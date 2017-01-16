@@ -9,7 +9,9 @@ Created on Fri Jan  6 15:10:52 2017
 import os
 from PIL import Image
 import numpy as np
-
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+from matplotlib import gridspec
 
 # Function to read the data and return it as 3D arrays
 def read_data(path_im,path_ob,path_dc):
@@ -63,3 +65,34 @@ def read_data(path_im,path_ob,path_dc):
     stack_ob_ar = np.asarray(stack_ob)            
         
     return(stack_im_ar,stack_ob_ar)
+
+    
+def roi(im,xROI,yROI,thickROI,heightROI,show=False):
+    """
+    roi() takes a SINGLE image and crops it 
+    (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
+    """
+    if  (0<=xROI<=im.shape[0] and 0<=xROI+thickROI<=im.shape[0] and 0<=yROI<=im.shape[1] and 0<=yROI+heightROI<=im.shape[1]):
+        imROI = im[yROI:yROI+heightROI,xROI:xROI+thickROI]
+        if show:
+            vmin,vmax=im.min(),im.max()
+            cmap='gray'
+            fig = plt.figure(figsize=(15,10)) 
+            gs = gridspec.GridSpec(1, 2,width_ratios=[4,1],height_ratios=[1,1]) 
+            ax = plt.subplot(gs[0])
+            ax2 = plt.subplot(gs[1])
+#            fig,(ax,ax2) = plt.subplots(1,2,sharex=False,sharey=False,figsize=(15,10))
+            ax.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)
+            rectNorm = patches.Rectangle((xROI,yROI),thickROI,heightROI,linewidth=1,edgecolor='m',facecolor='none')
+            ax.add_patch(rectNorm)
+            ax.set_title('Original image with selected ROI & cropped region')
+            ax2.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)
+            ax2.set_title('ROI')
+            ax2.set_xlim([xROI,xROI+thickROI])
+            ax2.set_ylim([yROI+heightROI,yROI])
+            plt.tight_layout()
+            plt.show()
+            plt.close('all')
+        return(imROI)
+    else:
+        print('!!!WARNING!!! \nROI out of range')
