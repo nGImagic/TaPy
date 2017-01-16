@@ -171,9 +171,10 @@ def createIm(stack_im,stack_ob):
     TI = np.divide(imParam[0],obParam[0])
     DPCI = imParam[2]-obParam[2]
     DFI = np.divide(np.divide(imParam[1],imParam[0]),np.divide(obParam[1],obParam[0]))
-    return TI, DPCI, DFI
+    VIS_map = np.divide(obParam[1],obParam[0])
+    return TI, DPCI, DFI, VIS_map
     
-def saveIm(ti,dpci,dfi,name='name',folder='folder',overWrite=False):
+def saveIm(ti,dpci,dfi,vis_map,name='name',folder='folder',overWrite=False):
     """
     """
     if not exists('data/'+folder):
@@ -183,6 +184,7 @@ def saveIm(ti,dpci,dfi,name='name',folder='folder',overWrite=False):
     pyfits.writeto('data/'+folder+'/ti_'+str(name)+'.fits',ti,clobber=overWrite)
     pyfits.writeto('data/'+folder+'/dpci_'+str(name)+'.fits',dpci,clobber=overWrite)
     pyfits.writeto('data/'+folder+'/dfi_'+str(name)+'.fits',dfi,clobber=overWrite)
+    pyfits.writeto('data/'+folder+'/visi_'+str(name)+'.fits',vis_map,clobber=overWrite)
     
 #    fits.writeto('out.fits', ti, 96)
     return
