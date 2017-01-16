@@ -20,21 +20,22 @@ def read_data(path_im,path_ob,path_dc):
     """
     read()
     """
-    # Load DCs and average them
-    filenames_dc = os.listdir(path_dc)
-    filenames_dc.sort()
-    num_im_DC = len(filenames_dc)
-    
-    f_name = path_dc + '/' + filenames_dc[0]    # Load first DC in folder
-    im = Image.open(f_name)
-    im_a1 = np.array(im)
-    
-    for i in filenames_dc:              # Iterate through filenames in DC folder
-        f_name = path_dc + '/' + i
+    if path_dc != '':
+        # Load DCs and average them
+        filenames_dc = os.listdir(path_dc)
+        filenames_dc.sort()
+        num_im_DC = len(filenames_dc)
+        
+        f_name = path_dc + '/' + filenames_dc[0]    # Load first DC in folder
         im = Image.open(f_name)
-        im_a = np.array(im)
-        im_a1 = (im_a1 + im_a)/2        # Add to previous DC and divide by 2 - average
-    
+        im_a1 = np.array(im)
+        
+        for i in filenames_dc:              # Iterate through filenames in DC folder
+            f_name = path_dc + '/' + i
+            im = Image.open(f_name)
+            im_a = np.array(im)
+            im_a1 = (im_a1 + im_a)/2        # Add to previous DC and divide by 2 - average
+        
     # Load Projectionss
     filenames_im = os.listdir(path_im)  # Create list of filenames in projection folder
     filenames_im.sort()                 # Sort the lsit (just in case)
@@ -44,7 +45,10 @@ def read_data(path_im,path_ob,path_dc):
     for i in filenames_im:              # Iterate through filenames in projection folder
         f_name = path_im + '/' + i
         im = Image.open(f_name)         # Open image
-        im_a = np.array(im-im_a1)             # Convert image to array
+        if path_dc != '':
+            im_a = np.array(im-im_a1)             # Convert image to array
+        else:
+            im_a = np.array(im)
         stack_im.append(im_a)           # Append array to list
     
     stack_im_ar = np.asarray(stack_im)  # Convert list to numpy array
@@ -58,7 +62,10 @@ def read_data(path_im,path_ob,path_dc):
     for i in filenames_ob:
         f_name = path_ob + '/' + i
         im = Image.open(f_name)
-        im_a = np.array(im-im_a1)
+        if path_dc != '':
+            im_a = np.array(im-im_a1)             # Convert image to array
+        else:
+            im_a = np.array(im)
         stack_ob.append(im_a)
     
     stack_ob_ar = np.asarray(stack_ob)            
