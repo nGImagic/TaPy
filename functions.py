@@ -29,8 +29,6 @@ def read_data(path_im,path_ob,path_dc):
         im_a = np.array(im)
         im_a1 = (im_a1 + im_a)/2        # Add to previous DC and divide by 2 - average
     
-    if num_im_im != num_im_ob:
-        print('!!!WARNING!!! NUMBERS OF PROJECTIONS AND OPEN BEAMS ARE NOT THE SAME')
     # Load Projectionss
     filenames_im = os.listdir(path_im)  # Create list of filenames in projection folder
     filenames_im.sort()                 # Sort the lsit (just in case)
@@ -50,6 +48,9 @@ def read_data(path_im,path_ob,path_dc):
     filenames_ob = os.listdir(path_ob)
     filenames_ob.sort()
     num_im_ob = len(filenames_ob)
+    
+    if num_im_im != num_im_ob:
+        print('!!!WARNING!!! NUMBERS OF PROJECTIONS AND OPEN BEAMS ARE NOT THE SAME')
     
     stack_ob = list()
     
