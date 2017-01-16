@@ -66,7 +66,8 @@ def read_data(path_im,path_ob,path_dc):
         
     return(stack_im_ar,stack_ob_ar)
 
-    
+xROI,yROI,thickROI,heightROI=10,10,35,35 #parameter for roi
+   
 def roi(im,xROI,yROI,thickROI,heightROI,show=False):
     """
     roi() takes a SINGLE image and crops it 
@@ -96,3 +97,18 @@ def roi(im,xROI,yROI,thickROI,heightROI,show=False):
         return(imROI)
     else:
         print('!!!WARNING!!! \nROI out of range')
+
+
+def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI):
+    """
+    cropped() takes a stack of data,ob and dark currenr and crops them 
+    (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
+    """
+    stack_im_ar = [roi(im=stack_im[0],xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True)]
+    for i in stack_im[1:]:
+        stack_im_ar.append(roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False))
+#    stack_im_ar = [roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True) for i in stack_im]
+    
+    stack_ob_ar = [roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False) for i in stack_ob]
+    
+    return(stack_im_ar,stack_ob_ar)
