@@ -173,12 +173,16 @@ def createIm(stack_im,stack_ob):
     DFI = np.divide(np.divide(imParam[1],imParam[0]),np.divide(obParam[1],obParam[0]))
     return TI, DPCI, DFI
     
-def saveIm(ti,dpci,dfi,name,folder):
+def saveIm(ti,dpci,dfi,name='name',folder='folder',overWrite=False):
     """
     """
     if not exists('data/'+folder):
         makedirs('data/'+folder) 
         print('files saved in folder: ','data/'+folder)
-    pyfits.writeto('data/'+folder+'/test.fits', ti)
+
+    pyfits.writeto('data/'+folder+'/ti_'+str(name)+'.fits',ti,clobber=overWrite)
+    pyfits.writeto('data/'+folder+'/dpci_'+str(name)+'.fits',dpci,clobber=overWrite)
+    pyfits.writeto('data/'+folder+'/dfi_'+str(name)+'.fits',dfi,clobber=overWrite)
+    
 #    fits.writeto('out.fits', ti, 96)
     return
