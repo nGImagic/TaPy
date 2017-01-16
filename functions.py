@@ -111,4 +111,4 @@ def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=he
     
     stack_ob_ar = [roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False) for i in stack_ob]
     
-    return(stack_im_ar,stack_ob_ar)
+    return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
