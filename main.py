@@ -18,10 +18,10 @@ crop_param = [10,15,50,50]
 
 (im,ob) = read_data(path_im,path_ob,path_dc)
 #im,ob = normalization(im,ob,*norm_param)
-im,ob = cropped(im,ob,*crop_param)
+#im,ob = cropped(im,ob,*crop_param)
 
 ti, dpci, dfi = createIm(im,ob)
 
 plt.imshow(dfi)
 ti, dpci, dfi = createIm(im,ob)
-saveIm(ti, dpci, dfi,'name','folder')
+saveIm(ti, dpci, dfi,'name','folder',overWrite=True)
