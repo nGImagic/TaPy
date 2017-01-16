@@ -8,9 +8,9 @@ Created on Fri Jan  6 15:42:58 2017
 
 from functions import read_data,cropped,normalization
 
-path_ob = '/Users/harti/switchdrive/repos/nGI_magic/r/data/data_OB'
-path_im = '/Users/harti/switchdrive/repos/nGI_magic/r/data/data_smp'
-path_dc = '/Users/harti/switchdrive/repos/nGI_magic/r/data/DCs'
+path_ob = 'data/data_OB'
+path_im = 'data/data_smp'
+path_dc = 'data/DCs'
 
 norm_param = [3,5,2,2]
 crop_param = [10,15,50,50]
