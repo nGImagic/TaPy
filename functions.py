@@ -104,7 +104,7 @@ def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=he
     """
     stack_im_ar = [roi(im=stack_im[0],xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True)]
     for i in stack_im[1:]:
-        stack_im_ar.append(roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True))
+        stack_im_ar.append(roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False))
 #    stack_im_ar = [roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True) for i in stack_im]
     
     stack_ob_ar = [roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False) for i in stack_ob]
@@ -153,11 +153,23 @@ def matrix(stack_im):
     a0 = np.reshape(np.asarray(offSet),[shapeStack[1],shapeStack[2]])
     a1 = np.reshape(np.sqrt(np.asarray(absoluteAmpl)**2+np.asarray(absPhase)**2),[shapeStack[1],shapeStack[2]])
     phi = np.reshape(np.arctan((np.asarray(absPhase)/np.asarray(absoluteAmpl))),[shapeStack[1],shapeStack[2]])
-    return A,a0,a1,phi
+    return a0,a1,phi
      
 def reductionMatrix(stack_im,stack_ob):
     """
     reductionMatrix(): it applies matrix() to both stacks im and ob
     """
     return (matrix(stack_im),matrix(stack_ob))
+    
+def createIm(stack_im,stack_ob):
+    """
+    """
+    imParam,obParam = reductionMatrix(stack_im,stack_ob)
+    
+    TI = np.divide(imParam[0],obParam[0])
+    DPCI = imParam[2]-obParam[2]
+    DFI = np.divide(np.divide(imParam[1],imParam[0]),np.divide(obParam[1],obParam[0]))
+    return TI, DPCI, DFI
+    
+    
     

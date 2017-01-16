@@ -6,7 +6,7 @@ Created on Fri Jan  6 15:42:58 2017
 @author: harti
 """
 
-from functions import read_data,cropped,normalization,reductionMatrix
+from functions import read_data,cropped,createIm
 
 path_ob = 'data/data_OB'
 path_im = 'data/data_smp'
@@ -20,4 +20,4 @@ crop_param = [10,15,50,50]
 #im,ob = normalization(im,ob,*norm_param)
 im,ob = cropped(im,ob,*crop_param)
 
-im,ob = reductionMatrix(im,ob)
+TI, DPCI, DFI = createIm(im,ob)
