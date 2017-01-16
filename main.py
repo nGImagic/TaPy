@@ -24,4 +24,4 @@ ti, dpci, dfi = createIm(im,ob)
 
 plt.imshow(dfi)
 ti, dpci, dfi = createIm(im,ob)
-saveIm(ti, dpci, dfi)
+saveIm(ti, dpci, dfi,'name','folder')

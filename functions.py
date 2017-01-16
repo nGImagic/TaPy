@@ -12,7 +12,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib import gridspec
-import pyfits# Function to read the data and return it as 3D arrays
+import pyfits
+from os import listdir,rename, makedirs
+from os.path import isfile, join, exists, isdir
+# Function to read the data and return it as 3D arrays
 def read_data(path_im,path_ob,path_dc):
     """
     read()
@@ -170,9 +173,12 @@ def createIm(stack_im,stack_ob):
     DFI = np.divide(np.divide(imParam[1],imParam[0]),np.divide(obParam[1],obParam[0]))
     return TI, DPCI, DFI
     
-def saveIm(ti, dpci, dfi):
+def saveIm(ti,dpci,dfi,name,folder):
     """
     """
-    pyfits.writeto('test.fits', ti)
+    if not exists('data/'+folder):
+        makedirs('data/'+folder) 
+        print('files saved in folder: ','data/'+folder)
+    pyfits.writeto('data/'+folder+'/test.fits', ti)
 #    fits.writeto('out.fits', ti, 96)
     return
