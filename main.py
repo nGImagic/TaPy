@@ -6,7 +6,7 @@ Created on Fri Jan  6 15:42:58 2017
 @author: harti
 """
 
-from functions import read_data,roi,cropped
+from functions import read_data,cropped,normalization
 
 path_ob = '/Users/harti/switchdrive/repos/nGI_magic/r/data/data_OB'
 path_im = '/Users/harti/switchdrive/repos/nGI_magic/r/data/data_smp'
