@@ -15,7 +15,9 @@ from matplotlib import gridspec
 
 # Function to read the data and return it as 3D arrays
 def read_data(path_im,path_ob,path_dc):
-    
+    """
+    read()
+    """
     # Load DCs and average them
     filenames_dc = os.listdir(path_dc)
     filenames_dc.sort()
@@ -112,4 +114,21 @@ def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=he
     stack_ob_ar = [roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False) for i in stack_ob]
     
     
+    return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
+
+    
+def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False):
+    """
+    normalization()
+    """
+    Area = abs(thickROI*heightROI)  
+    
+    stack_im_ar = []    
+
+    stack_im_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/Area) for l in stack_im]   
+    for i in stack_im_ar:
+        print(i.mean())
+        
+    stack_ob_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/Area) for l in stack_ob] 
+        
     return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
