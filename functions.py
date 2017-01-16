@@ -36,7 +36,6 @@ def read_data(path_im,path_ob,path_dc):
     # Load Projectionss
     filenames_im = os.listdir(path_im)  # Create list of filenames in projection folder
     filenames_im.sort()                 # Sort the lsit (just in case)
-    num_im_im = len(filenames_im)      # Get number of projections
     
     stack_im = list()                   # Generate empty list for projections 
     
@@ -51,10 +50,6 @@ def read_data(path_im,path_ob,path_dc):
     # Load Open Beams
     filenames_ob = os.listdir(path_ob)
     filenames_ob.sort()
-    num_im_ob = len(filenames_ob)
-    
-    if num_im_im != num_im_ob:
-        print('!!!WARNING!!! NUMBERS OF PROJECTIONS AND OPEN BEAMS ARE NOT THE SAME')
     
     stack_ob = list()
     
@@ -65,7 +60,8 @@ def read_data(path_im,path_ob,path_dc):
         stack_ob.append(im_a)
     
     stack_ob_ar = np.asarray(stack_ob)            
-        
+    if  stack_im_ar.shape != stack_ob_ar.shape:
+        print('!!!WARNING!!! SHAPE OF PROJECTIONS AND OPEN BEAMS ARE NOT THE SAME')
     return(stack_im_ar,stack_ob_ar)
 
 xROI,yROI,thickROI,heightROI=10,10,35,35 #parameter for roi
@@ -108,7 +104,7 @@ def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=he
     """
     stack_im_ar = [roi(im=stack_im[0],xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True)]
     for i in stack_im[1:]:
-        stack_im_ar.append(roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False))
+        stack_im_ar.append(roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True))
 #    stack_im_ar = [roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True) for i in stack_im]
     
     stack_ob_ar = [roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False) for i in stack_ob]
@@ -132,3 +128,36 @@ def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,height
     stack_ob_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/Area) for l in stack_ob] 
         
     return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
+
+def matrix(stack_im):
+    """
+    """
+    shapeStack = np.shape(stack_im)
+    B = np.zeros((shapeStack[0],3))  
+    numberPeriods = 1
+    ###TODO: function for number of periods
+    
+    stack_imReshaped = np.reshape(stack_im,[shapeStack[0],shapeStack[1]*shapeStack[2]])
+    rangeStack = range(shapeStack[0])
+    
+    for j in rangeStack:
+        B[j][0] = 1.0
+        B[j][1] = np.cos(2*np.pi*rangeStack[j]*numberPeriods/(shapeStack[0]-1))
+        B[j][2] = np.sin(2*np.pi*rangeStack[j]*numberPeriods/(shapeStack[0]-1))
+    B = np.matrix(B)
+    
+    G = (B.T * B).I * B.T
+    print(np.shape(G),np.shape(stack_imReshaped))
+    A = (G*stack_imReshaped)
+    offSet,absoluteAmpl,absPhase = A[0,:],A[1,:],A[2,:]
+    a0 = np.reshape(np.asarray(offSet),[shapeStack[1],shapeStack[2]])
+    a1 = np.reshape(np.sqrt(np.asarray(absoluteAmpl)**2+np.asarray(absPhase)**2),[shapeStack[1],shapeStack[2]])
+    phi = np.reshape(np.arctan((np.asarray(absPhase)/np.asarray(absoluteAmpl))),[shapeStack[1],shapeStack[2]])
+    return A,a0,a1,phi
+     
+def reductionMatrix(stack_im,stack_ob):
+    """
+    reductionMatrix(): it applies matrix() to both stacks im and ob
+    """
+    return (matrix(stack_im),matrix(stack_ob))
+    
