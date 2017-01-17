@@ -122,13 +122,15 @@ def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=he
     return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
 
     
-def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False):
+def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True):
     """
     normalization()
     """
     Area = abs(thickROI*heightROI)  
     
     stack_im_ar = []    
+    
+    roi(stack_im[0],xROI,yROI,thickROI,heightROI,show)
 
     stack_im_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/Area) for l in stack_im]   
     for i in stack_im_ar:
