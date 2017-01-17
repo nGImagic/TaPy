@@ -3,7 +3,7 @@
 """
 Created on Fri Jan  6 15:42:58 2017
 
-@author: harti
+@author: harti and valsecchi
 """
 import matplotlib.pyplot as plt
 from functions import read_data,cropped,createIm,normalization,saveIm
