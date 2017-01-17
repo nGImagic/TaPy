@@ -195,3 +195,32 @@ def saveIm(ti,dpci,dfi,vis_map,name='name',folder='folder',overWrite=False):
     
 #    fits.writeto('out.fits', ti, 96)
     return
+    
+def binning(stack_im,stack_ob,bin_fac=None):
+    
+    num_im,x_im,y_im = np.shape(stack_im)
+    stack_im_tmp = list()
+    if bin_fac != None:
+        for i in range(num_im):
+            t = stack_im[i]
+            t_resh = t.reshape(int(x_im/bin_fac), bin_fac, int(y_im/bin_fac), bin_fac)
+            stack_im_tmp.append(t_resh.mean(axis=3).mean(axis=1))
+    
+    stack_im_bin = np.asarray(stack_im_tmp) 
+    
+    num_ob,x_ob,y_ob = np.shape(stack_ob)
+    stack_ob_tmp = list()
+    if bin_fac != None:
+        for i in range(num_ob):
+            t = stack_ob[i]
+            t_resh = t.reshape(int(x_ob/bin_fac), bin_fac, int(y_ob/bin_fac), bin_fac)
+            stack_ob_tmp.append(t_resh.mean(axis=3).mean(axis=1))
+    
+    stack_ob_bin = np.asarray(stack_ob_tmp) 
+            #print(i)
+    return stack_im_bin,stack_ob_bin
+        
+        
+        
+        
+        
