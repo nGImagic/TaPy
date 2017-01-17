@@ -220,7 +220,3 @@ def binning(stack_im,stack_ob,bin_fac=None):
             #print(i)
     return stack_im_bin,stack_ob_bin
         
-        
-        
-        
-        
