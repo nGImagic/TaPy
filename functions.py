@@ -223,5 +223,5 @@ def binning(stack_im,stack_ob,bin_fac=None):
     else:
         stack_ob_bin = stack_ob
         
-    return stack_im_bin,stack_ob_bin
+    return stack_im_bin, stack_ob_bin
         
