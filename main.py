@@ -14,7 +14,7 @@ path_dc = 'data/DCs'
 
 norm_param = [3,5,2,2]
 crop_param = [10,15,50,50]
-bin_fac = 1                 # no binning either 1 or None, 2x2 binning: bin_fac = 2
+bin_fac = None                 # no binning either 1 or None, 2x2 binning: bin_fac = 2
 
 
 (im,ob) = read_data(path_im,path_ob,path_dc)
