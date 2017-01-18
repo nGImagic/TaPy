@@ -118,6 +118,7 @@ elif i.lower().endswith(('.tiff','.tif')) :
     im_a1.append(Image.open(i))
 elif i.lower().endswith(('.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5')): 
     print('hdf')
-    im_a1.append(h5py.File(i,'r+'))
+    im_a1.append(h5py.File(i,'r+')['entry']['data']['data'].value)
+    
 else:
     print(splitext(i)[-1],'file extension not yet implemented....Do it your own way!')
