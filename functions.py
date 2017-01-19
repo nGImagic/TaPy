@@ -39,7 +39,7 @@ def readRead(ii,dc=1):
                 im_a1.append(iScan)
         else:
     ##        if you don't want to break the program just comment the raise and eventually uncomment the print for having a feedback
-    #        print(splitext(i)[-1],'file extension not yet implemented....Do it your own way!')
+#            print(os.path.splitext(i)[-1],'file extension not yet implemented....Do it your own way!')
             raise OSError('file extension not yet implemented....Do it your own way!')     
         if dc:
             im_a1 = np.asarray(im_a1)-dc

@@ -16,6 +16,7 @@ def readRead(ii,dc=1):
     """
     readRead()
     it loads images from list of absolute paths and subtract the dark current
+    piu
     """
     im_a1 = []       
     for i in ii:
@@ -47,37 +48,22 @@ def read_data(path_im,path_ob,path_dc):
     """
     
     if path_dc:
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        # Load DCs and average them
-        
         f_name = [path_dc + '/' + n for n in os.listdir(path_dc)].sort
-        
-        im_a1 = []
-        for i in f_name[1:]:
-
-            if i.lower().endswith('.fits'):
-                print('fits')
-                try:
-                    im_a1.append(fits.open(i)[0].data)
-                except OSError:
-                    im_a1.append(fitsio.read(i))
-            elif i.lower().endswith(('.tiff','.tif')) :
-                print('tif or tiff')
-                im_a1.append(Image.open(i))
-            elif i.lower().endswith(('.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5')): 
-                print('hdf')
-                im_a1.append(h5py.File(i,'r'))
-            else:
-                print(splitext(i)[-1],'file extension not yet implemented....Do it your own way!')
+        i = f_name[0]
+        if i.lower().endswith('.fits'):
+            print('fits')
+            try:
+                im_a1.append(fits.open(i)[0].data)
+            except OSError:
+                im_a1.append(fitsio.read(i))
+        elif i.lower().endswith(('.tiff','.tif')) :
+            print('tif or tiff')
+            im_a1.append(Image.open(i))
+        elif i.lower().endswith(('.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5')): 
+            print('hdf')
+            im_a1.append(h5py.File(i,'r'))
+        else:
+            print(os.path.splitext(i)[-1],'file extension not yet implemented....Do it your own way!')
         
         
         
