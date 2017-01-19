@@ -14,7 +14,6 @@ import matplotlib.patches as patches
 from matplotlib import gridspec
 import pyfits
 from os import makedirs
-from os.path import exists
 import fitsio
 from astropy.io import fits 
 import h5py
@@ -220,7 +219,7 @@ def createIm(stack_im,stack_ob):
 def saveIm(ti,dpci,dfi,vis_map,name='name',folder='folder',overWrite=False):
     """
     """
-    if not exists('data/'+folder):
+    if not os.path.exists('data/'+folder):
         makedirs('data/'+folder) 
         print('files saved in folder: ','data/'+folder)
 
