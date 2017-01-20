@@ -39,7 +39,7 @@ def readRead(ii,dc=1):
             im_a1 = np.asarray(im_a1)-dc
         else:
             im_a1 = np.asarray(im_a1)
-        return im_a1
+    return im_a1
 
 # Function to read the data and return it as 3D arrays
 def read_data(path_im,path_ob,path_dc):
