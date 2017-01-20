@@ -66,4 +66,5 @@ path_ob = 'data/data_OB'
 path_im = 'data/data_smp'
 path_dc = 'data/DCs'
 
+
 io = read_data(0,0,'data/data_smp')
