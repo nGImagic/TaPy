@@ -47,8 +47,6 @@ def read_data(path_im,path_ob,path_dc):
     read()
     """
     return
-
-    return(stack_im_ar,stack_ob_ar)
     
 path_ob = 'data/data_OB'
 path_im = 'data/data_smp'
