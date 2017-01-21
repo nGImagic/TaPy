@@ -80,7 +80,7 @@ def read_data(path_im,path_ob,path_dc):
     filenames_im = [name for name in os.listdir(path_im) if name.lower().endswith(tuple(imExt))]
     filenames_im.sort()
     stack_im_ar = []
-    for name in filenames_ob:
+    for name in filenames_im:
         full_path_name = path_im+'/'+name
         print(full_path_name)
         if path_dc:
@@ -88,6 +88,9 @@ def read_data(path_im,path_ob,path_dc):
         else:
             stack_im_ar.append(readRead(full_path_name))   #without dc
     stack_im_ar = np.asarray(stack_im_ar)
+    
+    if np.shape(stack_im_ar) != np.shape(stack_ob):
+            raise ValueError('Data and  open beam have different shapes')
         
     return stack_im_ar,stack_ob,im_a1
 path_ob = 'data/data_OB'
