@@ -51,10 +51,10 @@ def read_data(path_im,path_ob,path_dc):
     read()
     """
 #    Dark current
-    
+    imExt = ['.fits','.tiff','.tif','.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5']
     if path_dc:
         im_a1 = []
-        filenames_dc = [name for name in os.listdir(path_dc) if name.lower().endswith(('.fits','.tiff','.tif','.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5'))]
+        filenames_dc = [name for name in os.listdir(path_dc) if name.lower().endswith(tuple(imExt))]
         filenames_dc.sort()
         for name in filenames_dc:
             full_path_name = path_dc+'/'+name
@@ -63,25 +63,36 @@ def read_data(path_im,path_ob,path_dc):
         im_a1 = np.asarray(im_a1)
         im_a1 = np.sum(im_a1,axis=0)/np.shape(im_a1)[0]
     
-    
 #    Open beam
-    filenames_ob = [name for name in os.listdir(path_ob) if name.lower().endswith(('.fits','.tiff','.tif','.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5'))]
+    filenames_ob = [name for name in os.listdir(path_ob) if name.lower().endswith(tuple(imExt))]
     filenames_ob.sort()
     stack_ob = []
     for name in filenames_ob:
         full_path_name = path_ob+'/'+name
         print(full_path_name)
         if path_dc:
-            stack_ob.append(readRead(full_path_name,im_a1))
+            stack_ob.append(readRead(full_path_name,im_a1)) #with dc
         else:
-            stack_ob.append(readRead(full_path_name))
+            stack_ob.append(readRead(full_path_name))   #without dc
     stack_ob = np.asarray(stack_ob)
+    
+#    Projections
+    filenames_im = [name for name in os.listdir(path_im) if name.lower().endswith(tuple(imExt))]
+    filenames_im.sort()
+    stack_im_ar = []
+    for name in filenames_ob:
+        full_path_name = path_im+'/'+name
+        print(full_path_name)
+        if path_dc:
+            stack_im_ar.append(readRead(full_path_name,im_a1)) #with dc
+        else:
+            stack_im_ar.append(readRead(full_path_name))   #without dc
+    stack_im_ar = np.asarray(stack_im_ar)
         
-        
-    return stack_ob,im_a1
+    return stack_im_ar,stack_ob,im_a1
 path_ob = 'data/data_OB'
 path_im = 'data/data_smp'
 path_dc = 'data/DCs'
 
 
-ob,dc = read_data(0,path_ob,path_dc)
+ll,ob,dc = read_data(path_im,path_ob,path_dc)
