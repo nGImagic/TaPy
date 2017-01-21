@@ -36,10 +36,10 @@ def readRead(path,dc=1):
     ##        if you don't want to break the program just comment the raise and eventually uncomment the print for having a feedback
     #        print(os.path.splitext(path)[-1],'file extension not yet implemented....Do it your own way!')
             raise OSError('file extension not yet implemented....Do it your own way!')     
-        if dc:
-            im_a1 = np.asarray(im_a1)-dc
-        else:
-            im_a1 = np.asarray(im_a1)
+#        if dc:
+        im_a1 = np.asarray(im_a1)-dc
+#        else:
+#            im_a1 = np.asarray(im_a1)
         return im_a1
     else:
         print(path,'does not exist')
@@ -51,8 +51,9 @@ def read_data(path_im,path_ob,path_dc):
     read()
     """
 #    Dark current
-    im_a1 = []
+    
     if path_dc:
+        im_a1 = []
         filenames_dc = [name for name in os.listdir(path_dc) if name.lower().endswith(('.fits','.tiff','.tif','.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5'))]
         filenames_dc.sort()
         for name in filenames_dc:
@@ -62,12 +63,25 @@ def read_data(path_im,path_ob,path_dc):
         im_a1 = np.asarray(im_a1)
         im_a1 = np.sum(im_a1,axis=0)/np.shape(im_a1)[0]
     
+    
 #    Open beam
-
-    return im_a1
+    filenames_ob = [name for name in os.listdir(path_ob) if name.lower().endswith(('.fits','.tiff','.tif','.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5'))]
+    filenames_ob.sort()
+    stack_ob = []
+    for name in filenames_ob:
+        full_path_name = path_ob+'/'+name
+        print(full_path_name)
+        if path_dc:
+            stack_ob.append(readRead(full_path_name,im_a1))
+        else:
+            stack_ob.append(readRead(full_path_name))
+    stack_ob = np.asarray(stack_ob)
+        
+        
+    return stack_ob,im_a1
 path_ob = 'data/data_OB'
 path_im = 'data/data_smp'
 path_dc = 'data/DCs'
 
 
-io = read_data(0,0,'data/data_smp')
+ob,dc = read_data(0,path_ob,path_dc)
