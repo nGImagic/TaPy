@@ -90,7 +90,7 @@ def read_data(path_im,path_ob,path_dc):
     stack_im_ar = np.asarray(stack_im_ar)
     
     if np.shape(stack_im_ar) != np.shape(stack_ob):
-            raise ValueError('Data and  open beam have different shapes')
+            raise ValueError('Data and open beam have different shapes')
         
     return stack_im_ar,stack_ob,im_a1
 path_ob = 'data/data_OB'
