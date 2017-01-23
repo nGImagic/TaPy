@@ -17,6 +17,8 @@ from os import makedirs
 import fitsio
 from astropy.io import fits 
 import h5py
+from pathlib import Path
+
 
 
 def readRead(path,dc=0):
@@ -52,7 +54,7 @@ def readRead(path,dc=0):
     
     
 # Function to read the data and return it as 3D arrays
-def read_data(path_im,path_ob,path_dc):
+#def read_data(path_im,path_ob,path_dc):
     """
     read()
     """
@@ -109,6 +111,11 @@ def read_data(path_im,path_ob,path_dc):
 #        print('!!!WARNING!!! SHAPE OF PROJECTIONS AND OPEN BEAMS ARE NOT THE SAME')
 #    return(stack_im_ar,stack_ob_ar)
 #    Dark current
+def read_data(path_im,path_ob,path_dc):
+    """
+    read()
+    """
+#    Dark current
     imExt = ['.fits','.tiff','.tif','.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5']
     if path_dc:
         im_a1 = []
@@ -132,7 +139,8 @@ def read_data(path_im,path_ob,path_dc):
             stack_ob.append(readRead(full_path_name,im_a1)) #with dc
         else:
             stack_ob.append(readRead(full_path_name))   #without dc
-    stack_ob = np.asarray(stack_ob)
+    stack_ob = np.concatenate(stack_ob)
+
     
 #    Projections
     filenames_im = [name for name in os.listdir(path_im) if name.lower().endswith(tuple(imExt))]
@@ -145,19 +153,19 @@ def read_data(path_im,path_ob,path_dc):
             stack_im_ar.append(readRead(full_path_name,im_a1)) #with dc
         else:
             stack_im_ar.append(readRead(full_path_name))   #without dc
-    stack_im_ar = np.asarray(stack_im_ar)
+    stack_im_ar = np.concatenate(stack_im_ar)
     
     if np.shape(stack_im_ar) != np.shape(stack_ob):
             raise ValueError('Data and open beam have different shapes')
         
-    return stack_im_ar,stack_ob,im_a1
+    return stack_im_ar,stack_ob
 
 
 
 
 xROI,yROI,thickROI,heightROI=10,10,35,35 #parameter for roi
    
-def roi(im,xROI,yROI,thickROI,heightROI,show=False):
+def roi(im,xROI,yROI,thickROI,heightROI,show=False,titleOne='Original image with selected ROI',titleTwo='ROI'):
     """
     roi() takes a SINGLE image and crops it 
     (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
@@ -175,9 +183,9 @@ def roi(im,xROI,yROI,thickROI,heightROI,show=False):
             ax.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)
             rectNorm = patches.Rectangle((xROI,yROI),thickROI,heightROI,linewidth=1,edgecolor='m',facecolor='none')
             ax.add_patch(rectNorm)
-            ax.set_title('Original image with selected ROI & cropped region')
+            ax.set_title(titleOne)
             ax2.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)
-            ax2.set_title('ROI')
+            ax2.set_title(titleTwo)
             ax2.set_xlim([xROI,xROI+thickROI])
             ax2.set_ylim([yROI+heightROI,yROI])
             plt.tight_layout()
@@ -193,7 +201,7 @@ def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=he
     cropped() takes a stack of data,ob and dark currenr and crops them 
     (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
     """
-    stack_im_ar = [roi(im=stack_im[0],xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True)]
+    stack_im_ar = [roi(im=stack_im[0],xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True,titleTwo='Cropped region')]
     for i in stack_im[1:]:
         stack_im_ar.append(roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False))
 #    stack_im_ar = [roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True) for i in stack_im]
@@ -212,7 +220,7 @@ def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,height
     
     stack_im_ar = []    
     
-    roi(stack_im[0],xROI,yROI,thickROI,heightROI,show)
+    roi(stack_im[0],xROI,yROI,thickROI,heightROI,show,titleTwo='Area for normalization')
 
     stack_im_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/Area) for l in stack_im]   
     for i in stack_im_ar:

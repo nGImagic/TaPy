@@ -38,6 +38,7 @@ def readRead(path,dc=1):
             raise OSError('file extension not yet implemented....Do it your own way!')     
 #        if dc:
         im_a1 = np.asarray(im_a1)-dc
+        print(np.shape(im_a1))
 #        else:
 #            im_a1 = np.asarray(im_a1)
         return im_a1
@@ -74,7 +75,8 @@ def read_data(path_im,path_ob,path_dc):
             stack_ob.append(readRead(full_path_name,im_a1)) #with dc
         else:
             stack_ob.append(readRead(full_path_name))   #without dc
-    stack_ob = np.asarray(stack_ob)
+    stack_ob = np.concatenate(stack_ob)
+
     
 #    Projections
     filenames_im = [name for name in os.listdir(path_im) if name.lower().endswith(tuple(imExt))]
@@ -87,15 +89,15 @@ def read_data(path_im,path_ob,path_dc):
             stack_im_ar.append(readRead(full_path_name,im_a1)) #with dc
         else:
             stack_im_ar.append(readRead(full_path_name))   #without dc
-    stack_im_ar = np.asarray(stack_im_ar)
+    stack_im_ar = np.concatenate(stack_im_ar)
     
     if np.shape(stack_im_ar) != np.shape(stack_ob):
             raise ValueError('Data and open beam have different shapes')
         
-    return stack_im_ar,stack_ob,im_a1
+    return stack_im_ar,stack_ob
 path_ob = 'data/data_OB'
 path_im = 'data/data_smp'
 path_dc = 'data/DCs'
 
 
-ll,ob,dc = read_data(path_im,path_ob,path_dc)
+ll,ob = read_data(path_im,path_ob,path_dc)
