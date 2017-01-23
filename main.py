@@ -10,7 +10,7 @@ from functions import read_data,cropped,createIm,normalization,saveIm,binning,os
 
 path_ob = 'data/data_OB'
 path_im = 'data/data_smp'
-path_dc = 'data/DCs'
+path_dc = ''#'data/DCs'
 
 norm_param = [3,5,20,40]
 crop_param = [10,15,500,500]
