@@ -170,7 +170,10 @@ def roi(im,xROI,yROI,thickROI,heightROI,show=False,titleOne='Original image with
     roi() takes a SINGLE image and crops it 
     (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
     """
-    if  (0<=xROI<=im.shape[0] and 0<=xROI+thickROI<=im.shape[0] and 0<=yROI<=im.shape[1] and 0<=yROI+heightROI<=im.shape[1]):
+    print(type(im),np.shape(im)[0],im.shape[0])
+#    if (0<=xROI<=np.shape(im)[0] and 0<=xROI+thickROI<=np.shape(im)[0] and 0<=yROI<=np.shape(im)[1] and 0<=yROI+heightROI<=np.shape(im)[1]):
+
+    if (0<=xROI<=im.shape[0] and 0<=xROI+thickROI<=im.shape[0] and 0<=yROI<=im.shape[1] and 0<=yROI+heightROI<=im.shape[1]):
         imROI = im[yROI:yROI+heightROI,xROI:xROI+thickROI]
         if show:
             vmin,vmax=im.min(),im.max()
