@@ -9,7 +9,7 @@ import os
 from PIL import Image
 import numpy as np
 from astropy.io import fits 
-#import fitsio
+import fitsio
 import h5py
 from pathlib import Path
 
