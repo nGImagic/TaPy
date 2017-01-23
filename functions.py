@@ -227,8 +227,39 @@ def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,height
         print(i.mean())
         
     stack_ob_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/Area) for l in stack_ob] 
-        
     return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
+
+def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,titleOne='Area for oscillation',titleTwo='Oscillation plot'):
+    area = abs(thickROI*heightROI)
+    stack_ob_ar = [l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/area for l in stack_ob] 
+    stack_im_ar = [l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/area for l in stack_im] 
+
+#    PLOT oscillation
+    im = stack_im[0]
+    vmin,vmax=im.min(),im.max()
+    cmap='gray'
+    fig = plt.figure(figsize=(15,10)) 
+    gs = gridspec.GridSpec(1, 2,width_ratios=[4,1],height_ratios=[1,1]) 
+    ax = plt.subplot(gs[0])
+    ax2 = plt.subplot(gs[1])
+#            fig,(ax,ax2) = plt.subplots(1,2,sharex=False,sharey=False,figsize=(15,10))
+    ax.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)
+    rectNorm = patches.Rectangle((xROI,yROI),thickROI,heightROI,linewidth=1,edgecolor='m',facecolor='none')
+    ax.add_patch(rectNorm)
+    ax.set_title(titleOne)
+
+    ax2.plot(range(1,len(stack_ob_ar)+1),stack_ob_ar,color='b')
+    ax2.scatter(range(1,len(stack_ob_ar)+1),stack_ob_ar,color='b')
+    ax2.plot(range(1,len(stack_im_ar)+1),stack_im_ar,color='g')
+    ax2.scatter(range(1,len(stack_im_ar)+1),stack_im_ar,marker='*',color='g')
+    ax2.set_title(titleTwo)
+#    ax2.set_xlim([xROI,xROI+thickROI])
+#    ax2.set_ylim([yROI+heightROI,yROI])
+    plt.tight_layout()
+    plt.show()
+    plt.close('all')
+    
+    return stack_ob_ar
 
 def matrix(stack_im):
     """
