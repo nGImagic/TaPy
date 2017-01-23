@@ -20,5 +20,8 @@ bin_fac = None                 # no binning either 1 or None, 2x2 binning: bin_f
 im,ob=normalization(im,ob,*norm_param)
 #im,ob = cropped(im,ob,*crop_param)
 #im, ob = binning(im,ob,bin_fac)
-#ti, dpci, dfi, vis_map = createIm(im,ob)
-#saveIm(ti, dpci, dfi, vis_map,'name','folder',overWrite=True)
+ti, dpci, dfi, vis_map = createIm(im,ob)
+saveIm(ti, dpci, dfi, vis_map,'name','TIO',overWrite=True)
+
+
+
