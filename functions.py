@@ -252,7 +252,64 @@ def reductionMatrix(stack_im,stack_ob):
     reductionMatrix(): it applies matrix() to both stacks im and ob
     """
     return (matrix(stack_im),matrix(stack_ob))
+
+def createIm_fft(stack_im,stack_ob):
+    """
+        reductionFourier(): it applies the fourier component analysis to retrieve dfi, ti, dpci and visibility map
+        
+        """
+    ## Projection
+    shapeStack_im = np.shape(stack_im)
+    ###TODO: function for number of periods
     
+    stack_imReshaped = np.reshape(stack_im,[shapeStack_im[0],shapeStack_im[1]*shapeStack_im[2]])
+    
+    steps = len(stack_imReshaped[:,:])
+    
+    outfft_a_im = []
+    outfft_b_im = []
+    outfft_c_im = []
+    
+    for i in range(len(stack_imReshaped[0,:])):
+        fft_osc = np.fft.rfft(stack_imReshaped[:,i])/(steps-1)
+        outfft_a_im.append(fft_osc[0])
+        outfft_b_im.append(2*np.sqrt(np.real(fft_osc[1])**2+np.imag(fft_osc[1])**2))
+        outfft_c_im.append(-np.angle(fft_osc[1]))
+    
+    outfft_a_im = np.reshape(outfft_a_im, [shapeStack_im[1],shapeStack_im[2]])
+    outfft_b_im = np.reshape(outfft_b_im, [shapeStack_im[1],shapeStack_im[2]])
+    outfft_c_im = np.reshape(outfft_c_im, [shapeStack_im[1],shapeStack_im[2]])
+
+    ## open beam
+    shapeStack_ob = np.shape(stack_ob)
+    ###TODO: function for number of periods
+    
+    stack_obReshaped = np.reshape(stack_ob,[shapeStack_ob[0],shapeStack_ob[1]*shapeStack_ob[2]])
+    
+    steps = len(stack_obReshaped[:,:])
+
+    outfft_a_ob = []
+    outfft_b_ob = []
+    outfft_c_ob = []
+    
+    for i in range(len(stack_obReshaped[0,:])):
+        fft_osc = np.fft.rfft(stack_obReshaped[:,i])/(steps-1)
+        outfft_a_ob.append(fft_osc[0])
+        outfft_b_ob.append(2*np.sqrt(np.real(fft_osc[1])**2+np.imag(fft_osc[1])**2))
+        outfft_c_ob.append(-np.angle(fft_osc[1]))
+
+    outfft_a_ob = np.reshape(outfft_a_ob, [shapeStack_ob[1],shapeStack_ob[2]])
+    outfft_b_ob = np.reshape(outfft_b_ob, [shapeStack_ob[1],shapeStack_ob[2]])
+    outfft_c_ob = np.reshape(outfft_c_ob, [shapeStack_ob[1],shapeStack_ob[2]])
+    
+    ti = np.real(outfft_a_im)/np.real(outfft_a_ob)
+    dpci = outfft_c_im - outfft_c_ob
+    dfi = (np.real(outfft_b_im)*np.real(outfft_a_ob))/(np.real(outfft_b_ob)*np.real(outfft_a_im))
+    visi = np.real(outfft_b_ob)/np.real(outfft_a_ob)
+    
+    return ti, dpci, dfi, visi
+
+
 def createIm(stack_im,stack_ob):
     """
     """

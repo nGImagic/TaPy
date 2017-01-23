@@ -6,7 +6,7 @@ Created on Fri Jan  6 15:42:58 2017
 @author: harti and valsecchi
 """
 import matplotlib.pyplot as plt
-from functions import read_data,cropped,createIm,normalization,saveIm,binning,oscillation
+from functions import read_data,cropped,createIm,normalization,saveIm,binning,oscillation,createIm_fft
 
 path_ob = 'data/data_OB'
 path_im = 'data/data_smp'
@@ -21,6 +21,7 @@ im,ob=normalization(im,ob,*norm_param)
 #im,ob = cropped(im,ob,*crop_param)
 #im, ob = binning(im,ob,bin_fac)
 ti, dpci, dfi, vis_map = createIm(im,ob)
+#ti, dpci, dfi, vis_map = createIm_fft(im,ob)
 saveIm(ti, dpci, dfi, vis_map,'name','TIO',overWrite=True)
 
 
