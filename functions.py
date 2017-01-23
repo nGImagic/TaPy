@@ -229,11 +229,15 @@ def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,height
     stack_ob_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/Area) for l in stack_ob] 
     return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
 
-def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,titleOne='Area for oscillation',titleTwo='Oscillation plot'):
+def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,titleOne='Area for oscillation',titleTwo='Oscillation plot',repeatedPeriod=False):
     area = abs(thickROI*heightROI)
     stack_ob_ar = [l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/area for l in stack_ob] 
     stack_im_ar = [l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/area for l in stack_im] 
-
+    if repeatedPeriod:
+        stack_ob_ar += stack_ob_ar
+        stack_im_ar += stack_im_ar
+        titleTwo += ' repetead period'
+    
 #    PLOT oscillation
     im = stack_im[0]
     vmin,vmax=im.min(),im.max()
@@ -248,12 +252,15 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightRO
     ax.add_patch(rectNorm)
     ax.set_title(titleOne)
 
-    ax2.plot(range(1,len(stack_ob_ar)+1),stack_ob_ar,color='b')
-    ax2.scatter(range(1,len(stack_ob_ar)+1),stack_ob_ar,color='b')
-    ax2.plot(range(1,len(stack_im_ar)+1),stack_im_ar,color='g')
+
+    ax2.plot(range(1,len(stack_im_ar)+1),stack_im_ar,color='g',label='data')
     ax2.scatter(range(1,len(stack_im_ar)+1),stack_im_ar,marker='*',color='g')
+    ax2.plot(range(1,len(stack_ob_ar)+1),stack_ob_ar,color='b',label='ob')
+    ax2.scatter(range(1,len(stack_ob_ar)+1),stack_ob_ar,color='b')
+    ax2.legend(loc=1, shadow=True)
+
     ax2.set_title(titleTwo)
-#    ax2.set_xlim([xROI,xROI+thickROI])
+    ax2.set_xlim((0,len(stack_ob_ar)+2))
 #    ax2.set_ylim([yROI+heightROI,yROI])
     plt.tight_layout()
     plt.show()
