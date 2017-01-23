@@ -16,7 +16,6 @@ norm_param = [3,5,20,40]
 crop_param = [10,15,500,500]
 bin_fac = None                 # no binning either 1 or None, 2x2 binning: bin_fac = 2
 
-
 (im,ob) = read_data(path_im,path_ob,path_dc)
 im,ob=normalization(im,ob,*norm_param)
 #im,ob = cropped(im,ob,*crop_param)
