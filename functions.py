@@ -229,7 +229,17 @@ def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,height
     stack_ob_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/Area) for l in stack_ob] 
     return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
 
-def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,titleOne='Area for oscillation',titleTwo='Oscillation plot',repeatedPeriod=False):
+def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,repeatedPeriod=False,folder=False):
+    """
+   stack_im is the data stack
+   stack_ob is the open beam stack
+   xROI,yROI,thickROI,heightROI is the rectangle of the ROI for the oscillation plot and (xROI,yROI) is the upper left corner
+   repeatedPeriod=bool  double the period of the stack appendind to the end of the first
+   folder is the folder where you want to save the plot if False it does not save
+    
+    """
+    titleOne='Area for oscillation'
+    titleTwo='Oscillation plot'
     area = abs(thickROI*heightROI)
     stack_ob_ar = [l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/area for l in stack_ob] 
     stack_im_ar = [l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/area for l in stack_im] 
@@ -243,7 +253,7 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightRO
     vmin,vmax=im.min(),im.max()
     cmap='gray'
     fig = plt.figure(figsize=(15,10)) 
-    gs = gridspec.GridSpec(1, 2,width_ratios=[4,1],height_ratios=[1,1]) 
+    gs = gridspec.GridSpec(1,2,width_ratios=[2,1],height_ratios=[1,1]) 
     ax = plt.subplot(gs[0])
     ax2 = plt.subplot(gs[1])
 #            fig,(ax,ax2) = plt.subplots(1,2,sharex=False,sharey=False,figsize=(15,10))
@@ -252,6 +262,8 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightRO
     ax.add_patch(rectNorm)
     ax.set_title(titleOne)
 
+    
+     
 
     ax2.plot(range(1,len(stack_im_ar)+1),stack_im_ar,color='g',label='data')
     ax2.scatter(range(1,len(stack_im_ar)+1),stack_im_ar,marker='*',color='g')
@@ -264,9 +276,13 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightRO
 #    ax2.set_ylim([yROI+heightROI,yROI])
     plt.tight_layout()
     plt.show()
+    if folder:
+        if not os.path.exists('data/'+folder):
+            makedirs('data/'+folder) 
+            print('files saved in folder: ','data/'+folder)
+        fig.savefig('data/'+folder+'/oscillationPlot.png', bbox_inches='tight')
     plt.close('all')
     
-    return stack_ob_ar
 
 def matrix(stack_im):
     """
