@@ -7,7 +7,6 @@ Created on Fri Jan  6 15:42:58 2017
 """
 from functions import read_data,cropped,createIm,normalization,saveIm,binning,oscillation,createIm_fft
 from pixelwiseDPC import pixelWiseDPC,pixelWisePC
-import numpy as np
 
 path_ob = 'data/phase/data_OB'
 path_im = 'data/phase/data_smp'
@@ -24,8 +23,6 @@ im,ob = cropped(im,ob,*crop_param)
 ti, dpci, dfi, vis_map = createIm(im,ob)
 #ti, dpci, dfi, vis_map = createIm_fft(im,ob)
 saveIm(ti, dpci, dfi, vis_map,name='name',folder='TIO',overWrite=True)
-pixel = pixelWiseDPC(dpci)
-pixel2 = pixelWisePC(pixel)
-#saveIm(ti, pixel, dfi, vis_map,name='name',folder='TIO',overWrite=True)
+
 
 
