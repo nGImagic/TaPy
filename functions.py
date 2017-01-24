@@ -316,7 +316,9 @@ def saveIm(ti,dpci,dfi,vis_map,name='name',folder='folder',overWrite=False):
     fits.writeto('data/'+folder+'/visi_'+str(name)+'.fits',vis_map,clobber=overWrite)
     
 def binning(stack_im,stack_ob,bin_fac=None):
-    
+    """
+    binning()
+    """
     num_im,x_im,y_im = np.shape(stack_im)
     stack_im_tmp = list()
     if bin_fac:
