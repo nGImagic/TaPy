@@ -29,7 +29,11 @@ def readRead(path,dc=0):
     if my_file.is_file():
         im_a1 = []
         if path.lower().endswith('.fits'):
-            im_a1.append(fits.open(path,ignore_missing_end=True)[0].data)
+            try:
+                im_a1.append(fits.open(path,ignore_missing_end=True)[0].data)
+            except OSError:
+                import fitsio
+                im_a1.append(fitsio.read(path))
         elif path.lower().endswith(('.tiff','.tif')) :
             im_a1.append(np.asarray(Image.open(path)))
         elif path.lower().endswith(('.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5')): 
