@@ -16,6 +16,7 @@ from os import makedirs
 from astropy.io import fits 
 import h5py
 from pathlib import Path
+from scipy.signal import medfilt
 
 
 
@@ -345,4 +346,26 @@ def binning(stack_im,stack_ob,bin_fac=None):
         stack_ob_bin = stack_ob
         
     return stack_im_bin, stack_ob_bin
-        
+
+
+def med_filt_z(stack_im,stack_ob,filter_size=1):
+    """
+    med_filt_z()
+    """
+    
+    shapeStack_ob = np.shape(stack_ob)
+    
+    stack_obReshaped = np.reshape(stack_ob,[shapeStack_ob[0],shapeStack_ob[1]*shapeStack_ob[2]])
+    stack_obReshaped = medfilt(stack_obReshaped,(filter_size,1))
+    ob = np.reshape(stack_obReshaped, [shapeStack_ob[0], shapeStack_ob[1],shapeStack_ob[2]])
+    
+    
+    shapeStack_im = np.shape(stack_im)
+    
+    stack_imReshaped = np.reshape(stack_im,[shapeStack_im[0],shapeStack_im[1]*shapeStack_im[2]])
+    stack_imReshaped = medfilt(stack_imReshaped,(filter_size,1))
+    im = np.reshape(stack_imReshaped, [shapeStack_im[0], shapeStack_im[1],shapeStack_im[2]])
+    
+    return im, ob
+    
+    
