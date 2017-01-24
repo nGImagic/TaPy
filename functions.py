@@ -12,7 +12,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib import gridspec
-import pyfits
 from os import makedirs
 from astropy.io import fits 
 import h5py
@@ -37,16 +36,11 @@ def readRead(path,dc=0):
             for iScan in hdf:
                 im_a1.append(iScan)
         else:
-    ##        if you don't want to break the program just comment the raise and eventually uncomment the print for having a feedback
-    #        print(os.path.splitext(path)[-1],'file extension not yet implemented....Do it your own way!')
             raise OSError('file extension not yet implemented....Do it your own way!')     
-#        if dc:
         im_a1 = np.asarray(im_a1)-dc
-#        else:
-#            im_a1 = np.asarray(im_a1)
         return im_a1
     else:
-        print(path,'does not exist')
+        raise OSError('the path does not exist')
     
 def read_data(path_im,path_ob,path_dc):
     """
@@ -153,17 +147,11 @@ def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,height
     """
     normalization()
     """
-    Area = abs(thickROI*heightROI)  
-    
+    area = abs(thickROI*heightROI)  
     stack_im_ar = []    
-    
     roi(stack_im[0],xROI,yROI,thickROI,heightROI,show,titleTwo='Area for normalization')
-
-    stack_im_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/Area) for l in stack_im]   
-    for i in stack_im_ar:
-        print(i.mean())
-        
-    stack_ob_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/Area) for l in stack_ob] 
+    stack_im_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/area) for l in stack_im]   
+    stack_ob_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/area) for l in stack_ob] 
     return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
 
 def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,repeatedPeriod=False,folder=False):
@@ -198,19 +186,13 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightRO
     rectNorm = patches.Rectangle((xROI,yROI),thickROI,heightROI,linewidth=1,edgecolor='m',facecolor='none')
     ax.add_patch(rectNorm)
     ax.set_title(titleOne)
-
-    
-     
-
     ax2.plot(range(1,len(stack_im_ar)+1),stack_im_ar,color='g',label='data')
     ax2.scatter(range(1,len(stack_im_ar)+1),stack_im_ar,marker='*',color='g')
     ax2.plot(range(1,len(stack_ob_ar)+1),stack_ob_ar,color='b',label='ob')
     ax2.scatter(range(1,len(stack_ob_ar)+1),stack_ob_ar,color='b')
     ax2.legend(loc=1, shadow=True)
-
     ax2.set_title(titleTwo)
     ax2.set_xlim((0,len(stack_ob_ar)+2))
-#    ax2.set_ylim([yROI+heightROI,yROI])
     plt.tight_layout()
     plt.show()
     if folder:
@@ -239,7 +221,7 @@ def matrix(stack_im):
     B = np.matrix(B)
     
     G = (B.T * B).I * B.T
-    print(np.shape(G),np.shape(stack_imReshaped))
+#    print(np.shape(G),np.shape(stack_imReshaped))
     A = (G*stack_imReshaped)
     offSet,absoluteAmpl,absPhase = A[0,:],A[1,:],A[2,:]
     a0 = np.reshape(np.asarray(offSet),[shapeStack[1],shapeStack[2]])
@@ -314,7 +296,6 @@ def createIm(stack_im,stack_ob):
     """
     """
     imParam,obParam = reductionMatrix(stack_im,stack_ob)
-    
     TI = np.divide(imParam[0],obParam[0])
     DPCI = imParam[2]-obParam[2]
     DFI = np.divide(np.divide(imParam[1],imParam[0]),np.divide(obParam[1],obParam[0]))
@@ -326,15 +307,11 @@ def saveIm(ti,dpci,dfi,vis_map,name='name',folder='folder',overWrite=False):
     """
     if not os.path.exists('data/'+folder):
         makedirs('data/'+folder) 
-        print('files saved in folder: ','data/'+folder)
-
-    pyfits.writeto('data/'+folder+'/ti_'+str(name)+'.fits',ti,clobber=overWrite)
-    pyfits.writeto('data/'+folder+'/dpci_'+str(name)+'.fits',dpci,clobber=overWrite)
-    pyfits.writeto('data/'+folder+'/dfi_'+str(name)+'.fits',dfi,clobber=overWrite)
-    pyfits.writeto('data/'+folder+'/visi_'+str(name)+'.fits',vis_map,clobber=overWrite)
-    
-#    fits.writeto('out.fits', ti, 96)
-    return
+    print('files saved in folder: ','data/'+folder)
+    fits.writeto('data/'+folder+'/ti_'+str(name)+'.fits',ti,clobber=overWrite)
+    fits.writeto('data/'+folder+'/dpci_'+str(name)+'.fits',dpci,clobber=overWrite)
+    fits.writeto('data/'+folder+'/dfi_'+str(name)+'.fits',dfi,clobber=overWrite)
+    fits.writeto('data/'+folder+'/visi_'+str(name)+'.fits',vis_map,clobber=overWrite)
     
 def binning(stack_im,stack_ob,bin_fac=None):
     
