@@ -355,6 +355,7 @@ def binning(stack_im,stack_ob,bin_fac=None):
 def med_filt_z(stack_im,stack_ob,filter_size=1):
     """
     med_filt_z()
+    A median filter that does not filter the actual 2 image dimensions, but takes the 3D array and filters in direction of the sine oscillation
     """
     
     shapeStack_ob = np.shape(stack_ob)
