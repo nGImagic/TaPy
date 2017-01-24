@@ -6,3 +6,4 @@ Required python repositories:
 - numpy
 - matplotlib
 - pyfits
+- scipy
