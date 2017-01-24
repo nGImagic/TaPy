@@ -239,7 +239,7 @@ def reductionMatrix(stack_im,stack_ob):
 
 def createIm_fft(stack_im,stack_ob):
     """
-        reductionFourier(): it applies the fourier component analysis to retrieve dfi, ti, dpci and visibility map
+        createIm_fft(): it applies the fourier component analysis to retrieve dfi, ti, dpci and visibility map
         
         """
     ## Projection
