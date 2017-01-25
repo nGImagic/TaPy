@@ -101,11 +101,13 @@ def read_data(path_im,path_ob,path_dc):
 
 xROI,yROI,thickROI,heightROI=10,10,35,35 #parameter for roi
    
-def roi(im,xROI,yROI,thickROI,heightROI,show=False,titleOne='Original image with selected ROI',titleTwo='ROI'):
+def roi(im,xROI,yROI,thickROI,heightROI,show=False,titleOne='Original image with selected ROI',titleTwo='ROI',shape=False):
     """
     roi() takes a SINGLE image and crops it 
     (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
     """
+    if shape:
+        print(im.shape)
     if (0<=xROI<=im.shape[0] and 0<=xROI+thickROI<=im.shape[0] and 0<=yROI<=im.shape[1] and 0<=yROI+heightROI<=im.shape[1]):
         imROI = im[yROI:yROI+heightROI,xROI:xROI+thickROI]
         if show:
@@ -137,7 +139,7 @@ def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=he
     cropped() takes a stack of data,ob and dark currenr and crops them 
     (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
     """
-    stack_im_ar = [roi(im=stack_im[0],xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True,titleTwo='Cropped region')]
+    stack_im_ar = [roi(im=stack_im[0],xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True,titleTwo='Cropped region',shape=True)]
     for i in stack_im[1:]:
         stack_im_ar.append(roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False))
 #    stack_im_ar = [roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True) for i in stack_im]
@@ -170,10 +172,20 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightRO
     """
     titleOne='Area for oscillation'
     titleTwo='Oscillation plot'
-    area = abs(thickROI*heightROI)
-    stack_ob_ar = [l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/area for l in stack_ob] 
-    stack_im_ar = [l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/area for l in stack_im] 
+#    area = abs(thickROI*heightROI)
+#    stack_ob_ar = [l[yROI:yROI+heightROI,xROI:xROI+thickROI].sum()/area for l in stack_ob] 
+#    print('stack_ob_ar:',stack_ob_ar)
+
+    stack_ob_ar = [l[yROI:yROI+heightROI,xROI:xROI+thickROI].mean() for l in stack_ob] 
+
+#    stack_im_ar = [l[yROI:yROI+heightROI,xROI:xROI+thickROI].sum()/area for l in stack_im] 
+    stack_im_ar = [l[yROI:yROI+heightROI,xROI:xROI+thickROI].mean() for l in stack_im] 
+
+#    print('stack_ob_ar:',stack_ob_ar)
+#    print( 'stack_im_ar',stack_im_ar)
     if repeatedPeriod:
+        stack_ob_ar += stack_ob_ar[1:]  #without step
+        stack_im_ar += stack_im_ar[1:]  #without step
         stack_ob_ar += stack_ob_ar
         stack_im_ar += stack_im_ar
         titleTwo += ' repetead period'
