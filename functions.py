@@ -184,8 +184,8 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightRO
 #    print('stack_ob_ar:',stack_ob_ar)
 #    print( 'stack_im_ar',stack_im_ar)
     if repeatedPeriod:
-        stack_ob_ar += stack_ob_ar[1:]  #without step
-        stack_im_ar += stack_im_ar[1:]  #without step
+#        stack_ob_ar += stack_ob_ar[1:]  #without step
+#        stack_im_ar += stack_im_ar[1:]  #without step
         stack_ob_ar += stack_ob_ar
         stack_im_ar += stack_im_ar
         titleTwo += ' repetead period'
@@ -212,6 +212,7 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightRO
     ax2.legend(loc=1, shadow=True)
     ax2.set_title(titleTwo)
     ax2.set_xlim((0,len(stack_ob_ar)+2))
+    ax2.grid(True)
     plt.tight_layout()
     plt.show()
     if folder:
