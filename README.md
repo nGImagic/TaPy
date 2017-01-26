@@ -1,6 +1,6 @@
 # nGI_magic
 
-Required python repositories:
+Required python3 repositories:
 - os
 - PIL
 - numpy
