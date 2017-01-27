@@ -5,13 +5,19 @@ Created on Fri Jan  6 15:42:58 2017
 
 @author: harti and valsecchi
 """
-from functions import read_data,cropped,createIm,normalization,saveIm,binning,oscillation,createIm_fft,med_filt_z
+from functions import read_data,cropped,createIm,normalization,saveIm,binning,oscillation,createIm_fft
 from pixelwiseDPC import pixelWiseDPC,pixelWisePC
 import numpy as np
 #path_ob = '/Users/valsecchi/Dropbox/B0A/OBspin_OFF'
 #path_im = '/Users/valsecchi/Dropbox/B0A/Sample_spin_OFF'
 #path_dc = '/Users/valsecchi/Documents/PSI/BOA_FOLDER/BOA_DICEMBRE/Data/01_firstSlot/LASER_IN/04_brp_dark'#'data/DCs'
 
+<<<<<<< HEAD
+=======
+path_ob = 'data/data_OB_noise_snr10'
+path_im = 'data/data_smp_noise_snr10'
+path_dc = ''#'data/DCs'
+>>>>>>> ralph
 
 #path_ob = '/Users/valsecchi/nGI_magic/data/data_OB'
 #path_im = '/Users/valsecchi/nGI_magic/data/data_smp'
@@ -38,7 +44,18 @@ oscillation(im,ob,*oscillationParam,repeatedPeriod=True)
 #print(np.shape(im))
 
 #im, ob = binning(im,ob,bin_fac)
+<<<<<<< HEAD
 #im, ob = med_filt_z(im,ob,3)
 #ti, dpci, dfi, vis_map = createIm(im,ob)
 #ti, dpci, dfi, vis_map = createIm_fft(im,ob)
 #saveIm(ti, dpci, dfi, vis_map,name='name',folder='med_filt',overWrite=True)
+=======
+#im, ob = win_filt_z(im,ob)
+ti, dpci, dfi, vis_map = createIm(im,ob)
+#ti, dpci, dfi, vis_map = createIm_fft(im,ob)
+oscillation(im,ob,5,5,2,2)
+saveIm(ti, dpci, dfi, vis_map,name='name',folder='folder',overWrite=True)
+
+
+
+>>>>>>> ralph

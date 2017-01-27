@@ -16,7 +16,7 @@ from os import makedirs
 from astropy.io import fits 
 import h5py
 from pathlib import Path
-from scipy.signal import medfilt
+from scipy.signal import medfilt,wiener
 
 
 
@@ -365,24 +365,38 @@ def binning(stack_im,stack_ob,bin_fac=None):
     return stack_im_bin, stack_ob_bin
 
 
-def med_filt_z(stack_im,stack_ob,filter_size=1):
+def win_filt_z(stack_im,stack_ob):
     """
+<<<<<<< HEAD
     med_filt_z()
     A median filter that does not filter the actual 2 image dimensions, but takes the 3D array and filters in direction of the sine oscillation
+=======
+    med_filt_z(): Only use for very low DFI values and test before use to see if the results are better!!!
+>>>>>>> ralph
     """
-    
+    shapeStack_ob_org = np.shape(stack_ob)
+    stack_ob=np.append(stack_ob,np.delete(stack_ob,0,0), axis=0)
     shapeStack_ob = np.shape(stack_ob)
     
+    
     stack_obReshaped = np.reshape(stack_ob,[shapeStack_ob[0],shapeStack_ob[1]*shapeStack_ob[2]])
-    stack_obReshaped = medfilt(stack_obReshaped,(filter_size,1))
-    ob = np.reshape(stack_obReshaped, [shapeStack_ob[0], shapeStack_ob[1],shapeStack_ob[2]])
+#    stack_obReshaped = medfilt(stack_obReshaped,(filter_size,1))
+    stack_obReshaped = wiener(stack_obReshaped,[3,1])
+    stack_obReshaped = np.split(stack_obReshaped,[-(shapeStack_ob_org[0]-1)],0)[0]
+
+
+    ob = np.reshape(stack_obReshaped, [shapeStack_ob_org[0], shapeStack_ob_org[1],shapeStack_ob_org[2]])
     
-    
+    shapeStack_im_org = np.shape(stack_im)
+    stack_im=np.append(stack_im,np.delete(stack_im,0,0), axis=0)
     shapeStack_im = np.shape(stack_im)
     
+    
     stack_imReshaped = np.reshape(stack_im,[shapeStack_im[0],shapeStack_im[1]*shapeStack_im[2]])
-    stack_imReshaped = medfilt(stack_imReshaped,(filter_size,1))
-    im = np.reshape(stack_imReshaped, [shapeStack_im[0], shapeStack_im[1],shapeStack_im[2]])
+#    stack_imReshaped = medfilt(stack_imReshaped,(filter_size,1))
+    stack_imReshaped = wiener(stack_imReshaped,[3,1])
+    stack_imReshaped = np.split(stack_imReshaped,[-(shapeStack_im_org[0]-1)],0)[0]
+    im = np.reshape(stack_imReshaped, [shapeStack_im_org[0], shapeStack_im_org[1],shapeStack_im_org[2]])
     
     return im, ob
     
