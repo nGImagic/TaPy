@@ -392,5 +392,3 @@ def win_filt_z(stack_im,stack_ob):
     im = np.reshape(stack_imReshaped, [shapeStack_im_org[0], shapeStack_im_org[1],shapeStack_im_org[2]])
     
     return im, ob
-    
-    
