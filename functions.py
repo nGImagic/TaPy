@@ -367,12 +367,7 @@ def binning(stack_im,stack_ob,bin_fac=None):
 
 def win_filt_z(stack_im,stack_ob):
     """
-<<<<<<< HEAD
-    med_filt_z()
-    A median filter that does not filter the actual 2 image dimensions, but takes the 3D array and filters in direction of the sine oscillation
-=======
     med_filt_z(): Only use for very low DFI values and test before use to see if the results are better!!!
->>>>>>> ralph
     """
     shapeStack_ob_org = np.shape(stack_ob)
     stack_ob=np.append(stack_ob,np.delete(stack_ob,0,0), axis=0)
@@ -380,7 +375,6 @@ def win_filt_z(stack_im,stack_ob):
     
     
     stack_obReshaped = np.reshape(stack_ob,[shapeStack_ob[0],shapeStack_ob[1]*shapeStack_ob[2]])
-#    stack_obReshaped = medfilt(stack_obReshaped,(filter_size,1))
     stack_obReshaped = wiener(stack_obReshaped,[3,1])
     stack_obReshaped = np.split(stack_obReshaped,[-(shapeStack_ob_org[0]-1)],0)[0]
 
@@ -393,7 +387,6 @@ def win_filt_z(stack_im,stack_ob):
     
     
     stack_imReshaped = np.reshape(stack_im,[shapeStack_im[0],shapeStack_im[1]*shapeStack_im[2]])
-#    stack_imReshaped = medfilt(stack_imReshaped,(filter_size,1))
     stack_imReshaped = wiener(stack_imReshaped,[3,1])
     stack_imReshaped = np.split(stack_imReshaped,[-(shapeStack_im_org[0]-1)],0)[0]
     im = np.reshape(stack_imReshaped, [shapeStack_im_org[0], shapeStack_im_org[1],shapeStack_im_org[2]])
