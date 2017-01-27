@@ -99,17 +99,17 @@ def read_data(path_im,path_ob,path_dc):
 
 
 
-xROI,yROI,thickROI,heightROI=10,10,35,35 #parameter for roi
+xROI,yROI,widthROI,heightROI=10,10,35,35 #parameter for roi
    
-def roi(im,xROI,yROI,thickROI,heightROI,show=False,titleOne='Original image with selected ROI',titleTwo='ROI',shape=False):
+def roi(im,xROI,yROI,widthROI,heightROI,show=False,titleOne='Original image with selected ROI',titleTwo='ROI',shape=False):
     """
     roi() takes a SINGLE image and crops it 
     (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
     """
     if shape:
         print(im.shape)
-    if (0<=xROI<=im.shape[0] and 0<=xROI+thickROI<=im.shape[0] and 0<=yROI<=im.shape[1] and 0<=yROI+heightROI<=im.shape[1]):
-        imROI = im[yROI:yROI+heightROI,xROI:xROI+thickROI]
+    if (0<=xROI<=im.shape[0] and 0<=xROI+widthROI<=im.shape[0] and 0<=yROI<=im.shape[1] and 0<=yROI+heightROI<=im.shape[1]):
+        imROI = im[yROI:yROI+heightROI,xROI:xROI+widthROI]
         if show:
             vmin,vmax=im.min(),im.max()
             cmap='gray'
@@ -119,12 +119,12 @@ def roi(im,xROI,yROI,thickROI,heightROI,show=False,titleOne='Original image with
             ax2 = plt.subplot(gs[1])
 #            fig,(ax,ax2) = plt.subplots(1,2,sharex=False,sharey=False,figsize=(15,10))
             ax.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)
-            rectNorm = patches.Rectangle((xROI,yROI),thickROI,heightROI,linewidth=1,edgecolor='m',facecolor='none')
+            rectNorm = patches.Rectangle((xROI,yROI),widthROI,heightROI,linewidth=1,edgecolor='m',facecolor='none')
             ax.add_patch(rectNorm)
             ax.set_title(titleOne)
             ax2.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)
             ax2.set_title(titleTwo)
-            ax2.set_xlim([xROI,xROI+thickROI])
+            ax2.set_xlim([xROI,xROI+widthROI])
             ax2.set_ylim([yROI+heightROI,yROI])
             plt.tight_layout()
             plt.show()
@@ -134,52 +134,52 @@ def roi(im,xROI,yROI,thickROI,heightROI,show=False,titleOne='Original image with
         print('!!!WARNING!!! \nROI out of range')
 
 
-def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI):
+def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI):
     """
     cropped() takes a stack of data,ob and dark currenr and crops them 
     (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
     """
-    stack_im_ar = [roi(im=stack_im[0],xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True,titleTwo='Cropped region',shape=True)]
+    stack_im_ar = [roi(im=stack_im[0],xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=True,titleTwo='Cropped region',shape=True)]
     for i in stack_im[1:]:
-        stack_im_ar.append(roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False))
-#    stack_im_ar = [roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True) for i in stack_im]
+        stack_im_ar.append(roi(im=i,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=False))
+#    stack_im_ar = [roi(im=i,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=True) for i in stack_im]
     
-    stack_ob_ar = [roi(im=i,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=False) for i in stack_ob]
+    stack_ob_ar = [roi(im=i,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=False) for i in stack_ob]
     
     
     return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
 
     
-def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,show=True):
+def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=True):
     """
     normalization()
     """
-    area = abs(thickROI*heightROI)  
+    area = abs(widthROI*heightROI)  
     stack_im_ar = []    
-    roi(stack_im[0],xROI,yROI,thickROI,heightROI,show,titleTwo='Area for normalization')
-    stack_im_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/area) for l in stack_im]   
-    stack_ob_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+thickROI+1].sum()/area) for l in stack_ob] 
+    roi(stack_im[0],xROI,yROI,widthROI,heightROI,show,titleTwo='Area for normalization')
+    stack_im_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+widthROI+1].sum()/area) for l in stack_im]   
+    stack_ob_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+widthROI+1].sum()/area) for l in stack_ob] 
     return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
 
-def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightROI=heightROI,repeatedPeriod=False,folder=False):
+def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,repeatedPeriod=False,folder=False):
     """
    stack_im is the data stack
    stack_ob is the open beam stack
-   xROI,yROI,thickROI,heightROI is the rectangle of the ROI for the oscillation plot and (xROI,yROI) is the upper left corner
+   xROI,yROI,widthROI,heightROI is the rectangle of the ROI for the oscillation plot and (xROI,yROI) is the upper left corner
    repeatedPeriod=bool  double the period of the stack appendind to the end of the first
    folder is the folder where you want to save the plot if False it does not save
     
     """
     titleOne='Area for oscillation'
     titleTwo='Oscillation plot'
-#    area = abs(thickROI*heightROI)
-#    stack_ob_ar = [l[yROI:yROI+heightROI,xROI:xROI+thickROI].sum()/area for l in stack_ob] 
+#    area = abs(widthROI*heightROI)
+#    stack_ob_ar = [l[yROI:yROI+heightROI,xROI:xROI+widthROI].sum()/area for l in stack_ob] 
 #    print('stack_ob_ar:',stack_ob_ar)
 
-    stack_ob_ar = [l[yROI:yROI+heightROI,xROI:xROI+thickROI].mean() for l in stack_ob] 
+    stack_ob_ar = [l[yROI:yROI+heightROI,xROI:xROI+widthROI].mean() for l in stack_ob] 
 
-#    stack_im_ar = [l[yROI:yROI+heightROI,xROI:xROI+thickROI].sum()/area for l in stack_im] 
-    stack_im_ar = [l[yROI:yROI+heightROI,xROI:xROI+thickROI].mean() for l in stack_im] 
+#    stack_im_ar = [l[yROI:yROI+heightROI,xROI:xROI+widthROI].sum()/area for l in stack_im] 
+    stack_im_ar = [l[yROI:yROI+heightROI,xROI:xROI+widthROI].mean() for l in stack_im] 
 
 #    print('stack_ob_ar:',stack_ob_ar)
 #    print( 'stack_im_ar',stack_im_ar)
@@ -200,7 +200,7 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,thickROI=thickROI,heightRO
     ax2 = plt.subplot(gs[1])
 #            fig,(ax,ax2) = plt.subplots(1,2,sharex=False,sharey=False,figsize=(15,10))
     ax.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)
-    rectNorm = patches.Rectangle((xROI,yROI),thickROI,heightROI,linewidth=1,edgecolor='m',facecolor='none')
+    rectNorm = patches.Rectangle((xROI,yROI),widthROI,heightROI,linewidth=1,edgecolor='m',facecolor='none')
     ax.add_patch(rectNorm)
     ax.set_title(titleOne)
     rangeim = range(1,len(stack_im_ar)+1)
