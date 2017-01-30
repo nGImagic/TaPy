@@ -135,12 +135,12 @@ def roi(im,xROI,yROI,widthROI,heightROI,show=False,titleOne='Original image with
         print('!!!WARNING!!! \nROI out of range')
 
 
-def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI):
+def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=True):
     """
     cropped() takes a stack of data,ob and dark currenr and crops them 
     (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
     """
-    stack_im_ar = [roi(im=stack_im[0],xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=True,titleTwo='Cropped region',shape=True)]
+    stack_im_ar = [roi(im=stack_im[0],xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=show,titleTwo='Cropped region',shape=True)]
     for i in stack_im[1:]:
         stack_im_ar.append(roi(im=i,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=False))
 #    stack_im_ar = [roi(im=i,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=True) for i in stack_im]
@@ -162,7 +162,7 @@ def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,height
     
     return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
 
-def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,repeatedPeriod=False,folder=False):
+def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,repeatedPeriod=False,folder=False,show=True):
     """
    stack_im is the data stack
    stack_ob is the open beam stack
@@ -184,34 +184,38 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightRO
         titleTwo += ' repetead period'
 #    PLOT oscillation
     im = stack_im[0]
-    vmin,vmax=im.min(),im.max()
-    cmap='gray'
-    fig = plt.figure(figsize=(15,10)) 
-    gs = gridspec.GridSpec(1,2,width_ratios=[2,1],height_ratios=[1,1]) 
-    ax = plt.subplot(gs[0])
-    ax2 = plt.subplot(gs[1])
-    ax.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)
-    rectNorm = patches.Rectangle((xROI,yROI),widthROI,heightROI,linewidth=1,edgecolor='m',facecolor='none')
-    ax.add_patch(rectNorm)
-    ax.set_title(titleOne)
-    rangeim = range(1,len(stack_im_ar)+1)
-    ax2.plot(rangeim,stack_im_ar,color='g',label='data')
-    ax2.scatter(rangeim,stack_im_ar,marker='*',color='g')
-    rangeob = range(1,len(stack_ob_ar)+1)
-    ax2.plot(rangeob,stack_ob_ar,color='b',label='ob')
-    ax2.scatter(rangeob,stack_ob_ar,color='b')
-    ax2.legend(loc=1, shadow=True)
-    ax2.set_title(titleTwo)
-    ax2.set_xlim((0,len(stack_ob_ar)+2))
-    ax2.grid(True)
-    plt.tight_layout()
-    plt.show()
-    if folder:
-        if not os.path.exists('data/'+folder):
-            makedirs('data/'+folder) 
-            print('files saved in folder: ','data/'+folder)
-        fig.savefig('data/'+folder+'/oscillationPlot_X'+str(xROI)+'Y'+str(yROI)+'.png', bbox_inches='tight')
-    plt.close('all')
+    if (0<=xROI<=im.shape[1] and 0<=xROI+widthROI<=im.shape[1] and 0<=yROI<=im.shape[0] and 0<=yROI+heightROI<=im.shape[0]):
+        vmin,vmax=im.min(),im.max()
+        cmap='gray'
+        fig = plt.figure(figsize=(15,10)) 
+        gs = gridspec.GridSpec(1,2,width_ratios=[2,1],height_ratios=[1,1]) 
+        ax = plt.subplot(gs[0])
+        ax2 = plt.subplot(gs[1])
+        ax.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)
+        rectNorm = patches.Rectangle((xROI,yROI),widthROI,heightROI,linewidth=1,edgecolor='m',facecolor='none')
+        ax.add_patch(rectNorm)
+        ax.set_title(titleOne)
+        rangeim = range(1,len(stack_im_ar)+1)
+        ax2.plot(rangeim,stack_im_ar,color='g',label='data')
+        ax2.scatter(rangeim,stack_im_ar,marker='*',color='g')
+        rangeob = range(1,len(stack_ob_ar)+1)
+        ax2.plot(rangeob,stack_ob_ar,color='b',label='ob')
+        ax2.scatter(rangeob,stack_ob_ar,color='b')
+        ax2.legend(loc=1, shadow=True)
+        ax2.set_title(titleTwo)
+        ax2.set_xlim((0,len(stack_ob_ar)+2))
+        ax2.grid(True)
+        plt.tight_layout()
+        if show:
+            plt.show()
+        if folder:
+            if not os.path.exists(folder):
+                makedirs(folder) 
+                print('files saved in folder: ',folder)
+            fig.savefig(folder+'/oscillationPlot_X'+str(xROI)+'Y'+str(yROI)+'.png', bbox_inches='tight')
+        plt.close('all')
+    else:
+        print('!!!WARNING!!! \nROI out of range')
     
 
 def matrix(stack_im,numberPeriods):
@@ -314,13 +318,13 @@ def createIm(stack_im,stack_ob,numberPeriods):
 def saveIm(ti,dpci,dfi,vis_map,name='name',folder='folder',overWrite=False):
     """
     """
-    if not os.path.exists('data/'+folder):
-        makedirs('data/'+folder) 
-    print('files saved in folder: ','data/'+folder)
-    fits.writeto('data/'+folder+'/ti_'+str(name)+'.fits',ti,clobber=overWrite)
-    fits.writeto('data/'+folder+'/dpci_'+str(name)+'.fits',dpci,clobber=overWrite)
-    fits.writeto('data/'+folder+'/dfi_'+str(name)+'.fits',dfi,clobber=overWrite)
-    fits.writeto('data/'+folder+'/visi_'+str(name)+'.fits',vis_map,clobber=overWrite)
+    if not os.path.exists(folder):
+        makedirs(folder) 
+    print('files saved in folder: ',folder)
+    fits.writeto(folder+'/ti_'+str(name)+'.fits',ti,clobber=overWrite)
+    fits.writeto(folder+'/dpci_'+str(name)+'.fits',dpci,clobber=overWrite)
+    fits.writeto(folder+'/dfi_'+str(name)+'.fits',dfi,clobber=overWrite)
+    fits.writeto(folder+'/visi_'+str(name)+'.fits',vis_map,clobber=overWrite)
     
 def binning(stack_im,stack_ob,bin_fac=None):
     """
