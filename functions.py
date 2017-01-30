@@ -59,7 +59,7 @@ def read_data(path_im,path_ob,path_dc):
         filenames_dc.sort()
         for name in filenames_dc:
             full_path_name = path_dc+'/'+name
-            print(full_path_name)
+#            print(full_path_name)
             im_a1.append(readRead(full_path_name))
         im_a1 = np.asarray(im_a1)
         im_a1 = np.sum(im_a1,axis=0)/np.shape(im_a1)[0]
@@ -70,7 +70,7 @@ def read_data(path_im,path_ob,path_dc):
     stack_ob = []
     for name in filenames_ob:
         full_path_name = path_ob+'/'+name
-        print(full_path_name)
+#        print(full_path_name)
         if path_dc:
             stack_ob.append(readRead(full_path_name,im_a1)) #with dc
         else:
@@ -84,7 +84,7 @@ def read_data(path_im,path_ob,path_dc):
     stack_im_ar = []
     for name in filenames_im:
         full_path_name = path_im+'/'+name
-        print(full_path_name)
+#        print(full_path_name)
         if path_dc:
             stack_im_ar.append(readRead(full_path_name,im_a1)) #with dc
         else:
@@ -108,7 +108,7 @@ def roi(im,xROI,yROI,widthROI,heightROI,show=False,titleOne='Original image with
     """
     if shape:
         print(im.shape)
-    if (0<=xROI<=im.shape[0] and 0<=xROI+widthROI<=im.shape[0] and 0<=yROI<=im.shape[1] and 0<=yROI+heightROI<=im.shape[1]):
+    if (0<=xROI<=im.shape[1] and 0<=xROI+widthROI<=im.shape[1] and 0<=yROI<=im.shape[0] and 0<=yROI+heightROI<=im.shape[0]):
         imROI = im[yROI:yROI+heightROI,xROI:xROI+widthROI]
         if show:
             vmin,vmax=im.min(),im.max()
@@ -129,6 +129,7 @@ def roi(im,xROI,yROI,widthROI,heightROI,show=False,titleOne='Original image with
             plt.tight_layout()
             plt.show()
             plt.close('all')
+      
         return(imROI)
     else:
         print('!!!WARNING!!! \nROI out of range')
@@ -146,7 +147,6 @@ def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=he
     
     stack_ob_ar = [roi(im=i,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=False) for i in stack_ob]
     
-    
     return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
 
     
@@ -159,6 +159,7 @@ def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,height
     roi(stack_im[0],xROI,yROI,widthROI,heightROI,show,titleTwo='Area for normalization')
     stack_im_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+widthROI+1].sum()/area) for l in stack_im]   
     stack_ob_ar = [l/(l[yROI:yROI+heightROI+1,xROI:xROI+widthROI+1].sum()/area) for l in stack_ob] 
+    
     return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
 
 def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,repeatedPeriod=False,folder=False):
