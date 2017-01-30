@@ -414,4 +414,4 @@ def splitNewRoutine_BOA(path,firstSpinFlipperON=True):
         for odd in filenames[::2]:
             os.rename(path+'/'+odd,path+'/'+spin_ON+'/'+odd)
         for even in filenames[1::2]:
-            os.rename(path+'/'+even,path+'/'+spin_OFF+'/'+even)
+            os.rename(path+'/'+even,path+'/'+spin_OFF+'/'+even) 

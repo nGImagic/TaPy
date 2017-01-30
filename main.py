@@ -36,5 +36,3 @@ ti, dpci, dfi, vis_map = createIm(im,ob)
 #ti, dpci, dfi, vis_map = createIm_fft(im,ob)
 oscillation(im,ob,5,5,2,2)
 saveIm(ti, dpci, dfi, vis_map,name='name',folder='folder',overWrite=True)
-
-
