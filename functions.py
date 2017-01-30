@@ -214,13 +214,11 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightRO
     plt.close('all')
     
 
-def matrix(stack_im):
+def matrix(stack_im,numberPeriods):
     """
     """
     shapeStack = np.shape(stack_im)
     B = np.zeros((shapeStack[0],3))  
-    numberPeriods = 1
-    ###TODO: function for number of periods
     
     stack_imReshaped = np.reshape(stack_im,[shapeStack[0],shapeStack[1]*shapeStack[2]])
     rangeStack = range(shapeStack[0])
@@ -240,11 +238,11 @@ def matrix(stack_im):
     phi = np.reshape(np.arctan((np.asarray(absPhase)/np.asarray(absoluteAmpl))),[shapeStack[1],shapeStack[2]])
     return a0,a1,phi
      
-def reductionMatrix(stack_im,stack_ob):
+def reductionMatrix(stack_im,stack_ob,numberPeriods):
     """
     reductionMatrix(): it applies matrix() to both stacks im and ob
     """
-    return (matrix(stack_im),matrix(stack_ob))
+    return (matrix(stack_im,numberPeriods),matrix(stack_ob,numberPeriods))
 
 def createIm_fft(stack_im,stack_ob):
     """
@@ -303,10 +301,10 @@ def createIm_fft(stack_im,stack_ob):
     return ti, dpci, dfi, visi
 
 
-def createIm(stack_im,stack_ob):
+def createIm(stack_im,stack_ob,numberPeriods):
     """
     """
-    imParam,obParam = reductionMatrix(stack_im,stack_ob)
+    imParam,obParam = reductionMatrix(stack_im,stack_ob,numberPeriods)
     TI = np.divide(imParam[0],obParam[0])
     DPCI = imParam[2]-obParam[2]
     DFI = np.divide(np.divide(imParam[1],imParam[0]),np.divide(obParam[1],obParam[0]))
