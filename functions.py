@@ -172,24 +172,15 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightRO
     """
     titleOne='Area for oscillation'
     titleTwo='Oscillation plot'
-#    area = abs(widthROI*heightROI)
-#    stack_ob_ar = [l[yROI:yROI+heightROI,xROI:xROI+widthROI].sum()/area for l in stack_ob] 
-#    print('stack_ob_ar:',stack_ob_ar)
-
     stack_ob_ar = [l[yROI:yROI+heightROI,xROI:xROI+widthROI].mean() for l in stack_ob] 
-
-#    stack_im_ar = [l[yROI:yROI+heightROI,xROI:xROI+widthROI].sum()/area for l in stack_im] 
     stack_im_ar = [l[yROI:yROI+heightROI,xROI:xROI+widthROI].mean() for l in stack_im] 
 
-#    print('stack_ob_ar:',stack_ob_ar)
-#    print( 'stack_im_ar',stack_im_ar)
     if repeatedPeriod:
 #        stack_ob_ar += stack_ob_ar[1:]  #without step
 #        stack_im_ar += stack_im_ar[1:]  #without step
         stack_ob_ar += stack_ob_ar
         stack_im_ar += stack_im_ar
         titleTwo += ' repetead period'
-    
 #    PLOT oscillation
     im = stack_im[0]
     vmin,vmax=im.min(),im.max()
@@ -198,7 +189,6 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightRO
     gs = gridspec.GridSpec(1,2,width_ratios=[2,1],height_ratios=[1,1]) 
     ax = plt.subplot(gs[0])
     ax2 = plt.subplot(gs[1])
-#            fig,(ax,ax2) = plt.subplots(1,2,sharex=False,sharey=False,figsize=(15,10))
     ax.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)
     rectNorm = patches.Rectangle((xROI,yROI),widthROI,heightROI,linewidth=1,edgecolor='m',facecolor='none')
     ax.add_patch(rectNorm)
@@ -219,7 +209,7 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightRO
         if not os.path.exists('data/'+folder):
             makedirs('data/'+folder) 
             print('files saved in folder: ','data/'+folder)
-        fig.savefig('data/'+folder+'/oscillationPlot.png', bbox_inches='tight')
+        fig.savefig('data/'+folder+'/oscillationPlot_X'+str(xROI)+'Y'+str(yROI)+'.png', bbox_inches='tight')
     plt.close('all')
     
 
