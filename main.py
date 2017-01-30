@@ -10,10 +10,13 @@ from pixelwiseDPC import pixelWiseDPC,pixelWisePC
 import numpy as np
 
 
+#path_ob = 'data/data_OB'
+#path_im = 'data/data_smp'
+#path_dc = ''#'data/DCs'
+
 path_ob = 'data/data_OB'
 path_im = 'data/data_smp'
 path_dc = ''#'data/DCs'
-
 
 path_dc = ''#'data/DCs'
 bin_fac = None                 # no binning either 1 or None, 2x2 binning: bin_fac = 2
