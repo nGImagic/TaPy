@@ -111,7 +111,9 @@ def roi(im,xROI,yROI,widthROI,heightROI,show=False,titleOne='Original image with
     if (0<=xROI<=im.shape[1] and 0<=xROI+widthROI<=im.shape[1] and 0<=yROI<=im.shape[0] and 0<=yROI+heightROI<=im.shape[0]):
         imROI = im[yROI:yROI+heightROI,xROI:xROI+widthROI]
         if show:
-            vmin,vmax=im.min(),im.max()
+#            vmin,vmax=im.min(),im.max()
+            vmin,vmax=np.mean(im)-2*np.std(im),np.mean(im)+2*np.std(im)
+            print(vmax, vmin)
             cmap='gray'
             fig = plt.figure(figsize=(15,10)) 
             gs = gridspec.GridSpec(1, 2,width_ratios=[4,1],height_ratios=[1,1]) 
