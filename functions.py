@@ -22,8 +22,16 @@ from scipy.signal import medfilt,wiener
 
 def readRead(path,dc=0):
     """
-    readRead()
+    Read 
     
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----
     """
     my_file = Path(path)
     if my_file.is_file():
@@ -49,8 +57,14 @@ def readRead(path,dc=0):
     
 def read_data(path_im,path_ob,path_dc):
     """
-    read()
-    """
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----    """
 #    Dark current
     imExt = ['.fits','.tiff','.tif','.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5']
     if path_dc:
@@ -105,6 +119,15 @@ def roi(im,xROI,yROI,widthROI,heightROI,show=False,titleOne='Original image with
     """
     roi() takes a SINGLE image and crops it 
     (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
+    
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----
     """
     if shape:
         print(im.shape)
@@ -141,6 +164,16 @@ def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=he
     """
     cropped() takes a stack of data,ob and dark currenr and crops them 
     (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
+   
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----
+    
     """
     stack_im_ar = [roi(im=stack_im[0],xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=show,titleTwo='Cropped region',shape=True)]
     for i in stack_im[1:]:
@@ -155,6 +188,15 @@ def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=he
 def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=True):
     """
     normalization()
+   
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----
     """
     area = abs(widthROI*heightROI)  
     stack_im_ar = []    
@@ -171,7 +213,15 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightRO
    xROI,yROI,widthROI,heightROI is the rectangle of the ROI for the oscillation plot and (xROI,yROI) is the upper left corner
    repeatedPeriod=bool  double the period of the stack appendind to the end of the first
    folder is the folder where you want to save the plot if False it does not save
-    
+   
+   Parameters
+   ----------
+
+   Returns
+   -------
+
+   Notes
+   -----    
     """
     titleOne='Area for oscillation'
     titleTwo='Oscillation plot'
@@ -222,6 +272,14 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightRO
 
 def matrix(stack_im,numberPeriods):
     """
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----
     """
     shapeStack = np.shape(stack_im)
     B = np.zeros((shapeStack[0],3))  
@@ -247,14 +305,31 @@ def matrix(stack_im,numberPeriods):
 def reductionMatrix(stack_im,stack_ob,numberPeriods):
     """
     reductionMatrix(): it applies matrix() to both stacks im and ob
+   
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----
     """
     return (matrix(stack_im,numberPeriods),matrix(stack_ob,numberPeriods))
 
 def createIm_fft(stack_im,stack_ob):
     """
-        createIm_fft(): it applies the fourier component analysis to retrieve dfi, ti, dpci and visibility map
-        
-        """
+    createIm_fft(): it applies the fourier component analysis to retrieve dfi, ti, dpci and visibility map
+
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----
+    """
     ## Projection
     shapeStack_im = np.shape(stack_im)
     ###TODO: function for number of periods
@@ -309,6 +384,14 @@ def createIm_fft(stack_im,stack_ob):
 
 def createIm(stack_im,stack_ob,numberPeriods):
     """
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----
     """
     imParam,obParam = reductionMatrix(stack_im,stack_ob,numberPeriods)
     TI = np.divide(imParam[0],obParam[0])
@@ -319,6 +402,14 @@ def createIm(stack_im,stack_ob,numberPeriods):
     
 def saveIm(ti,dpci,dfi,vis_map,name='name',folder='folder',overWrite=False):
     """
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----
     """
     if not os.path.exists(folder):
         makedirs(folder) 
@@ -331,6 +422,15 @@ def saveIm(ti,dpci,dfi,vis_map,name='name',folder='folder',overWrite=False):
 def binning(stack_im,stack_ob,bin_fac=None):
     """
     binning()
+    
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----
     """
     num_im,x_im,y_im = np.shape(stack_im)
     stack_im_tmp = list()
@@ -363,6 +463,15 @@ def binning(stack_im,stack_ob,bin_fac=None):
 def win_filt_z(stack_im,stack_ob):
     """
     med_filt_z(): Only use for very low DFI values and test before use to see if the results are better!!!
+   
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----
     """
     shapeStack_ob_org = np.shape(stack_ob)
     stack_ob=np.append(stack_ob,np.delete(stack_ob,0,0), axis=0)
@@ -391,6 +500,15 @@ def win_filt_z(stack_im,stack_ob):
 def splitNewRoutine_BOA(path,firstSpinFlipperON=True):
     """
     when you acquire nGI data at BOA with the new routing (spinON spinOFF and step) this function splits the data into two folders
+   
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----
     """
     import re
     
