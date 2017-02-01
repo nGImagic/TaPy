@@ -14,8 +14,14 @@ def pixelWiseDPC(dpci,p2um=4,d1cm=1.94,lambdaAmstr=4.1):
         d Φ / d x  =       (p2 / λ * d1) φ           
           according to SI 
     
-    Parameters:
-        
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----        
         
     """
     
@@ -29,6 +35,15 @@ def pixelWisePC(dpciUnit,pixelConversion=1,p2um=4,d1cm=1.94,lambdaAmstr=4.1):
     formula:
         ∫ d Φ   =     ∫  (p2 / λ * d1) φ  dx         
     according to SI 
+    
+    Parameters
+    ----------
+    
+    Returns
+    -------
+    
+    Notes
+    -----    
     """
     dphi_over_dxPixel = np.array([scipy.integrate.cumtrapz(line*pixelConversion,initial=0) for line in dpciUnit])
 
