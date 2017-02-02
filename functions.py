@@ -283,7 +283,7 @@ def matrix(stack_im):
     """
     shapeStack = np.shape(stack_im)
     B = np.zeros((shapeStack[0],3))  
-    numberPeriods = 1
+    numberPeriods = 2
     ###TODO: function for number of periods
     
     stack_imReshaped = np.reshape(stack_im,[shapeStack[0],shapeStack[1]*shapeStack[2]])
@@ -398,6 +398,12 @@ def createIm(stack_im,stack_ob):
     imParam,obParam = reductionMatrix(stack_im,stack_ob)
     TI = np.divide(imParam[0],obParam[0])
     DPCI = imParam[2]-obParam[2]
+    DPCI = np.arctan(np.tan(DPCI)) # unwrap solver problem
+#    from skimage.restoration import unwrap_phase
+#    DPCI = unwrap_phase(DPCI)
+#    from unwrap import unwrap
+#    DPCI = unwrap(DPCI,wrap_around_axis_2=True)
+#    DPCI = np.unwrap(DPCI,0.1)
     DFI = np.divide(np.divide(imParam[1],imParam[0]),np.divide(obParam[1],obParam[0]))
     VIS_map = np.divide(obParam[1],obParam[0])
     return TI, DPCI, DFI, VIS_map
