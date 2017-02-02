@@ -396,6 +396,12 @@ def createIm(stack_im,stack_ob,numberPeriods):
     imParam,obParam = reductionMatrix(stack_im,stack_ob,numberPeriods)
     TI = np.divide(imParam[0],obParam[0])
     DPCI = imParam[2]-obParam[2]
+    DPCI = np.arctan(np.tan(DPCI)) # unwrap solver problem
+#    from skimage.restoration import unwrap_phase
+#    DPCI = unwrap_phase(DPCI)
+#    from unwrap import unwrap
+#    DPCI = unwrap(DPCI,wrap_around_axis_2=True)
+#    DPCI = np.unwrap(DPCI,0.1)
     DFI = np.divide(np.divide(imParam[1],imParam[0]),np.divide(obParam[1],obParam[0]))
     VIS_map = np.divide(obParam[1],obParam[0])
     return TI, DPCI, DFI, VIS_map
