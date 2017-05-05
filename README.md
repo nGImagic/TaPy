@@ -1,4 +1,4 @@
-# nGI_magic
+# TaPy
 
 Required python3 repositories:
 - os
