@@ -1,9 +1,12 @@
 # TaPy
 
 Required python3 repositories:
+- numpy
 - os
 - PIL
-- numpy
 - matplotlib
-- pyfits
+- astropy (for fits files)
+- fitsio (for some fits files)
+- h5py (for hdf files)
+- pathlib
 - scipy
