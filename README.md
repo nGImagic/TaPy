@@ -11,3 +11,4 @@ Required python3 repositories:
 - h5py (for hdf files)
 - pathlib
 - scipy
+- re
