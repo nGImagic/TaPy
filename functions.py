@@ -148,13 +148,17 @@ def roi(im,xROI,yROI,widthROI,heightROI,show=False,titleOne='Original image with
     im : array_like
         Input image.
         
-    xROI : x position of the upper left-hand corner in pixel units.
+    xROI : int_like
+        x position of the upper left-hand corner in pixel units.
     
-    yROI : y position of the upper left-hand corner in pixel units.
+    yROI : int_like
+        y position of the upper left-hand corner in pixel units.
     
-    widthROI : width of the recangle in pixel units.
+    widthROI : int_like
+        width of the recangle in pixel units.
     
-    heightROI : height of the recangle in pixel units.
+    heightROI : int_like
+        height of the recangle in pixel units.
     
     show : boolean
         If True it shows the ROI and its position.
@@ -219,13 +223,17 @@ def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=he
     stack_ob : array_like
         Input stack of open beam.
         
-    xROI : x position of the upper left-hand corner in pixel units.
+    xROI : int_like
+        x position of the upper left-hand corner in pixel units.
     
-    yROI : y position of the upper left-hand corner in pixel units.
+    yROI : int_like
+        y position of the upper left-hand corner in pixel units.
     
-    widthROI : width of the recangle in pixel units.
+    widthROI : int_like
+        width of the recangle in pixel units.
     
-    heightROI : height of the recangle in pixel units.
+    heightROI : int_like
+        height of the recangle in pixel units.
     
     show : boolean
         If True it shows the ROI and its position.
@@ -264,13 +272,17 @@ def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,height
     stack_ob : array_like
         Input stack of open beam.
         
-    xROI : x position of the upper left-hand corner in pixel units.
+    xROI : int_like
+        x position of the upper left-hand corner in pixel units.
     
-    yROI : y position of the upper left-hand corner in pixel units.
+    yROI : int_like 
+        y position of the upper left-hand corner in pixel units.
     
-    widthROI : width of the recangle in pixel units.
+    widthROI : int_like
+        width of the recangle in pixel units.
     
-    heightROI : height of the recangle in pixel units.
+    heightROI : int_like
+        height of the recangle in pixel units.
     
     show : boolean
         If True it shows the ROI and its position.
@@ -307,13 +319,17 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightRO
     stack_ob : array_like
         Input stack of open beam.
         
-    xROI : x position of the upper left-hand corner in pixel units.
+    xROI : int_like
+        x position of the upper left-hand corner in pixel units.
     
-    yROI : y position of the upper left-hand corner in pixel units.
+    yROI : int_like
+        y position of the upper left-hand corner in pixel units.
     
-    widthROI : width of the recangle in pixel units.
+    widthROI : int_like
+        width of the recangle in pixel units.
     
-    heightROI : height of the recangle in pixel units.
+    heightROI : int_like
+        height of the recangle in pixel units.
     
     repeatedPeriod : boolean
         If True it plots the oscillation twice.
