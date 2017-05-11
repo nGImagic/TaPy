@@ -159,10 +159,10 @@ def roi(im,xROI,yROI,widthROI,heightROI,show=False,titleOne='Original image with
     show : boolean
         If True it shows the ROI and its position.
         
-    titleOne : string
+    titleOne : string_like
         Title of the ROI position.
         
-    titleTwo : string
+    titleTwo : string_like
         Title of the ROI.
         
     shape : boolean
@@ -209,15 +209,35 @@ def roi(im,xROI,yROI,widthROI,heightROI,show=False,titleOne='Original image with
 
 def cropped(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,show=True):
     """
-    cropped() takes a stack of data,ob and dark currenr and crops them 
-    (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
+    Crop the stacks to the selected ROI 
    
     Parameters
     ----------
+    stack_im : array_like
+        Input stack of projections.
+    
+    stack_ob : array_like
+        Input stack of open beam.
+        
+    xROI : x position of the upper left-hand corner in pixel units.
+    
+    yROI : y position of the upper left-hand corner in pixel units.
+    
+    widthROI : width of the recangle in pixel units.
+    
+    heightROI : height of the recangle in pixel units.
+    
+    show : boolean
+        If True it shows the ROI and its position.
     
     Returns
     -------
+    stack_im_ar : array_like
+            A stack containing all the cropped projections.
     
+    stack_ob_ar : array_like
+            A stack containing all the cropped references.  
+            
     Notes
     -----
     
