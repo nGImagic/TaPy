@@ -39,7 +39,7 @@ We recommend following series of functions for succesful data reduction:
  - "oscillation": This function plots the oscillation of the raw data through the stepping of one grating. You can use it to get an idea of the quality of you motor and visually check the oscillations you use for retrieving the signal.
  - "cropped": Crop the image to a region of interest. This increases the computational speed.
  - "binning": If you would like to bin you data - here you go.
- - "createIm": Take the stack of OBs and projections to create TI, DPCI, DFI and visiblity map.
+ - "createIm": Take the stack of OBs and projections to create TI, DPCI, DFI and visiblity map. The algorithm used in this step is based on Marathe et al. (2014) http://dx.doi.org/10.1063/1.4861199.
  - "saveIm": Save your results.
  
  # Have it your way
