@@ -66,14 +66,31 @@ def readRead(path,dc=0):
     
 def read_data(path_im,path_ob,path_dc):
     """
+    Function to read data from the specified folders, it can read FITS, TIFF and HDF.
+
     Parameters
     ----------
-    
+    path_im : string_like
+            Path of the projection folder.
+            
+    path_ob : string_like
+            Path of the open beam folder.
+            
+    path_dc : string_like
+            Path of the dark current folder.
+            
     Returns
     -------
+    stack_im_ar : array_like
+            A stack containing all the projections.
+    
+    stack_ob : array_like
+            A stack containing all the references.
     
     Notes
-    -----    """
+    -----   
+    It
+    """
 #    Dark current
     imExt = ['.fits','.tiff','.tif','.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5']
     if path_dc:
