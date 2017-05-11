@@ -22,16 +22,24 @@ from scipy.signal import medfilt,wiener
 
 def readRead(path,dc=0):
     """
-    Read 
+    Function to read data from the specified path, it can read FITS, TIFF and HDF.
     
     Parameters
     ----------
+    path : string_like
+            Path of the input file with his extention.
+    dc : array_like
+            An array containing the dark current data.
     
     Returns
     -------
+    readRead : array_like
+            An array containing the read data.
     
     Notes
     -----
+    In case of corrupted header it skips the header and reads the raw data.
+    For the HDF format you need to specify the hierarchy.
     """
     my_file = Path(path)
     if my_file.is_file():
@@ -45,7 +53,8 @@ def readRead(path,dc=0):
         elif path.lower().endswith(('.tiff','.tif')) :
             im_a1.append(np.asarray(Image.open(path)))
         elif path.lower().endswith(('.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5')): 
-            hdf = h5py.File(path,'r')['entry']['data']['data'].value
+            # change here the hierarchy 
+            hdf = h5py.File(path,'r')['entry']['data']['data'].value    
             for iScan in hdf:
                 im_a1.append(iScan)
         else:
@@ -109,8 +118,6 @@ def read_data(path_im,path_ob,path_dc):
             raise ValueError('Data and open beam have different shapes')
         
     return stack_im_ar,stack_ob
-
-
 
 
 xROI,yROI,widthROI,heightROI=10,10,35,35 #parameter for roi
