@@ -402,6 +402,10 @@ def matrix(stack_im,numberPeriods):
     ----------
     stack_im : array_like
         Input stack of projections.
+        
+    numberPeriods : float_like
+        Numbers or fraction of stepped period.
+    
     Returns
     -------
     
