@@ -46,6 +46,6 @@ We recommend following series of functions for succesful data reduction:
  Feel free to develop your own functions and add them to "functions.py". If you need more complex read-in routines to fit your data structure we suggest modifying "main.py". If you think you developed things that could be interesting to the community let us know and we will incorporate it and make it available to everybody.
  
  Contact:
- Ralph P. Harti - ralph.harti@psi.ch
+ Ralph P. Harti - Ralph.Harti@psi.ch
  Jacopo Valsecchi - Jacopo.Valsecchi@psi.ch
  
