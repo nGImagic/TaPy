@@ -33,7 +33,7 @@ def readRead(path,dc=0):
     
     Returns
     -------
-    readRead : array_like
+    im_a1 : array_like
             An array containing the read data.
     
     Notes
@@ -89,7 +89,7 @@ def read_data(path_im,path_ob,path_dc):
     
     Notes
     -----   
-    It
+    File format supported: ['.fits','.tiff','.tif','.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5']
     """
 #    Dark current
     imExt = ['.fits','.tiff','.tif','.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5']
@@ -141,14 +141,37 @@ xROI,yROI,widthROI,heightROI=10,10,35,35 #parameter for roi
    
 def roi(im,xROI,yROI,widthROI,heightROI,show=False,titleOne='Original image with selected ROI',titleTwo='ROI',shape=False):
     """
-    roi() takes a SINGLE image and crops it 
-    (xROI,yROI) is the upper left-hand corner of the cropping rectangle 
+    roi() takes a single image and crops it, (xROI,yROI) is the upper left-hand corner of the rectangle in pixel units.
     
     Parameters
     ----------
+    im : array_like
+        Input image.
+        
+    xROI : x position of the upper left-hand corner in pixel units.
     
+    yROI : y position of the upper left-hand corner in pixel units.
+    
+    widthROI : width of the recangle in pixel units.
+    
+    heightROI : height of the recangle in pixel units.
+    
+    show : boolean
+        If True it shows the ROI and its position.
+        
+    titleOne : string
+        Title of the ROI position.
+        
+    titleTwo : string
+        Title of the ROI.
+        
+    shape : boolean
+        If True it shows the size of the image.
+        
     Returns
     -------
+    imROI : array_like
+        Return the ROI.
     
     Notes
     -----
