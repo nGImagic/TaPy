@@ -297,20 +297,39 @@ def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,height
 
 def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,repeatedPeriod=False,folder=False,show=True):
     """
-   stack_im is the data stack
-   stack_ob is the open beam stack
-   xROI,yROI,widthROI,heightROI is the rectangle of the ROI for the oscillation plot and (xROI,yROI) is the upper left corner
-   repeatedPeriod=bool  double the period of the stack appendind to the end of the first
-   folder is the folder where you want to save the plot if False it does not save
+    Oscillation plot analysis of the selected ROI.
    
-   Parameters
-   ----------
-
-   Returns
-   -------
-
-   Notes
-   -----    
+    Parameters
+    ----------
+    stack_im : array_like
+        Input stack of projections.
+    
+    stack_ob : array_like
+        Input stack of open beam.
+        
+    xROI : x position of the upper left-hand corner in pixel units.
+    
+    yROI : y position of the upper left-hand corner in pixel units.
+    
+    widthROI : width of the recangle in pixel units.
+    
+    heightROI : height of the recangle in pixel units.
+    
+    repeatedPeriod : boolean
+        If True it plots the oscillation twice.
+        
+    folder : string_like or False
+        Path of the folder where to save the oscillation plot, if False it doesn't save the plot.
+    
+    show : boolean
+        If True it shows the ROI and its position.
+    
+    Returns
+    -------
+    Oscillation plot.  
+            
+    Notes
+    -----  
     """
     titleOne='Area for oscillation'
     titleTwo='Oscillation plot'
