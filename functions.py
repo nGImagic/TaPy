@@ -408,6 +408,14 @@ def matrix(stack_im,numberPeriods):
     
     Returns
     -------
+    a0 : array_like
+        Offset.
+        
+    a1 : array_like
+        Amplitude.
+    
+    phi : array_like
+        Phase.
     
     Notes
     -----
@@ -435,13 +443,22 @@ def matrix(stack_im,numberPeriods):
      
 def reductionMatrix(stack_im,stack_ob,numberPeriods):
     """
-    reductionMatrix(): it applies matrix() to both stacks im and ob
+    Apply matrix() to the projections and open beam stacks.
    
     Parameters
     ----------
+    stack_im : array_like
+        Input stack of projections.
+    
+    stack_ob : array_like
+        Input stack of open beam.
+        
+    numberPeriods : float_like
+        Numbers or fraction of stepped period.
     
     Returns
     -------
+    Return an array_like containing the a0, a1, phi of the projections and open beam stack.
     
     Notes
     -----
