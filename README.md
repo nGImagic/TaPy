@@ -15,7 +15,6 @@ Required python3 repositories:
 - h5py (for hdf files)
 - pathlib
 - scipy
-- re
 
 You might run into problems installing the fitsio package...especially in Windows. This package is not really needed to use TaPy. It is only required if your ".tif" file header is corrupted, or includes non ASCII characters. Most of the time this will not be the case.
 
