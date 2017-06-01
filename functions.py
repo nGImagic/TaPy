@@ -46,7 +46,10 @@ def readRead(path,dc=0):
         im_a1 = []
         if path.lower().endswith('.fits'):
             try:
-                im_a1.append(fits.open(path,ignore_missing_end=True)[0].data)
+                temp = fits.open(path,ignore_missing_end=True)[0].data
+                if len(temp.shape) == 3:
+                    temp = temp.reshape(temp.shape[1:])                
+                im_a1.append(temp)  
             except OSError:
                 import fitsio
                 im_a1.append(fitsio.read(path))
