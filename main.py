@@ -17,11 +17,12 @@ norm_param = [3,5,20,40]
 crop_param = [10,15,80,60]
 oscillationParam = [30,1,1,1]
 numberPeriods = 1
+savingFolder = 'folder'
 
 im,ob = read_data(path_im,path_ob,path_dc)
 #im,ob=normalization(im,ob,*norm_param)
-#oscillation(im,ob,*oscillationParam,repeatedPeriod=True)
+#oscillation(im,ob,folder=savingFolder,*oscillationParam)
 #im,ob = cropped(im,ob,*crop_param)
 #im, ob = binning(im,ob,bin_fac)
 ti, dpci, dfi, vis_map = createIm(im,ob,numberPeriods)
-saveIm(ti, dpci, dfi, vis_map,name='period2',folder='folder',overWrite=True)
+saveIm(ti, dpci, dfi, vis_map,name='period2',folder=savingFolder,overWrite=True)
