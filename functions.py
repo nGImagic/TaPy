@@ -302,7 +302,7 @@ def normalization(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,height
     
     return(np.asarray(stack_im_ar),np.asarray(stack_ob_ar))
 
-def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,repeatedPeriod=False,folder=False,show=True):
+def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightROI=heightROI,repeatedPeriod=False,folder='folder',show=True):
     """
     Oscillation plot analysis of the selected ROI.
    
@@ -380,8 +380,8 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightRO
         if folder:
             if not os.path.exists(folder):
                 makedirs(folder) 
-                print('files saved in folder: ',folder)
-            fig.savefig(folder+'/oscillationPlot_X'+str(xROI)+'Y'+str(yROI)+'.png', bbox_inches='tight')
+                print('files saved in folder: ',str(folder))
+            fig.savefig(str(folder)+'/oscillationPlot_X'+str(xROI)+'Y'+str(yROI)+'.png', bbox_inches='tight')
         plt.close('all')
     else:
         print('!!!WARNING!!! \nROI out of range')
@@ -585,8 +585,8 @@ def saveIm(ti,dpci,dfi,vis_map,name='name',folder='folder',overWrite=False):
     name : sring_like
         Specific name for the images.
         
-    folder : string_like or False
-        Path of the folder where to save the oscillation plot, if False it doesn't save the plot.
+    folder : string_like
+        Path of the folder where to save the reconstructed images.
         
     overWrite : boolean
         If it's True it overwrite the images with the same name.
