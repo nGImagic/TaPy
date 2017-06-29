@@ -16,8 +16,6 @@ setup(
         'astropy',
         'h5p7',
         'scipy',
-        'pathlib',
-        'fitsio',
     ],
     dependency_links = [
     ],
