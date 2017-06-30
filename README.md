@@ -1,6 +1,4 @@
-<img src="https://github.com/nGImagic/TaPy/blob/master/pics/TaPy_logo.png"  width="150" height="150" />
-<a href="https://zenodo.org/badge/latestdoi/90043504"><img src="https://zenodo.org/badge/90043504.svg" alt="DOI"></a>  
-
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.803047.svg)](https://doi.org/10.5281/zenodo.803047)
 [![Build Status](https://travis-ci.org/nGImagic/TaPy.svg?branch=master)](https://travis-ci.org/nGImagic/TaPy)
 
 
