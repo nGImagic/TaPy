@@ -8,7 +8,7 @@ h5py=2.7.0=np113py36_0
 hdf5=1.8.17=1
 icu=54.1=0
 jbig=2.1=0
-jpeg=9b=0
+jpeg
 libpng=1.6.27=0
 libtiff
 matplotlib=2.0.2=np113py36_0
