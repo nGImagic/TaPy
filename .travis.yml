@@ -21,7 +21,7 @@ before_install:
 install:
   - conda config --set always_yes true
   - conda update conda
-  - conda create -n testenv pip nose python=$TRAVIS_PYTHON_VERSION --file requirements.txt
+  - conda create -n testenv pip nose python=$TRAVIS_PYTHON_VERSION --file requirements.conda
   - source activate testenv
   - pip install -U pytest
   - pip install pytest-cov
