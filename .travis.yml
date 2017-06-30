@@ -8,8 +8,8 @@ python:
   - 3.4
   - 3.6
 
- branches:
-   only:
+branches:
+  only:
     - library_making
 
 before_install:
