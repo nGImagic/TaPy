@@ -14,7 +14,7 @@ setup(
         'pyfits',
         'pillow',
         'astropy',
-        'h5p7',
+        'h5py',
         'scipy',
     ],
     dependency_links = [
