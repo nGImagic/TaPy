@@ -16,15 +16,41 @@ class TestClass(unittest.TestCase):
     def test_dict_initialized(self):
         '''assert image, ob and df dicts are correctly initialized'''
         o_grating = GratingInterferometer()
+        data = o_grating.data
         dict_image = o_grating.dict_image
         self.assertEqual([], dict_image['data'])
         self.assertEqual([], dict_image['file_name'])
+        self.assertEqual([], data['sample']['data'])
+        self.assertEqual([], data['sample']['file_name'])
+        
         dict_ob = o_grating.dict_ob
         self.assertEqual([], dict_ob['data'])
         self.assertEqual([], dict_ob['file_name'])
+        self.assertEqual([], data['ob']['data'])
+        self.assertEqual([], data['ob']['file_name'])
+
         dict_df = o_grating.dict_df
         self.assertEqual([], dict_df['data'])
         self.assertEqual([], dict_df['file_name'])
+        self.assertEqual([], data['df']['data'])
+        self.assertEqual([], data['df']['file_name'])
+        
+    def test_loading_bad_single_files(self):
+        '''assert error is raised when inexisting file is given'''
+        bad_tiff_file_name = 'bad_tiff_file_name.tiff'
+        o_grating = GratingInterferometer()
+        self.assertRaises(OSError, o_grating.load, bad_tiff_file_name, '', 'sample')
+        self.assertRaises(OSError, o_grating.load, bad_tiff_file_name, '', 'ob')
+        self.assertRaises(OSError, o_grating.load, bad_tiff_file_name, '', 'df')
+        bad_fits_file_name = 'bad_fits_file_name.fits'
+        o_grating = GratingInterferometer()
+        self.assertRaises(OSError, o_grating.load, bad_fits_file_name, '', 'sample')
+        self.assertRaises(OSError, o_grating.load, bad_fits_file_name, '', 'ob')
+        self.assertRaises(OSError, o_grating.load, bad_fits_file_name, '', 'df')
+        bad_h5_file_name = 'bad_h5_file_name.h5'
+        self.assertRaises(OSError, o_grating.load, bad_h5_file_name, '', 'sample')
+        self.assertRaises(OSError, o_grating.load, bad_h5_file_name, '', 'ob')
+        self.assertRaises(OSError, o_grating.load, bad_h5_file_name, '', 'df')
         
         
     #def test_bad_file_name_raise_ioerror(self):

@@ -12,6 +12,11 @@ class GratingInterferometer(object):
                         'file_name': []}
         self.dict_df = {'data': [],
                         'file_name': []}
+
+        self.data = {}
+        self.data['sample'] = self.dict_image
+        self.data['ob'] = self.dict_ob
+        self.data['df'] = self.dict_df
         
     
     def load(self, file='', folder='', data_type='sample'):
@@ -25,21 +30,20 @@ class GratingInterferometer(object):
            data_type: ['sample', 'ob', 'df]
         '''
         if not file == '':
-            # load file
-            pass
+            self.load_file(file=file, data_type=data_type)
         
         if not foler == '':
             # load all files from folder
             pass
         
     
-    def old_load(self, file_name='', data_type='sample'):
+    def load_file(self, file='', data_type='sample'):
         """
         Function to read data from the specified path, it can read FITS, TIFF and HDF.
     
         Parameters
         ----------
-        path : string_like
+        file : string_like
             Path of the input file with his extention.
         data_type: ['sample', 'df']
     
@@ -49,7 +53,7 @@ class GratingInterferometer(object):
         For the HDF format you need to specify the hierarchy.
         """
     
-        my_file = Path(file_name)
+        my_file = Path(file)
         if my_file.is_file():
             data = []
             if file_name.lower().endswith('.fits'):
@@ -60,12 +64,9 @@ class GratingInterferometer(object):
                 data = load_hdf(my_file)
             else:
                 raise OSError('file extension not yet implemented....Do it your own way!')     
-            
-            # save data in right array according to type
-            if data_type == 'sample':
-                self.sample = data
-            else:
-                self.ob = data
+
+            self.data[data_type]['data'].append(data)
+            self.data[data_type]['file_name'].append(my_file)
 
         else:
             raise OSError("The file name does not exist")
