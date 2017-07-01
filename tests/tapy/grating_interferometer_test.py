@@ -52,6 +52,33 @@ class TestClass(unittest.TestCase):
         self.assertRaises(OSError, o_grating.load, bad_h5_file_name, '', 'ob')
         self.assertRaises(OSError, o_grating.load, bad_h5_file_name, '', 'df')
         
+    def test_loading_good_single_file(self):
+        '''assert sample, ob and df single file correctly loaded'''
+        # tiff
+        sample_tif_file = self.data_path + '/sample/image001.tif'
+        o_grating = GratingInterferometer()
+        o_grating.load(file=sample_tif_file, data_type='sample')
+        _expected_data = np.ones([5,5])
+        _expected_data[0,0] = 5
+        _loaded_data = o_grating.data['sample']['data']
+        self.assertTrue((_expected_data == _loaded_data).all())
+        _expected_name = sample_tif_file
+        _loaded_name = o_grating.data['sample']['file_name'][0]
+        self.assertTrue(_expected_name == _loaded_name)
+
+        ## fits
+        #sample_fits_file = self.data_path + '/sample/image001.fits'
+        #o_grating = GratingInterferometer()
+        #o_grating.load(file=sample_fits_file, data_type='sample')
+        #_expected_data = np.ones([5,5])
+        #_expected_data[0,0] = 5
+        #_loaded_data = o_grating.data['sample']['data']
+        #self.assertTrue((_expected_data == _loaded_data).all())
+        #_expected_name = sample_fits_file
+        #_loaded_name = o_grating.data['sample']['file_name'][0]
+        #self.assertTrue(_expected_name == _loaded_name)
+        
+        
         
     #def test_bad_file_name_raise_ioerror(self):
         #"""assert error is raised when wrong input data file name is given"""

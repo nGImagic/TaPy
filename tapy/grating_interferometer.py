@@ -32,7 +32,7 @@ class GratingInterferometer(object):
         if not file == '':
             self.load_file(file=file, data_type=data_type)
         
-        if not foler == '':
+        if not folder == '':
             # load all files from folder
             pass
         
@@ -56,17 +56,17 @@ class GratingInterferometer(object):
         my_file = Path(file)
         if my_file.is_file():
             data = []
-            if file_name.lower().endswith('.fits'):
+            if file.lower().endswith('.fits'):
                 data = load_fits(my_file)
-            elif file_name.lower().endswith(('.tiff','.tif')) :
+            elif file.lower().endswith(('.tiff','.tif')) :
                 data = load_tiff(my_file)
-            elif file_name.lower().endswith(('.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5')): 
+            elif file.lower().endswith(('.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5')): 
                 data = load_hdf(my_file)
             else:
                 raise OSError('file extension not yet implemented....Do it your own way!')     
 
             self.data[data_type]['data'].append(data)
-            self.data[data_type]['file_name'].append(my_file)
+            self.data[data_type]['file_name'].append(file)
 
         else:
             raise OSError("The file name does not exist")
