@@ -5,14 +5,35 @@ from tapy.loader import load_hdf, load_tiff, load_fits
 
 class GratingInterferometer(object):
     
-    sample = []
-    ob = []
-    
     def __init__(self):
-        self.sample = []
-        self.ob = []
+        self.dict_image = { 'data': [],
+                            'file_name': []}
+        self.dict_ob = {'data': [],
+                        'file_name': []}
+        self.dict_df = {'data': [],
+                        'file_name': []}
+        
     
-    def load(self, file_name='', data_type='sample'):
+    def load(self, file='', folder='', data_type='sample'):
+        '''
+        Function to read individual files or entire files from folder specify for the given
+        data type
+        
+        Parameters:
+           file: full path to file
+           folder: full path to folder containing files to load
+           data_type: ['sample', 'ob', 'df]
+        '''
+        if not file == '':
+            # load file
+            pass
+        
+        if not foler == '':
+            # load all files from folder
+            pass
+        
+    
+    def old_load(self, file_name='', data_type='sample'):
         """
         Function to read data from the specified path, it can read FITS, TIFF and HDF.
     
