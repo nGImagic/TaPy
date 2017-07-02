@@ -55,7 +55,7 @@ class TestClass(unittest.TestCase):
     def test_loading_good_single_file(self):
         '''assert sample, ob and df single file correctly loaded'''
         # tiff
-        sample_tif_file = self.data_path + '/sample/image001.tif'
+        sample_tif_file = self.data_path + '/tif//sample/image001.tif'
         o_grating = GratingInterferometer()
         o_grating.load(file=sample_tif_file, data_type='sample')
         _expected_data = np.ones([5,5])
@@ -81,8 +81,8 @@ class TestClass(unittest.TestCase):
     def test_loading_good_several_single_files(self):
         '''assert sample, ob and df multi files correctly loaded'''
         # tiff
-        sample_tif_file_1 = self.data_path + '/sample/image001.tif'
-        sample_tif_file_2 = self.data_path + '/sample/image002.tif'
+        sample_tif_file_1 = self.data_path + '/tif//sample/image001.tif'
+        sample_tif_file_2 = self.data_path + '/tif/sample/image002.tif'
         o_grating = GratingInterferometer()
         o_grating.load(file=sample_tif_file_1, data_type='sample')
         o_grating.load(file=sample_tif_file_2, data_type='sample')
@@ -104,6 +104,24 @@ class TestClass(unittest.TestCase):
         _loaded_name_2 = o_grating.data['sample']['file_name'][1]
         self.assertTrue(_expected_name_2 == _loaded_name_2)        
         
+    def test_all_images_retrieved_from_folder(self):
+        '''assert list of images are correctly retrieved from folder'''
+        path = self.data_path + '/tif/sample'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=path)
+        list_files_expected = ['image001.tif', 'image002.tif', 'image003.tif']
+        list_files = o_grating.get_sorted_list_images(folder=path)
+        self.assertTrue(list_files_expected == list_files)
+        
+    def test_loading_images_from_folder(self):
+        '''assert images are correctly loaded when retrieved from a folder'''
+        path = self.data_path + '/tif/sample'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=path, data_type='sample')
+        list_of_files = ['image001.tif', 'image002.tif', 'image003.tif']
+        list_of_files_expected = [os.path.join(path, _file) for _file in list_of_files]
+        list_of_files_retrieved = o_grating.data['sample']['file_name']
+        self.assertTrue(list_of_files_expected == list_of_files_retrieved)
         
     #def test_bad_file_name_raise_ioerror(self):
         #"""assert error is raised when wrong input data file name is given"""

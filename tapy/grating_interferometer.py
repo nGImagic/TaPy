@@ -1,9 +1,12 @@
 from pathlib import Path
 import numpy as np
+import os
 
 from tapy.loader import load_hdf, load_tiff, load_fits
 
 class GratingInterferometer(object):
+    
+    im_ext = ['.fits','.tiff','.tif','.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5']
     
     def __init__(self):
         self.dict_image = { 'data': [],
@@ -34,8 +37,23 @@ class GratingInterferometer(object):
         
         if not folder == '':
             # load all files from folder
-            pass
+            list_images = self.get_sorted_list_images(folder=folder)
+            for _image in list_images:
+                full_path_image = os.path.join(folder, _image)
+                self.load_file(file=full_path_image, data_type=data_type)
         
+    def get_sorted_list_images(self, folder=''):
+        '''return the list of images sorted that have the correct format
+        
+        Parameters:
+           folder: string of the path containing the images
+           
+        Return:
+           sorted list of only images that can be read by program
+        '''
+        filenames = [name for name in os.listdir(folder) if name.lower().endswith(tuple(self.im_ext))]
+        filenames.sort()
+        return filenames
     
     def load_file(self, file='', data_type='sample'):
         """
