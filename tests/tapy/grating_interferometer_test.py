@@ -66,17 +66,20 @@ class TestClass(unittest.TestCase):
         _loaded_name = o_grating.data['sample']['file_name'][0]
         self.assertTrue(_expected_name == _loaded_name)
 
-        ## fits
-        #sample_fits_file = self.data_path + '/sample/image001.fits'
-        #o_grating = GratingInterferometer()
-        #o_grating.load(file=sample_fits_file, data_type='sample')
-        #_expected_data = np.ones([5,5])
-        #_expected_data[0,0] = 5
-        #_loaded_data = o_grating.data['sample']['data']
-        #self.assertTrue((_expected_data == _loaded_data).all())
-        #_expected_name = sample_fits_file
-        #_loaded_name = o_grating.data['sample']['file_name'][0]
-        #self.assertTrue(_expected_name == _loaded_name)
+        # fits
+        sample_fits_file = self.data_path + '/fits//sample/image001.fits'
+        o_grating = GratingInterferometer()
+        o_grating.load(file=sample_fits_file, data_type='sample')
+        _expected_data = np.ones([5,5])
+        _expected_data[0,0] = 5
+        _expected_data[:,2] = 2
+        _expected_data[:,3] = 3
+        _expected_data[:,4] = 4
+        _loaded_data = o_grating.data['sample']['data']
+        self.assertTrue((_expected_data == _loaded_data).all())
+        _expected_name = sample_fits_file
+        _loaded_name = o_grating.data['sample']['file_name'][0]
+        self.assertTrue(_expected_name == _loaded_name)
         
     def test_loading_good_several_single_files(self):
         '''assert sample, ob and df multi files correctly loaded'''
@@ -106,6 +109,7 @@ class TestClass(unittest.TestCase):
         
     def test_all_images_retrieved_from_folder(self):
         '''assert list of images are correctly retrieved from folder'''
+        # tif
         path = self.data_path + '/tif/sample'
         o_grating = GratingInterferometer()
         o_grating.load(folder=path)
@@ -113,6 +117,14 @@ class TestClass(unittest.TestCase):
         list_files = o_grating.get_sorted_list_images(folder=path)
         self.assertTrue(list_files_expected == list_files)
         
+        # fits
+        path = self.data_path + '/fits/sample'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=path)
+        list_files_expected = ['image001.fits', 'image002.fits', 'image003.fits']
+        list_files = o_grating.get_sorted_list_images(folder=path)
+        self.assertTrue(list_files_expected == list_files)
+
     def test_loading_images_from_folder(self):
         '''assert images are correctly loaded when retrieved from a folder'''
         path = self.data_path + '/tif/sample'
