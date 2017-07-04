@@ -89,7 +89,30 @@ class GratingInterferometer(object):
         else:
             raise OSError("The file name does not exist")
 
-    def dark_field_correction(self):
-        '''remove dark field from data set'''
-        if self.ob != []:
-            self.sample = np.asarray(self.sample) - self.ob
+    def normalization(self):
+        '''normalization of the data 
+        normalized_data = (sample - DF)/(OB - DF)
+        '''
+        if self.data['sample']['data'] == []:
+            raise IOError("No normalization available as no data have been loaded")
+
+        if self.data['ob']['data'] == []:
+            raise IOError("No normalization available as no OB have been loaded")
+
+        if not self.data['df']['data'] == []:
+            self.df_correction(data_type='sample')
+            self.df_correction(data_type='ob')
+            
+        return True
+    
+    def df_correction(self, data_type='sample'):
+        '''dark field correction
+        
+        Parameters:
+           data_type: string ['sample','ob]
+        '''
+        if self.data['df']['data'] == []:
+            return
+        
+        if np.shape(self.data['sample']['data'][0]) != np.shape(self.data['df']['data'][0]):
+            raise IOError("sample and df data must have the same shpae!")

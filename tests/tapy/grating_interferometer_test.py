@@ -174,6 +174,52 @@ class TestClass(unittest.TestCase):
         list_of_files_retrieved = o_grating.data['sample']['file_name']
         self.assertTrue(list_of_files_expected == list_of_files_retrieved)
         
+    def test_normalization_raises_error_if_no_ob_or_sample(self):
+        '''assert error raises when no ob or sample provided'''
+        path = self.data_path + '/tif/sample'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=path, data_type='sample')
+        self.assertRaises(IOError, o_grating.normalization)
+        
+        path = self.data_path + '/tif/ob'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=path, data_type='ob')
+        self.assertRaises(IOError, o_grating.normalization)
+        
+        sample_path = self.data_path + '/tif/sample'
+        ob_path = self.data_path + '/tif/ob'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path, data_type='sample')
+        o_grating.load(folder=ob_path, data_type='ob')
+        assert o_grating.normalization()
+        
+    def test_df_correction_when_no_df(self):
+        '''assert sample and ob are inchanged if df is empty'''
+        path = self.data_path + '/tif/sample'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=path, data_type='sample')
+        data_before = o_grating.data['sample']['data'][0]
+        o_grating.df_correction(data_type='sample')
+        data_after = o_grating.data['sample']['data'][0]
+        self.assertTrue((data_before == data_after).all())
+        
+        path = self.data_path + '/tif/ob'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=path, data_type='ob')
+        data_before = o_grating.data['ob']['data'][0]
+        o_grating.df_correction(data_type='sample')
+        data_after = o_grating.data['ob']['data'][0]
+        self.assertTrue((data_before == data_after).all())
+        
+    def test_df_fails_when_not_identical_data_shape(self):
+        o_grating = GratingInterferometer()
+        sample_1 = np.ones([5,5])
+        df_1 = np.ones([6,6])
+        o_grating.data['sample']['data'] = sample_1
+        o_grating.data['df']['data'] = df_1
+        self.assertRaises(IOError, o_grating.df_correction, 'sample')
+        
+        
     #def test_bad_file_name_raise_ioerror(self):
         #"""assert error is raised when wrong input data file name is given"""
         #_bad_file_name = 'file.fits'
