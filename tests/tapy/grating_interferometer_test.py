@@ -211,6 +211,15 @@ class TestClass(unittest.TestCase):
         data_after = o_grating.data['ob']['data'][0]
         self.assertTrue((data_before == data_after).all())
         
+    def test_right_data_type_passed_to_df_correction(self):
+        '''assert data_type is either sample or ob'''
+        sample_path = self.data_path + '/tif/sample'
+        df_path = self.data_path + '/tif/df'        
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path, data_type='sample')
+        o_grating.load(folder=df_path, data_type='df')
+        self.assertRaises(IOError, o_grating.df_correction, 'not_data_type')
+        
     def test_df_fails_when_not_identical_data_shape(self):
         o_grating = GratingInterferometer()
         sample_1 = np.ones([5,5])
@@ -219,6 +228,11 @@ class TestClass(unittest.TestCase):
         o_grating.data['df']['data'] = df_1
         self.assertRaises(IOError, o_grating.df_correction, 'sample')
         
+        o_grating = GratingInterferometer()
+        ob_1 = np.ones([6,6])
+        o_grating.data['ob']['data'] = sample_1
+        o_grating.data['df']['data'] = ob_1
+        self.assertRaises(IOError, o_grating.df_correction, 'ob')
         
     #def test_bad_file_name_raise_ioerror(self):
         #"""assert error is raised when wrong input data file name is given"""

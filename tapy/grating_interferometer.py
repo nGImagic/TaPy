@@ -111,8 +111,20 @@ class GratingInterferometer(object):
         Parameters:
            data_type: string ['sample','ob]
         '''
+        if not data_type in ['sample', 'ob']:
+            raise IOError("Wrong data type passed. Must be either 'sample' or 'ob'!")
+
         if self.data['df']['data'] == []:
             return
+
+        if data_type == 'sample':
+            if np.shape(self.data['sample']['data'][0]) != np.shape(self.data['df']['data'][0]):
+                raise IOError("sample and df data must have the same shpae!")
         
-        if np.shape(self.data['sample']['data'][0]) != np.shape(self.data['df']['data'][0]):
-            raise IOError("sample and df data must have the same shpae!")
+            pass
+            
+        if data_type == 'ob':
+            if np.shape(self.data['ob']['data'][0]) != np.shape(self.data['df']['data'][0]):
+                raise IOError("ob and df data must have the same shpae!")
+            
+            pass
