@@ -99,6 +99,11 @@ class GratingInterferometer(object):
         if self.data['ob']['data'] == []:
             raise IOError("No normalization available as no OB have been loaded")
 
+        nbr_sample = len(self.data['sample']['file_name'])
+        nbr_ob = len(self.data['ob']['file_name'])
+        if nbr_sample != nbr_ob:
+            raise IOError("Number of sample and ob do not match!")
+
         if not self.data['df']['data'] == []:
             self.df_correction(data_type='sample')
             self.df_correction(data_type='ob')
@@ -112,7 +117,7 @@ class GratingInterferometer(object):
            data_type: string ['sample','ob]
         '''
         if not data_type in ['sample', 'ob']:
-            raise IOError("Wrong data type passed. Must be either 'sample' or 'ob'!")
+            raise KeyError("Wrong data type passed. Must be either 'sample' or 'ob'!")
 
         if self.data['df']['data'] == []:
             return
