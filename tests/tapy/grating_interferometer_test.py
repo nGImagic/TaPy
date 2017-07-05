@@ -236,7 +236,7 @@ class TestClass(unittest.TestCase):
         
     def test_same_number_of_images_loaded_in_sample_and_ob(self):
         '''assert sample and ob have the same number of images loaded'''
-        sample_tif_file_1 = self.data_path + '/tif//sample/image001.tif'
+        sample_tif_file_1 = self.data_path + '/tif/sample/image001.tif'
         sample_tif_file_2 = self.data_path + '/tif/sample/image002.tif'
         o_grating = GratingInterferometer()
         o_grating.load(file=sample_tif_file_1, data_type='sample')
@@ -245,6 +245,17 @@ class TestClass(unittest.TestCase):
         o_grating.load(file=ob_tif_file_1, data_type='ob')
         self.assertRaises(IOError, o_grating.normalization)
         
+    def test_df_averaging(self):
+        '''assert df average works'''
+        df_tif_file_2 = self.data_path + '/tif/df/df002.tif'
+        df_tif_file_3 = self.data_path + '/tif/df/df003.tif'
+        o_grating = GratingInterferometer()
+        o_grating.load(file=df_tif_file_2, data_type='df')
+        o_grating.load(file=df_tif_file_3, data_type='df')
+        average_df = o_grating._average_df(df=o_grating.data['df']['data'])
+        expected_df = np.ones([5,5])
+        expected_df[0,0] = 5
+        self.assertTrue((expected_df == average_df).all())
         
     #def test_bad_file_name_raise_ioerror(self):
         #"""assert error is raised when wrong input data file name is given"""
