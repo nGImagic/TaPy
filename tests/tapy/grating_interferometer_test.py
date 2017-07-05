@@ -7,7 +7,7 @@ from PIL import Image
 from tapy.grating_interferometer import GratingInterferometer
 
 
-class TestClass(unittest.TestCase):
+class TestLoadingNormalization(unittest.TestCase):
     
     def setUp(self):    
         _file_path = os.path.dirname(__file__)
@@ -60,6 +60,9 @@ class TestClass(unittest.TestCase):
         o_grating.load(file=sample_tif_file, data_type='sample')
         _expected_data = np.ones([5,5])
         _expected_data[0,0] = 5
+        _expected_data[:,2] = 2
+        _expected_data[:,3] = 3
+        _expected_data[:,4] = 4
         _loaded_data = o_grating.data['sample']['data']
         self.assertTrue((_expected_data == _loaded_data).all())
         _expected_name = sample_tif_file
@@ -92,6 +95,9 @@ class TestClass(unittest.TestCase):
 
         _expected_data_1 = np.ones([5,5])
         _expected_data_1[0,0] = 5
+        _expected_data_1[:,2] = 2
+        _expected_data_1[:,3] = 3
+        _expected_data_1[:,4] = 4
         _loaded_data_1 = o_grating.data['sample']['data'][0]
         self.assertTrue((_expected_data_1 == _loaded_data_1).all())
         _expected_name_1 = sample_tif_file_1
@@ -100,7 +106,9 @@ class TestClass(unittest.TestCase):
         
         _expected_data_2 = np.ones([5,5])
         _expected_data_2[0,0] = 5
-        _expected_data_2[:,2:4] = 3
+        _expected_data_2[:,2] = 2
+        _expected_data_2[:,3] = 3
+        _expected_data_2[:,4] = 4
         _loaded_data_2 = o_grating.data['sample']['data'][1]
         self.assertTrue((_expected_data_2 == _loaded_data_2).all())
         _expected_name_2 = sample_tif_file_2
@@ -257,5 +265,25 @@ class TestClass(unittest.TestCase):
         expected_df[0,0] = 5
         self.assertTrue((expected_df == average_df).all())
 
-    
- 
+    def test_df_averaging_only_run_the_first_time(self):
+        '''assert the average_df is only run the first time the df_correction is run'''
+        pass
+
+    def test_df_correction(self):
+        '''assert df corrction works'''
+        sample_path = self.data_path + '/tif/sample/'
+        ob_path = self.data_path + '/tif/ob/'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path)
+        o_grating.load(folder=ob_path, data_type='ob')
+        df_file_1 = self.data_path + '/tif/df/df002.tif'
+        df_file_2 = self.data_path + '/tif/df/df003.tif'
+        o_grating.load(file=df_file_1, data_type='df')
+        o_grating.load(file=df_file_2, data_type='df')
+        o_grating.df_correction()
+        _expected_data = np.zeros([5,5])
+        _expected_data[:,2] = 1
+        _expected_data[:,3] = 2
+        _expected_data[:,4] = 3       
+        _sample_data = o_grating.data['sample']['data'][0]
+        self.assertTrue((_expected_data == o_grating.data['sample']['data'][0]).all())

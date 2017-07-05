@@ -14,13 +14,13 @@ class GratingInterferometer(object):
         self.dict_ob = {'data': [],
                         'file_name': []}
         self.dict_df = {'data': [],
+                        'data_average': [],
                         'file_name': []}
 
         self.data = {}
         self.data['sample'] = self.dict_image
         self.data['ob'] = self.dict_ob
         self.data['df'] = self.dict_df
-        
     
     def load(self, file='', folder='', data_type='sample'):
         '''
@@ -122,9 +122,13 @@ class GratingInterferometer(object):
         if self.data['df']['data'] == []:
             return
         
-        _df = self.data['df']['data']
-        if len(_df) > 1:
-            _df = self._average_df(df=_df)
+        if self.data['df']['data_average'] == []:
+            _df = self.data['df']['data']
+            if len(_df) > 1:
+                _df = self._average_df(df=_df)
+            self.data['df']['data_average'] = _df
+        else:
+            _df = self.data['df']['data_average']
 
         if np.shape(self.data[data_type]['data'][0]) != np.shape(self.data['df']['data'][0]):
             raise IOError("{} and df data must have the same shpae!".format(data_type))
