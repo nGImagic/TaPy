@@ -126,18 +126,15 @@ class GratingInterferometer(object):
         if len(_df) > 1:
             _df = self._average_df(df=_df)
 
-        if data_type == 'sample':
-            if np.shape(self.data['sample']['data'][0]) != np.shape(self.data['df']['data'][0]):
-                raise IOError("sample and df data must have the same shpae!")
-        
-#            for _data in self.data['sample']['data']:
-#                _data = _data - 
-            
-        if data_type == 'ob':
-            if np.shape(self.data['ob']['data'][0]) != np.shape(self.data['df']['data'][0]):
-                raise IOError("ob and df data must have the same shpae!")
-            
-            pass
+        if np.shape(self.data[data_type]['data'][0]) != np.shape(self.data['df']['data'][0]):
+            raise IOError("{} and df data must have the same shpae!".format(data_type))
+    
+        _data_df_corrected = []
+        for _data in self.data[data_type]['data']:
+                _data = _data - _df
+                _data_df_corrected.append(_data)
+
+        self.data[data_type]['data'] = _data_df_corrected
         
     def _average_df(self, df=[]):
         '''if more than 1 DF have been provided, we need to average them'''
