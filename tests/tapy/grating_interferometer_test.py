@@ -267,7 +267,29 @@ class TestLoadingNormalization(unittest.TestCase):
 
     def test_df_averaging_only_run_the_first_time(self):
         '''assert the average_df is only run the first time the df_correction is run'''
-        pass
+        sample_path = self.data_path + '/tif/sample/'
+        ob_path = self.data_path + '/tif/ob/'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path)
+        o_grating.load(folder=ob_path, data_type='ob')
+        df_file_1 = self.data_path + '/tif/df/df002.tif'
+        df_file_2 = self.data_path + '/tif/df/df003.tif'
+        o_grating.load(file=df_file_1, data_type='df')
+        o_grating.load(file=df_file_2, data_type='df')
+    
+        df_average_data = o_grating.data['df']['data_average']
+        self.assertTrue(df_average_data == [])
+    
+        #sample
+        o_grating.df_correction()
+        df_average_data = o_grating.data['df']['data_average']
+        self.assertTrue(df_average_data != [])
+    
+        #ob
+        o_grating.df_correction(data_type='ob')
+        expected_df_average = df_average_data
+        df_average = o_grating.data['df']['data_average']
+        self.assertTrue((expected_df_average == df_average).all())
 
     def test_df_correction(self):
         '''assert df corrction works'''
@@ -280,6 +302,8 @@ class TestLoadingNormalization(unittest.TestCase):
         df_file_2 = self.data_path + '/tif/df/df003.tif'
         o_grating.load(file=df_file_1, data_type='df')
         o_grating.load(file=df_file_2, data_type='df')
+        
+        #sample
         o_grating.df_correction()
         _expected_data = np.zeros([5,5])
         _expected_data[:,2] = 1
@@ -287,3 +311,9 @@ class TestLoadingNormalization(unittest.TestCase):
         _expected_data[:,4] = 3       
         _sample_data = o_grating.data['sample']['data'][0]
         self.assertTrue((_expected_data == o_grating.data['sample']['data'][0]).all())
+        
+        #ob
+        o_grating.df_correction(data_type='ob')
+        _expected_data = np.zeros([5,5])
+        _ob_data = o_grating.data['ob']['data'][0]
+        self.assertTrue((_expected_data == _ob_data).all())
