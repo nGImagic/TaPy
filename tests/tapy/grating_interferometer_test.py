@@ -318,16 +318,4 @@ class TestLoadingNormalization(unittest.TestCase):
         _ob_data = o_grating.data['ob']['data'][0]
         self.assertTrue((_expected_data == _ob_data).all())
         
-    def test_roi_correctly_defined(self):
-        '''assert crop cropping and normalization ROI are correctly defined'''
-        o_grating = GratingInterferometer()
-        
-        # normalization
-        o_grating.set_roi(x0=1, y0=1, x1=3, y1=3)
-        _expeced_roi = {'x0': 1, 'y0': 1, 'x1': 3, 'y1': 3}
-        self.assertTrue(_expeced_roi == o_grating.roi['normalization'])
-
-        # crop
-        o_grating.set_roi(x0=1, y0=1, x1=3, y1=3, roi_type='crop')
-        _expeced_roi = {'x0': 1, 'y0': 1, 'x1': 3, 'y1': 3}
-        self.assertTrue(_expeced_roi == o_grating.roi['crop'])        
+   

@@ -3,6 +3,7 @@ import numpy as np
 import os
 
 from tapy.loader import load_hdf, load_tiff, load_fits
+    
 
 class GratingInterferometer(object):
     
@@ -156,16 +157,4 @@ class GratingInterferometer(object):
         mean_average = np.mean(df, axis=0)
         return mean_average
     
-    def set_roi(self, x0=np.NaN, y0=np.NaN, x1=np.NaN, y1=np.NaN, roi_type='normalization'):
-        '''set ROI for normalization and crop
-        
-        Parameters:
-        ----------
-           roi_type: string ['normalization', 'crop']
-        '''
-        self.roi[roi_type]['x0'] = x0
-        self.roi[roi_type]['x1'] = x1
-        self.roi[roi_type]['y0'] = y0
-        self.roi[roi_type]['y1'] = y1
-
-        
+   
