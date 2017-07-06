@@ -17,6 +17,13 @@ class GratingInterferometer(object):
                         'data_average': [],
                         'file_name': []}
 
+        __roi_dict = {'x0': np.NaN,
+                      'x1': np.NaN,
+                      'y0': np.NaN,
+                      'y1': np.NaN}
+        self.roi = {'normalization': __roi_dict.copy(),
+                    'crop': __roi_dict.copy()}
+
         self.data = {}
         self.data['sample'] = self.dict_image
         self.data['ob'] = self.dict_ob
@@ -107,6 +114,10 @@ class GratingInterferometer(object):
         if not self.data['df']['data'] == []:
             self.df_correction(data_type='sample')
             self.df_correction(data_type='ob')
+        
+        for _index, _sample in enumerate(self.data['sample']['data']):
+            _ob = self.data['ob']['data'][_index]
+            _norm = _sample 
             
         return True
     
@@ -144,3 +155,17 @@ class GratingInterferometer(object):
         '''if more than 1 DF have been provided, we need to average them'''
         mean_average = np.mean(df, axis=0)
         return mean_average
+    
+    def set_roi(self, x0=np.NaN, y0=np.NaN, x1=np.NaN, y1=np.NaN, roi_type='normalization'):
+        '''set ROI for normalization and crop
+        
+        Parameters:
+        ----------
+           roi_type: string ['normalization', 'crop']
+        '''
+        self.roi[roi_type]['x0'] = x0
+        self.roi[roi_type]['x1'] = x1
+        self.roi[roi_type]['y0'] = y0
+        self.roi[roi_type]['y1'] = y1
+
+        
