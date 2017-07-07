@@ -333,12 +333,23 @@ class TestLoadingNormalization(unittest.TestCase):
         norm_roi = {'x0':0, 'y0':0, 'x1':2, 'y1':2}
         self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi, norm_roi=norm_roi)
 
-    #def test_roi_fit_images(self):
-        #'''assert norm and crop roi do fit the images'''
-        #sample_tif_file = self.data_path + '/tif/sample/image001.tif'
-        #ob_tif_file = self.data_path + '/tif/ob/ob001.tif'
-        #o_grating = GratingInterferometer()
-        #o_grating.load(file=sample_tif_file, data_type='sample')
-        #o_grating.load(file=ob_tif_file, data_type='ob')
-        #crop_roi = ROI(x0=0, y0=0, x1=20, y1=20)
-        #self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi)
+    def test_roi_fit_images(self):
+        '''assert norm and crop roi do fit the images'''
+        sample_tif_file = self.data_path + '/tif/sample/image001.tif'
+        ob_tif_file = self.data_path + '/tif/ob/ob001.tif'
+        o_grating = GratingInterferometer()
+        o_grating.load(file=sample_tif_file, data_type='sample')
+        o_grating.load(file=ob_tif_file, data_type='ob')
+        
+        # x0 < 0 or x1 > image_width
+        crop_roi = ROI(x0=0, y0=0, x1=20, y1=4)
+        self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi)
+        crop_roi = ROI(x0=-1, y0=0, x1=4, y1=4)
+        self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi)        
+        
+        # y0 < 0 or y1 > image_height
+        crop_roi = ROI(x0=0, y0=-1, x1=4, y1=4)
+        self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi)
+        crop_roi = ROI(x0=0, y0=0, x1=4, y1=20)
+        self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi)        
+        

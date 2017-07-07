@@ -159,15 +159,23 @@ class GratingInterferometer(object):
         return True
     
     def __roi_fit_into_sample(self, roi=[]):
+        '''check if roi is within the dimension of the image
+        
+        Returns:
+        ========
+        bool: True if roi is within the image dimension
+        
+        '''
         [sample_height, sample_width] = np.shape(self.data['sample']['data'][0])
         
         [_x0, _y0, _x1, _y1] = [roi.x0, roi.y0, roi.x1, roi.y1]
-        if (_x0 < 0) or (_x0 >= sample_width):
+        if (_x0 < 0) or (_x1 >= sample_width):
             return False
         
+        if (_y0 < 0) or (_y1 >= sample_height):
+            return False
+
         return True
-        
-        
     
     def df_correction(self, data_type='sample'):
         '''dark field correction
