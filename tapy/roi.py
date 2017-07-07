@@ -18,14 +18,16 @@ class ROI(object):
         self.y0 = y0
         
         if not np.isnan(y1):
-            self.y1 = y1
+            self.y1 = np.max([y0,y1])
+            self.y0 = np.min([y0,y1])
         elif not np.isnan(height):
             self.y1 = y0 + height
         else:
             raise ValueError("You must defined either y1 or height!")
             
         if not np.isnan(x1):
-            self.x1 = x1
+            self.x1 = np.max([x0,x1])
+            self.x0 = np.min([x0,x1])
         elif not np.isnan(width):
             self.x1 = x0 + width
         else:
