@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>This is the tutorial of the library &#8212; TaPy 1 documentation</title>
+    <title>Tutorial &#8212; TaPy 1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
@@ -39,9 +39,84 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="this-is-the-tutorial-of-the-library">
-<h1>This is the tutorial of the library<a class="headerlink" href="#this-is-the-tutorial-of-the-library" title="Permalink to this headline">¶</a></h1>
-<p>dfdfdf</p>
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<p>First you need to install the TaPy library</p>
+<p>$ pip install tapy</p>
+<p>Then in your python environment, import TaPy</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">tapy</span>
+</pre></div>
+</div>
+<p>First thing to do is to let the program know where are the sample, open beam (OB) and dark field (DF) images.
+Two options are available to load them:</p>
+<ul class="simple">
+<li>file by file</li>
+<li>full folder at once</li>
+</ul>
+<div class="section" id="loading-images-file-by-file">
+<h2>Loading images file by file<a class="headerlink" href="#loading-images-file-by-file" title="Permalink to this headline">¶</a></h2>
+<p>Let’s pretend that our images are in the folder <strong>/Users/me/sample/</strong> and named</p>
+<ul class="simple">
+<li>image001.fits</li>
+<li>image002.fits</li>
+<li>image003.fits</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span> <span class="o">=</span> <span class="n">tapy</span><span class="o">.</span><span class="n">GratingInterferometer</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="s1">&#39;/Users/me/sample/image001.fits&#39;</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;sample&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="s1">&#39;/Users/me/sample/image002.fits&#39;</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;sample&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="s1">&#39;/Users/me/sample/image003.fits&#39;</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;sample&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>At this point all the data have been loaded in memory and can be accessed as followed</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">image001</span> <span class="o">=</span> <span class="n">o_grating</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sample&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">image002</span> <span class="o">=</span> <span class="n">o_grating</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sample&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>and the file names</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">image003_file_name</span> <span class="o">=</span> <span class="n">o_grating</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sample&#39;</span><span class="p">][</span><span class="s1">&#39;file_name&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Let’s use the second method to retrieve files for the OB</p>
+</div>
+<div class="section" id="loading-all-images-at-once">
+<h2>Loading all images at once<a class="headerlink" href="#loading-all-images-at-once" title="Permalink to this headline">¶</a></h2>
+<p>Our OB are in the folder <strong>/Users/me/ob/</strong> and named</p>
+<ul class="simple">
+<li>ob001.fits</li>
+<li>ob002.fits</li>
+<li>ob003.fits</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="s1">&#39;/Users/me/ob&#39;</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;ob&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>again, all the data can be retrieved as followed</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ob1</span> <span class="o">=</span> <span class="n">o_grating</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ob&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ob2_file_name</span> <span class="o">=</span> <span class="n">o_grating</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ob&#39;</span><span class="p">][</span><span class="s1">&#39;file_name&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>For this library, DF are optional but for the sake of this exercise, let’s load them</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="s1">&#39;/Users/me/df&#39;</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;df&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cropping-the-data">
+<h2>Cropping the data<a class="headerlink" href="#cropping-the-data" title="Permalink to this headline">¶</a></h2>
+<p>You have the option to crop the data by specifying either</p>
+<ul class="simple">
+<li>the 4 corners of the region of interest (ROI)</li>
+<li>the top left corner coordinates, width and height of the ROI</li>
+</ul>
+<p>let’s use the first method and let’s pretend the ROI is defined by</p>
+<ul class="simple">
+<li>x0 = 5</li>
+<li>y0 = 5</li>
+<li>x1 = 200</li>
+<li>y1 = 250</li>
+</ul>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_sample_roi</span> <span class="o">=</span> <span class="n">tapy</span><span class="o">.</span><span class="n">ROI</span><span class="p">(</span><span class="n">x0</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">x1</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">y1</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
@@ -61,7 +136,12 @@
 
 <h3>Navigation</h3>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">This is the tutorial of the library</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#loading-images-file-by-file">Loading images file by file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loading-all-images-at-once">Loading all images at once</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cropping-the-data">Cropping the data</a></li>
+</ul>
+</li>
 </ul>
 
 <div class="relations">
