@@ -53,3 +53,59 @@ class TestRoi(unittest.TestCase):
         x1 = 3
         self.assertRaises(ValueError, ROI, x0, y0, x1, np.NaN)
 
+    def test_x_and_y_correctly_sorted(self):
+        '''assert x0 and y0 are always the smallest of the x and y values'''
+        x0 = 1
+        y0 = 1
+        x1 = 5
+        y1 = 10
+        _roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)
+        _x0_expected = 1
+        _x0_returned = _roi.x0
+        self.assertTrue(_x0_expected == _x0_returned)
+        
+        x0 = 1
+        y0 = 1
+        width = 5
+        height = 10
+        _roi = ROI(x0=x0, y0=y0, width=width, height=height)
+        _x0_expected = 1
+        _x0_returned = _roi.x0
+        self.assertTrue(_x0_expected == _x0_returned)
+        
+        x0 = 5
+        y0 = 1
+        x1 = 1
+        y1 = 10
+        _roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)
+        _x0_expected = 1
+        _x0_returned = _roi.x0
+        self.assertTrue(_x0_expected == _x0_returned)        
+        
+        x0 = 5
+        y0 = 1
+        x1 = 1
+        y1 = 10
+        _roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)
+        _y0_expected = 1
+        _y0_returned = _roi.y0
+        self.assertTrue(_y0_expected == _y0_returned)             
+        
+        x0 = 5
+        y0 = 10
+        x1 = 1
+        y1 = 1
+        _roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)
+        _y0_expected = 1
+        _y0_returned = _roi.y0
+        self.assertTrue(_y0_expected == _y0_returned)            
+        
+        x0 = 1
+        y0 = 1
+        width = 5
+        height = 10
+        _roi = ROI(x0=x0, y0=y0, width=width, height=height)
+        _y0_expected = 1
+        _y0_returned = _roi.y0
+        self.assertTrue(_y0_expected == _y0_returned)
+        
