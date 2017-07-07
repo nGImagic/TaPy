@@ -60,8 +60,8 @@ For this library, DF are optional but for the sake of this exercise, let's load 
 
 >>> o_grating.load(folder='/Users/me/df', data_type='df')
 
-Cropping the data
------------------
+Cropping the data (optional)
+----------------------------
 
 You have the option to crop the data by specifying either
 
@@ -75,4 +75,29 @@ let's use the first method and let's pretend the ROI is defined by
 - x1 = 200
 - y1 = 250
 
->>> my_sample_roi = tapy.ROI(x0=5, y0=5, x1=200, y1=250)
+>>> my_crop_roi = tapy.ROI(x0=5, y0=5, x1=200, y1=250)
+
+Normalization ROI (optional)
+----------------------------
+
+If you want to specify a region of your sample to match with the OB
+
+Let's use the following region 
+
+- x0 = 10
+- y0 = 10
+- x1 = 50
+- y1 = 50
+
+>>> my_norm_roi = tapy.ROI(x0=10, y0=10, x1=50, y1=50)
+
+Normalization
+-------------
+
+It is now time to run the full normalization
+
+>>> o_grating.normalization(crop_roi=my_crop_roi, norm_roi=my_norm_roi)
+
+
+
+
