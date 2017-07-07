@@ -3,7 +3,8 @@ import numpy as np
 import os
 
 from tapy.loader import load_hdf, load_tiff, load_fits
-    
+from tapy.roi import ROI
+
 
 class GratingInterferometer(object):
     
@@ -97,20 +98,52 @@ class GratingInterferometer(object):
         else:
             raise OSError("The file name does not exist")
 
-    def normalization(self):
+    def normalization(self, crop_roi=None, norm_roi=None):
         '''normalization of the data 
         normalized_data = (sample - DF)/(OB - DF)
+        
+        Parameters:
+        ===========
+        crop_roi: ROI object that defines the dimension and position of the region to keep in
+        the final data
+        norm_roi: ROI object that defines the region of the sample and OB that have to match 
+        in intensity
+
+        Raises:
+        =======
+        IOError: if no sample loaded
+        IOError: if no OB loaded
+        IOError: if size of sample and OB do not match
+        
         '''
+        
+        # make sure we loaded some sample data
         if self.data['sample']['data'] == []:
             raise IOError("No normalization available as no data have been loaded")
 
+        # make sure we loaded some ob data
         if self.data['ob']['data'] == []:
             raise IOError("No normalization available as no OB have been loaded")
 
+        # make sure that the size of the sample and ob data do match
         nbr_sample = len(self.data['sample']['file_name'])
         nbr_ob = len(self.data['ob']['file_name'])
         if nbr_sample != nbr_ob:
             raise IOError("Number of sample and ob do not match!")
+        
+        # make sure, if provided, crop_roi has the right type and fits into the images
+        if crop_roi:
+            if not type(crop_roi) == ROI:
+                raise ValueError("crop_roi must be a ROI object!")
+            if not self.__roi_fit_into_sample(roi=crop_roi):
+                raise ValueError("crop_roi does not fit into sample image!")
+        
+        # make sure, if provided, norm_roi has the rigth type and fits into the images
+        if norm_roi:
+            if not type(norm_roi) == ROI:
+                raise ValueError("norm_roi must be a ROI object!")
+            if not self.__roi_fit_into_sample(roi=norm_roi):
+                raise ValueError("norm_roi does not fit into sample image!")
 
         if not self.data['df']['data'] == []:
             self.df_correction(data_type='sample')
@@ -118,9 +151,23 @@ class GratingInterferometer(object):
         
         for _index, _sample in enumerate(self.data['sample']['data']):
             _ob = self.data['ob']['data'][_index]
-            _norm = _sample 
+            
+            # perform normalization
+
+
             
         return True
+    
+    def __roi_fit_into_sample(self, roi=[]):
+        [sample_height, sample_width] = np.shape(self.data['sample']['data'][0])
+        
+        [_x0, _y0, _x1, _y1] = [roi.x0, roi.y0, roi.x1, roi.y1]
+        if (_x0 < 0) or (_x0 >= sample_width):
+            return False
+        
+        return True
+        
+        
     
     def df_correction(self, data_type='sample'):
         '''dark field correction

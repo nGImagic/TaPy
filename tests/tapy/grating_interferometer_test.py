@@ -5,6 +5,7 @@ import os
 from PIL import Image
 
 from tapy.grating_interferometer import GratingInterferometer
+from tapy.roi import ROI
 
 
 class TestLoadingNormalization(unittest.TestCase):
@@ -318,4 +319,26 @@ class TestLoadingNormalization(unittest.TestCase):
         _ob_data = o_grating.data['ob']['data'][0]
         self.assertTrue((_expected_data == _ob_data).all())
         
-   
+    def test_roi_type(self):
+        '''assert error is raised when type of crop and norm roi are not ROI'''
+        sample_tif_file = self.data_path + '/tif/sample/image001.tif'
+        ob_tif_file = self.data_path + '/tif/ob/ob001.tif'
+        o_grating = GratingInterferometer()
+        o_grating.load(file=sample_tif_file, data_type='sample')
+        o_grating.load(file=ob_tif_file, data_type='ob')
+        crop_roi = {'x0':0, 'y0':0, 'x1':2, 'y1':2}
+        self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi)
+        
+        crop_roi = ROI(x0=0, y0=0, x1=2, y1=2)
+        norm_roi = {'x0':0, 'y0':0, 'x1':2, 'y1':2}
+        self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi, norm_roi=norm_roi)
+
+    #def test_roi_fit_images(self):
+        #'''assert norm and crop roi do fit the images'''
+        #sample_tif_file = self.data_path + '/tif/sample/image001.tif'
+        #ob_tif_file = self.data_path + '/tif/ob/ob001.tif'
+        #o_grating = GratingInterferometer()
+        #o_grating.load(file=sample_tif_file, data_type='sample')
+        #o_grating.load(file=ob_tif_file, data_type='ob')
+        #crop_roi = ROI(x0=0, y0=0, x1=20, y1=20)
+        #self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi)
