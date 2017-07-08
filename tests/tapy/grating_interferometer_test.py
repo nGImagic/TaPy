@@ -353,3 +353,47 @@ class TestLoadingNormalization(unittest.TestCase):
         crop_roi = ROI(x0=0, y0=0, x1=4, y1=20)
         self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi)        
         
+    def test_sample_df_correction(self):
+        '''assert sample df correction works with and without norm roi provided'''
+        sample_tif_folder = self.data_path + '/tif/sample'
+        ob_tif_folder = self.data_path + '/tif/ob'
+
+        # testing sample with norm_roi
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_tif_folder)
+        o_grating.load(folder=ob_tif_folder, data_type='ob')
+        norm_roi = ROI(x0=0, y0=0, x1=3, y1=2)
+        o_grating.normalization(norm_roi=norm_roi)
+        _sample = o_grating.data['sample']['data'][0]
+        _expected = np.mean(_sample[0:3, 0:4])
+        _returned = o_grating.data['sample']['data_df_corrected_roi_mean'][0]
+        self.assertTrue(_expected == _returned)
+
+        # testing sample without norm_roi
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_tif_folder)
+        o_grating.load(folder=ob_tif_folder, data_type='ob')
+        o_grating.normalization()
+        _expected = np.mean(_sample)
+        _returned = o_grating.data['sample']['data_df_corrected_roi_mean'][0]
+        self.assertTrue(_expected == _returned)
+        
+        # testing ob with norm_roi
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_tif_folder)
+        o_grating.load(folder=ob_tif_folder, data_type='ob')
+        norm_roi = ROI(x0=0, y0=0, x1=3, y1=2)
+        o_grating.normalization(norm_roi=norm_roi)
+        _ob = o_grating.data['ob']['data'][0]
+        _expected = np.mean(_ob[0:3, 0:4])
+        _returned = o_grating.data['ob']['data_df_corrected_roi_mean'][0]
+        self.assertTrue(_expected == _returned)
+        
+        # testing ob without norm_roi
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_tif_folder)
+        o_grating.load(folder=ob_tif_folder, data_type='ob')
+        o_grating.normalization()
+        _expected = np.mean(_ob)
+        _returned = o_grating.data['ob']['data_df_corrected_roi_mean'][0]
+        self.assertTrue(_expected == _returned)        

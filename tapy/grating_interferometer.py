@@ -12,8 +12,10 @@ class GratingInterferometer(object):
     
     def __init__(self):
         self.dict_image = { 'data': [],
+                            'data_df_corrected_roi_mean': [],
                             'file_name': []}
         self.dict_ob = {'data': [],
+                        'data_df_corrected_roi_mean': [],
                         'file_name': []}
         self.dict_df = {'data': [],
                         'data_average': [],
@@ -100,7 +102,9 @@ class GratingInterferometer(object):
 
     def normalization(self, crop_roi=None, norm_roi=None):
         '''normalization of the data 
-        normalized_data = (sample - DF)/(OB - DF)
+        
+        sample_df_corrected = sample - DF
+        ob_df_corrected = OB - DF
         
         Parameters:
         ===========
@@ -149,12 +153,31 @@ class GratingInterferometer(object):
             self.df_correction(data_type='sample')
             self.df_correction(data_type='ob')
         
+        if norm_roi:
+            _x0 = norm_roi.x0
+            _y0 = norm_roi.y0
+            _x1 = norm_roi.x1
+            _y1 = norm_roi.y1
+        
+        # heat normalization algorithm
+        _sample_df_corrected_roi_mean = []
+        _ob_df_corrected_roi_mean = []
+
         for _index, _sample in enumerate(self.data['sample']['data']):
             _ob = self.data['ob']['data'][_index]
+
+            if norm_roi:
+                _ob_roi = np.mean(_ob[_y0:_y1+1, _x0:_x1+1])
+                _sample_roi = np.mean(_sample[_y0:_y1+1, _x0:_x1+1])
+            else:
+                _ob_roi = np.mean(_ob[:])
+                _sample_roi = np.mean(_sample[:])
             
-            # perform normalization
-
-
+            _sample_df_corrected_roi_mean.append(_sample_roi)
+            _ob_df_corrected_roi_mean.append(_ob_roi)
+            
+        self.data['sample']['data_df_corrected_roi_mean'] = _sample_df_corrected_roi_mean
+        self.data['ob']['data_df_corrected_roi_mean'] = _ob_df_corrected_roi_mean
             
         return True
     
