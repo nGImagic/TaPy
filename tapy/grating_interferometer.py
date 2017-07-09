@@ -12,10 +12,10 @@ class GratingInterferometer(object):
     
     def __init__(self):
         self.dict_image = { 'data': [],
-                            'data_df_corrected_roi_mean': [],
+                            'data_df_corrected_normalized': [],
                             'file_name': []}
         self.dict_ob = {'data': [],
-                        'data_df_corrected_roi_mean': [],
+                        'data_df_corrected_normalized': [],
                         'file_name': []}
         self.dict_df = {'data': [],
                         'data_average': [],
@@ -160,24 +160,21 @@ class GratingInterferometer(object):
             _y1 = norm_roi.y1
         
         # heat normalization algorithm
-        _sample_df_corrected_roi_mean = []
-        _ob_df_corrected_roi_mean = []
+        _sample_df_corrected_normalized = []
+        _ob_df_corrected_normalized = []
 
         for _index, _sample in enumerate(self.data['sample']['data']):
             _ob = self.data['ob']['data'][_index]
 
             if norm_roi:
-                _ob_roi = np.mean(_ob[_y0:_y1+1, _x0:_x1+1])
-                _sample_roi = np.mean(_sample[_y0:_y1+1, _x0:_x1+1])
-            else:
-                _ob_roi = np.mean(_ob[:])
-                _sample_roi = np.mean(_sample[:])
+                _ob = _ob / np.mean(_ob[_y0:_y1+1, _x0:_x1+1])
+                _sample = _sample / np.mean(_sample[_y0:_y1+1, _x0:_x1+1])
             
-            _sample_df_corrected_roi_mean.append(_sample_roi)
-            _ob_df_corrected_roi_mean.append(_ob_roi)
+            _sample_df_corrected_normalized.append(_sample)
+            _ob_df_corrected_normalized.append(_ob)
             
-        self.data['sample']['data_df_corrected_roi_mean'] = _sample_df_corrected_roi_mean
-        self.data['ob']['data_df_corrected_roi_mean'] = _ob_df_corrected_roi_mean
+        self.data['sample']['data_df_corrected_normalized'] = _sample_df_corrected_normalized
+        self.data['ob']['data_df_corrected_normalized'] = _ob_df_corrected_normalized
             
         return True
     
