@@ -319,22 +319,18 @@ class TestLoadingNormalization(unittest.TestCase):
         _ob_data = o_grating.data['ob']['data'][0]
         self.assertTrue((_expected_data == _ob_data).all())
         
-    def test_roi_type(self):
-        '''assert error is raised when type of crop and norm roi are not ROI'''
+    def test_roi_type_in_normalization(self):
+        '''assert error is raised when type of norm roi are not ROI in normalization'''
         sample_tif_file = self.data_path + '/tif/sample/image001.tif'
         ob_tif_file = self.data_path + '/tif/ob/ob001.tif'
         o_grating = GratingInterferometer()
         o_grating.load(file=sample_tif_file, data_type='sample')
         o_grating.load(file=ob_tif_file, data_type='ob')
-        crop_roi = {'x0':0, 'y0':0, 'x1':2, 'y1':2}
-        self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi)
-        
-        crop_roi = ROI(x0=0, y0=0, x1=2, y1=2)
         norm_roi = {'x0':0, 'y0':0, 'x1':2, 'y1':2}
-        self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi, norm_roi=norm_roi)
-
+        self.assertRaises(ValueError, o_grating.normalization, norm_roi=norm_roi)
+        
     def test_roi_fit_images(self):
-        '''assert norm and crop roi do fit the images'''
+        '''assert norm roi do fit the images'''
         sample_tif_file = self.data_path + '/tif/sample/image001.tif'
         ob_tif_file = self.data_path + '/tif/ob/ob001.tif'
         o_grating = GratingInterferometer()
@@ -342,16 +338,16 @@ class TestLoadingNormalization(unittest.TestCase):
         o_grating.load(file=ob_tif_file, data_type='ob')
         
         # x0 < 0 or x1 > image_width
-        crop_roi = ROI(x0=0, y0=0, x1=20, y1=4)
-        self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi)
-        crop_roi = ROI(x0=-1, y0=0, x1=4, y1=4)
-        self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi)        
+        norm_roi = ROI(x0=0, y0=0, x1=20, y1=4)
+        self.assertRaises(ValueError, o_grating.normalization, norm_roi=norm_roi)
+        norm_roi = ROI(x0=-1, y0=0, x1=4, y1=4)
+        self.assertRaises(ValueError, o_grating.normalization, norm_roi=norm_roi)        
         
         # y0 < 0 or y1 > image_height
-        crop_roi = ROI(x0=0, y0=-1, x1=4, y1=4)
-        self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi)
-        crop_roi = ROI(x0=0, y0=0, x1=4, y1=20)
-        self.assertRaises(ValueError, o_grating.normalization, crop_roi=crop_roi)        
+        norm_roi = ROI(x0=0, y0=-1, x1=4, y1=4)
+        self.assertRaises(ValueError, o_grating.normalization, norm_roi=norm_roi)
+        norm_roi = ROI(x0=0, y0=0, x1=4, y1=20)
+        self.assertRaises(ValueError, o_grating.normalization, norm_roi=norm_roi)        
         
     def test_sample_df_correction(self):
         '''assert sample df correction works with and without norm roi provided'''

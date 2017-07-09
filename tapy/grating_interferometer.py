@@ -100,7 +100,7 @@ class GratingInterferometer(object):
         else:
             raise OSError("The file name does not exist")
 
-    def normalization(self, crop_roi=None, norm_roi=None):
+    def normalization(self, norm_roi=None):
         '''normalization of the data 
         
         sample_df_corrected = sample - DF
@@ -108,8 +108,6 @@ class GratingInterferometer(object):
         
         Parameters:
         ===========
-        crop_roi: ROI object that defines the dimension and position of the region to keep in
-        the final data
         norm_roi: ROI object that defines the region of the sample and OB that have to match 
         in intensity
 
@@ -134,14 +132,7 @@ class GratingInterferometer(object):
         nbr_ob = len(self.data['ob']['file_name'])
         if nbr_sample != nbr_ob:
             raise IOError("Number of sample and ob do not match!")
-        
-        # make sure, if provided, crop_roi has the right type and fits into the images
-        if crop_roi:
-            if not type(crop_roi) == ROI:
-                raise ValueError("crop_roi must be a ROI object!")
-            if not self.__roi_fit_into_sample(roi=crop_roi):
-                raise ValueError("crop_roi does not fit into sample image!")
-        
+                
         # make sure, if provided, norm_roi has the rigth type and fits into the images
         if norm_roi:
             if not type(norm_roi) == ROI:
