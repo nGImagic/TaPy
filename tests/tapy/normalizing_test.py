@@ -8,7 +8,7 @@ from tapy.grating_interferometer import GratingInterferometer
 from tapy.roi import ROI
 
 
-class TestLoading(unittest.TestCase):
+class TestNormalization(unittest.TestCase):
     
     def setUp(self):    
         _file_path = os.path.dirname(__file__)
@@ -32,6 +32,12 @@ class TestLoading(unittest.TestCase):
         o_grating.load(folder=sample_path, data_type='sample')
         o_grating.load(folder=ob_path, data_type='ob')
         assert o_grating.normalization()
+ 
+class TestDFCorrection(unittest.TestCase):
+    
+    def setUp(self):    
+        _file_path = os.path.dirname(__file__)
+        self.data_path = os.path.abspath(os.path.join(_file_path, '../data/'))  
         
     def test_df_correction_when_no_df(self):
         '''assert sample and ob are inchanged if df is empty'''
@@ -73,17 +79,6 @@ class TestLoading(unittest.TestCase):
         o_grating.data['ob']['data'] = sample_1
         o_grating.data['df']['data'] = ob_1
         self.assertRaises(IOError, o_grating.df_correction, 'ob')
-        
-    def test_same_number_of_images_loaded_in_sample_and_ob(self):
-        '''assert sample and ob have the same number of images loaded'''
-        sample_tif_file_1 = self.data_path + '/tif/sample/image001.tif'
-        sample_tif_file_2 = self.data_path + '/tif/sample/image002.tif'
-        o_grating = GratingInterferometer()
-        o_grating.load(file=sample_tif_file_1, data_type='sample')
-        o_grating.load(file=sample_tif_file_2, data_type='sample')
-        ob_tif_file_1 = self.data_path + '/tif/ob/ob001.tif'
-        o_grating.load(file=ob_tif_file_1, data_type='ob')
-        self.assertRaises(IOError, o_grating.normalization)
         
     def test_df_averaging(self):
         '''assert df average works'''
@@ -149,37 +144,7 @@ class TestLoading(unittest.TestCase):
         _expected_data = np.zeros([5,5])
         _ob_data = o_grating.data['ob']['data'][0]
         self.assertTrue((_expected_data == _ob_data).all())
-        
-    def test_roi_type_in_normalization(self):
-        '''assert error is raised when type of norm roi are not ROI in normalization'''
-        sample_tif_file = self.data_path + '/tif/sample/image001.tif'
-        ob_tif_file = self.data_path + '/tif/ob/ob001.tif'
-        o_grating = GratingInterferometer()
-        o_grating.load(file=sample_tif_file, data_type='sample')
-        o_grating.load(file=ob_tif_file, data_type='ob')
-        roi = {'x0':0, 'y0':0, 'x1':2, 'y1':2}
-        self.assertRaises(ValueError, o_grating.normalization, roi)
-        
-    def test_roi_fit_images(self):
-        '''assert norm roi do fit the images'''
-        sample_tif_file = self.data_path + '/tif/sample/image001.tif'
-        ob_tif_file = self.data_path + '/tif/ob/ob001.tif'
-        o_grating = GratingInterferometer()
-        o_grating.load(file=sample_tif_file, data_type='sample')
-        o_grating.load(file=ob_tif_file, data_type='ob')
-        
-        # x0 < 0 or x1 > image_width
-        roi = ROI(x0=0, y0=0, x1=20, y1=4)
-        self.assertRaises(ValueError, o_grating.normalization, roi)
-        roi = ROI(x0=-1, y0=0, x1=4, y1=4)
-        self.assertRaises(ValueError, o_grating.normalization, roi)        
-        
-        # y0 < 0 or y1 > image_height
-        roi = ROI(x0=0, y0=-1, x1=4, y1=4)
-        self.assertRaises(ValueError, o_grating.normalization, roi)
-        roi = ROI(x0=0, y0=0, x1=4, y1=20)
-        self.assertRaises(ValueError, o_grating.normalization, roi)        
-        
+
     def test_sample_df_correction(self):
         '''assert sample df correction works with and without norm roi provided'''
         sample_tif_folder = self.data_path + '/tif/sample'
@@ -224,12 +189,63 @@ class TestLoading(unittest.TestCase):
         _expected = o_grating.data['ob']['data'][0]
         _returned = o_grating.data['ob']['working_data'][0]
         self.assertTrue((_expected == _returned).all())        
+        
+        
+class TestApplyingROI(unittest.TestCase):
+    
+    def setUp(self):    
+        _file_path = os.path.dirname(__file__)
+        self.data_path = os.path.abspath(os.path.join(_file_path, '../data/'))       
+        
+    def test_roi_type_in_normalization(self):
+        '''assert error is raised when type of norm roi are not ROI in normalization'''
+        sample_tif_file = self.data_path + '/tif/sample/image001.tif'
+        ob_tif_file = self.data_path + '/tif/ob/ob001.tif'
+        o_grating = GratingInterferometer()
+        o_grating.load(file=sample_tif_file, data_type='sample')
+        o_grating.load(file=ob_tif_file, data_type='ob')
+        roi = {'x0':0, 'y0':0, 'x1':2, 'y1':2}
+        self.assertRaises(ValueError, o_grating.normalization, roi)
+        
+    def test_roi_fit_images(self):
+        '''assert norm roi do fit the images'''
+        sample_tif_file = self.data_path + '/tif/sample/image001.tif'
+        ob_tif_file = self.data_path + '/tif/ob/ob001.tif'
+        o_grating = GratingInterferometer()
+        o_grating.load(file=sample_tif_file, data_type='sample')
+        o_grating.load(file=ob_tif_file, data_type='ob')
+        
+        # x0 < 0 or x1 > image_width
+        roi = ROI(x0=0, y0=0, x1=20, y1=4)
+        self.assertRaises(ValueError, o_grating.normalization, roi)
+        roi = ROI(x0=-1, y0=0, x1=4, y1=4)
+        self.assertRaises(ValueError, o_grating.normalization, roi)        
+        
+        # y0 < 0 or y1 > image_height
+        roi = ROI(x0=0, y0=-1, x1=4, y1=4)
+        self.assertRaises(ValueError, o_grating.normalization, roi)
+        roi = ROI(x0=0, y0=0, x1=4, y1=20)
+        self.assertRaises(ValueError, o_grating.normalization, roi)        
 
     def test_error_raised_when_data_shape_of_different_type_do_not_match(self):
         '''assert shape of data must match to allow normalization'''
+        
+        # sample and ob
         image1 = self.data_path + '/tif/sample/image001.tif'
         ob1 = self.data_path + '/different_format/ob001_4_by_4.tif'
         o_grating = GratingInterferometer()
         o_grating.load(file=image1)
         o_grating.load(file=ob1, data_type='ob')
         self.assertRaises(ValueError, o_grating.normalization)
+        
+        # sample, ob and df
+        image1 = self.data_path + '/tif/sample/image001.tif'
+        ob1 = self.data_path + '/tif/ob/ob001.tif'
+        df1 = self.data_path + '/different_format/df001_4_by_4.tif'
+        o_grating = GratingInterferometer()
+        o_grating.load(file=image1)
+        o_grating.load(file=ob1, data_type='ob')
+        o_grating.load(file=df1, data_type='df')
+        self.assertRaises(ValueError, o_grating.normalization)
+        
+       
