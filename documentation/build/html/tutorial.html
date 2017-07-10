@@ -113,7 +113,7 @@ Two options are available to load them:</p>
 </pre></div>
 </div>
 <p>then the normalization can be run</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">normalization</span><span class="p">(</span> <span class="n">norm_roi</span><span class="o">=</span><span class="n">my_norm_roi</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">normalization</span><span class="p">(</span><span class="n">norm_roi</span><span class="o">=</span><span class="n">my_norm_roi</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -129,8 +129,8 @@ Two options are available to load them:</p>
 <p>Each of the data set in the sample and ob will then be normalized (and df corrected if any df have been loaded).
 If a norm_roi has been provided, the sample arrays will be divided by the average of the region defined. Same thing
 for the ob. Those normalized array can be retrieved this way</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample_normalized_array</span> <span class="o">=</span> <span class="n">o_grating</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sample&#39;</span><span class="p">][</span><span class="s1">&#39;data_df_corrected_normalized&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ob_normalized_array</span> <span class="o">=</span> <span class="n">o_gretting</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ob&#39;</span><span class="p">][</span><span class="s1">&#39;data_df_corrected_normalized&#39;</span><span class="p">]</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample_normalized_array</span> <span class="o">=</span> <span class="n">o_grating</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sample&#39;</span><span class="p">][</span><span class="s1">&#39;working_data&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ob_normalized_array</span> <span class="o">=</span> <span class="n">o_gretting</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ob&#39;</span><span class="p">][</span><span class="s1">&#39;working_data&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -149,6 +149,7 @@ for the ob. Those normalized array can be retrieved this way</p>
 <li>y1 = 250</li>
 </ul>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_crop_roi</span> <span class="o">=</span> <span class="n">tapy</span><span class="o">.</span><span class="n">ROI</span><span class="p">(</span><span class="n">x0</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">y0</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">x1</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">y1</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="n">roi</span><span class="o">=</span><span class="n">my_crop_roi</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

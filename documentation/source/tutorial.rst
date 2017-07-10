@@ -111,5 +111,5 @@ let's use the first method and let's pretend the ROI is defined by
 - y1 = 250
 
 >>> my_crop_roi = tapy.ROI(x0=5, y0=5, x1=200, y1=250)
-
+>>> o_grating.crop(roi=my_crop_roi)
 
