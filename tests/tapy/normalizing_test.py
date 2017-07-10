@@ -224,3 +224,12 @@ class TestLoading(unittest.TestCase):
         _expected = o_grating.data['ob']['data'][0]
         _returned = o_grating.data['ob']['working_data'][0]
         self.assertTrue((_expected == _returned).all())        
+
+    def test_error_raised_when_data_shape_of_different_type_do_not_match(self):
+        '''assert shape of data must match to allow normalization'''
+        image1 = self.data_path + '/tif/sample/image001.tif'
+        ob1 = self.data_path + '/different_format/ob001_4_by_4.tif'
+        o_grating = GratingInterferometer()
+        o_grating.load(file=image1)
+        o_grating.load(file=ob1, data_type='ob')
+        self.assertRaises(ValueError, o_grating.normalization)

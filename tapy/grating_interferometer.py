@@ -159,6 +159,10 @@ class GratingInterferometer(object):
         if nbr_sample != nbr_ob:
             raise IOError("Number of sample and ob do not match!")
               
+        # make sure the data loaded have the same size
+        if not self.data_loaded_have_matching_shape():
+            raise ValueError("Data loaded do not have the same shape!")
+              
         # make sure, if provided, roi has the rigth type and fits into the images
         if roi:
             if not type(roi) == ROI:
@@ -192,6 +196,26 @@ class GratingInterferometer(object):
             
         self.data['sample']['working_data'] = _sample_df_corrected_normalized
         self.data['ob']['working_data'] = _ob_df_corrected_normalized
+            
+        return True
+    
+    def data_loaded_have_matching_shape(self):
+        '''check that data loaded have the same shape
+        
+        Returns:
+        =======
+        bool: result of the check
+        '''
+        _shape_sample = self.data['sample']['shape']
+        _shape_ob = self.data['ob']['shape']
+        
+        if not (_shape_sample == _shape_ob):
+            return False
+        
+        _shape_df = self.data['df']['shape']
+        if not np.isnan(_shape_df['height']):
+            if not (_shape_sample == _shape_df):
+                return False
             
         return True
     
