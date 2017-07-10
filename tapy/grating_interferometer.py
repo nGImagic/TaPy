@@ -11,15 +11,20 @@ class GratingInterferometer(object):
     im_ext = ['.fits','.tiff','.tif','.hdf','.h4','.hdf4','.he2','h5','.hdf5','.he5']
     
     def __init__(self):
+        self.shape = {'width': np.NaN,
+                      'height': np.NaN}
         self.dict_image = { 'data': [],
                             'working_data': [],
-                            'file_name': []}
+                            'file_name': [],
+                            'shape': self.shape.copy()}
         self.dict_ob = {'data': [],
                         'working_data': [],
-                        'file_name': []}
+                        'file_name': [],
+                        'shape': self.shape.copy()}
         self.dict_df = {'data': [],
                         'data_average': [],
-                        'file_name': []}
+                        'file_name': [],
+                        'shape': self.shape.copy()}
 
         __roi_dict = {'x0': np.NaN,
                       'x1': np.NaN,
@@ -96,9 +101,30 @@ class GratingInterferometer(object):
 
             self.data[data_type]['data'].append(data)
             self.data[data_type]['file_name'].append(file)
+            self.save_or_check_shape(data=data, data_type=data_type)
 
         else:
             raise OSError("The file name does not exist")
+
+    def save_or_check_shape(self, data=[], data_type='sample'):
+        '''save the shape for the first data loaded (of each type) otherwise
+        check the size match
+    
+        Raises:
+        IOError if size do not match
+        '''
+        [height, width] = np.shape(data)
+        if np.isnan(self.data[data_type]['shape']['height']):
+            _shape = self.shape.copy()
+            _shape['height'] = height
+            _shape['width'] = width
+            self.data[data_type]['shape'] = _shape
+        else:
+            _prev_width = self.data[data_type]['shape']['width']
+            _prev_height = self.data[data_type]['shape']['height']
+            
+            if (not (_prev_width == width)) or (not (_prev_height == height)):
+                raise IOError("Shape of {} do not match previous loaded data set!".format(data_type))
 
     def normalization(self, roi=None):
         '''normalization of the data 

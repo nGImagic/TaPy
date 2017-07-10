@@ -183,4 +183,25 @@ class TestLoading(unittest.TestCase):
         list_of_files_retrieved = o_grating.data['sample']['file_name']
         self.assertTrue(list_of_files_expected == list_of_files_retrieved)
         
-   
+    def test_error_raised_when_data_size_do_not_match(self):
+        '''assert IOError raised when data of a same type do not match in size'''
+        # sample
+        image1 = self.data_path + '/tif/sample/image001.tif'
+        image2 = self.data_path + '/different_format/image001_4_by_4.tif'
+        o_grating = GratingInterferometer()
+        o_grating.load(file=image1)
+        self.assertRaises(IOError, o_grating.load, file=image2)
+
+        # ob
+        ob1 = self.data_path + '/tif/ob/ob001.tif'
+        ob2 = self.data_path + '/different_format/ob001_4_by_4.tif'
+        o_grating = GratingInterferometer()
+        o_grating.load(file=ob1)
+        self.assertRaises(IOError, o_grating.load, file=ob2)
+        
+        # df
+        df1 = self.data_path + '/tif/df/df001.tif'
+        df2 = self.data_path + '/different_format/df001_4_by_4.tif'
+        o_grating = GratingInterferometer()
+        o_grating.load(file=df1)
+        self.assertRaises(IOError, o_grating.load, file=df2)        
