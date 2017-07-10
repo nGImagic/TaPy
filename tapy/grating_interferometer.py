@@ -133,10 +133,6 @@ class GratingInterferometer(object):
         if nbr_sample != nbr_ob:
             raise IOError("Number of sample and ob do not match!")
               
-        # make sure that all the data loaded have the same shape
-        if not self.all_data_loaded_have_same_shape():
-            raise IOError("Data loaded do not have the same size!")
-                
         # make sure, if provided, roi has the rigth type and fits into the images
         if roi:
             if not type(roi) == ROI:
