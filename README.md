@@ -49,7 +49,7 @@ We recommend following series of functions for succesful data reduction:
  Contact:
  Ralph P. Harti - Ralph.Harti@psi.ch
  Jacopo Valsecchi - Jacopo.Valsecchi@psi.ch
- 
+ Jean Bilheux - bilheuxjm@ornl.gov
  
 Cite as: Ralph P. Harti & Jacopo Valsecchi. (2017, June 6). nGImagic/TaPy: TaPy 0.2. http://doi.org/10.5281/zenodo.803047
  
