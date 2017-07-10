@@ -100,7 +100,7 @@ class GratingInterferometer(object):
         else:
             raise OSError("The file name does not exist")
 
-    def normalization(self, norm_roi=None):
+    def normalization(self, roi=None):
         '''normalization of the data 
         
         sample_df_corrected = sample - DF
@@ -108,7 +108,7 @@ class GratingInterferometer(object):
         
         Parameters:
         ===========
-        norm_roi: ROI object that defines the region of the sample and OB that have to match 
+        roi: ROI object that defines the region of the sample and OB that have to match 
         in intensity
 
         Raises:
@@ -133,22 +133,22 @@ class GratingInterferometer(object):
         if nbr_sample != nbr_ob:
             raise IOError("Number of sample and ob do not match!")
                 
-        # make sure, if provided, norm_roi has the rigth type and fits into the images
-        if norm_roi:
-            if not type(norm_roi) == ROI:
-                raise ValueError("norm_roi must be a ROI object!")
-            if not self.__roi_fit_into_sample(roi=norm_roi):
-                raise ValueError("norm_roi does not fit into sample image!")
+        # make sure, if provided, roi has the rigth type and fits into the images
+        if roi:
+            if not type(roi) == ROI:
+                raise ValueError("roi must be a ROI object!")
+            if not self.__roi_fit_into_sample(roi=roi):
+                raise ValueError("roi does not fit into sample image!")
 
         if not self.data['df']['data'] == []:
             self.df_correction(data_type='sample')
             self.df_correction(data_type='ob')
         
-        if norm_roi:
-            _x0 = norm_roi.x0
-            _y0 = norm_roi.y0
-            _x1 = norm_roi.x1
-            _y1 = norm_roi.y1
+        if roi:
+            _x0 = roi.x0
+            _y0 = roi.y0
+            _x1 = roi.x1
+            _y1 = roi.y1
         
         # heat normalization algorithm
         _sample_df_corrected_normalized = []
@@ -157,7 +157,7 @@ class GratingInterferometer(object):
         for _index, _sample in enumerate(self.data['sample']['data']):
             _ob = self.data['ob']['data'][_index]
 
-            if norm_roi:
+            if roi:
                 _ob = _ob / np.mean(_ob[_y0:_y1+1, _x0:_x1+1])
                 _sample = _sample / np.mean(_sample[_y0:_y1+1, _x0:_x1+1])
             
@@ -223,4 +223,6 @@ class GratingInterferometer(object):
         mean_average = np.mean(df, axis=0)
         return mean_average
     
-   
+    def crop(self, roi=None):
+        ''' Cropping all the data loaded (sample, ob, df)'''
+        pass

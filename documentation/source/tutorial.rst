@@ -76,7 +76,7 @@ Let's use the following region
 
 then the normalization can be run
 
->>> o_grating.normalization( norm_roi=my_norm_roi
+>>> o_grating.normalization(norm_roi=my_norm_roi)
 
 Normalization
 -------------
@@ -92,8 +92,8 @@ Each of the data set in the sample and ob will then be normalized (and df correc
 If a norm_roi has been provided, the sample arrays will be divided by the average of the region defined. Same thing 
 for the ob. Those normalized array can be retrieved this way
 
->>> sample_normalized_array = o_grating.data['sample']['data_df_corrected_normalized']
->>> ob_normalized_array = o_gretting.data['ob']['data_df_corrected_normalized']
+>>> sample_normalized_array = o_grating.data['sample']['working_data']
+>>> ob_normalized_array = o_gretting.data['ob']['working_data']
 
 Cropping the data (optional)
 ----------------------------
