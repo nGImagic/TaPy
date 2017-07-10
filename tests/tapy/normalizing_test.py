@@ -190,7 +190,6 @@ class TestDFCorrection(unittest.TestCase):
         _returned = o_grating.data['ob']['working_data'][0]
         self.assertTrue((_expected == _returned).all())        
         
-        
 class TestApplyingROI(unittest.TestCase):
     
     def setUp(self):    
