@@ -127,11 +127,15 @@ class GratingInterferometer(object):
         if self.data['ob']['data'] == []:
             raise IOError("No normalization available as no OB have been loaded")
 
-        # make sure that the size of the sample and ob data do match
+        # make sure that the length of the sample and ob data do match
         nbr_sample = len(self.data['sample']['file_name'])
         nbr_ob = len(self.data['ob']['file_name'])
         if nbr_sample != nbr_ob:
             raise IOError("Number of sample and ob do not match!")
+              
+        # make sure that all the data loaded have the same shape
+        if not self.all_data_loaded_have_same_shape():
+            raise IOError("Data loaded do not have the same size!")
                 
         # make sure, if provided, roi has the rigth type and fits into the images
         if roi:
