@@ -4,7 +4,7 @@ import os
 
 from tapy.loader import load_hdf, load_tiff, load_fits
 from tapy.roi import ROI
-from tapy._utilities import get_sorted_list_images
+from tapy._utilities import get_sorted_list_images, average_df
 
 class GratingInterferometer(object):
 
@@ -238,7 +238,7 @@ class GratingInterferometer(object):
         if self.data['df']['data_average'] == []:
             _df = self.data['df']['data']
             if len(_df) > 1:
-                _df = self._average_df(df=_df)
+                _df = average_df(df=_df)
             self.data['df']['data_average'] = _df
         else:
             _df = self.data['df']['data_average']
@@ -252,11 +252,6 @@ class GratingInterferometer(object):
                 _data_df_corrected.append(_data)
 
         self.data[data_type]['data'] = _data_df_corrected
-        
-    def _average_df(self, df=[]):
-        '''if more than 1 DF have been provided, we need to average them'''
-        mean_average = np.mean(df, axis=0)
-        return mean_average
     
     def crop(self, roi=None):
         ''' Cropping all the data loaded (sample, ob, df)'''

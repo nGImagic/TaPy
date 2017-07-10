@@ -79,18 +79,6 @@ class TestDFCorrection(unittest.TestCase):
         o_grating.data['ob']['data'] = sample_1
         o_grating.data['df']['data'] = ob_1
         self.assertRaises(IOError, o_grating.df_correction, 'ob')
-        
-    def test_df_averaging(self):
-        '''assert df average works'''
-        df_tif_file_2 = self.data_path + '/tif/df/df002.tif'
-        df_tif_file_3 = self.data_path + '/tif/df/df003.tif'
-        o_grating = GratingInterferometer()
-        o_grating.load(file=df_tif_file_2, data_type='df')
-        o_grating.load(file=df_tif_file_3, data_type='df')
-        average_df = o_grating._average_df(df=o_grating.data['df']['data'])
-        expected_df = np.ones([5,5])
-        expected_df[0,0] = 5
-        self.assertTrue((expected_df == average_df).all())
 
     def test_df_averaging_only_run_the_first_time(self):
         '''assert the average_df is only run the first time the df_correction is run'''
