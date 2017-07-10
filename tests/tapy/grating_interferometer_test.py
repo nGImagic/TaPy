@@ -362,7 +362,7 @@ class TestLoadingNormalization(unittest.TestCase):
         o_grating.normalization(norm_roi=norm_roi)
         _sample = o_grating.data['sample']['data'][0]
         _expected = _sample / np.mean(_sample[0:3, 0:4])
-        _returned = o_grating.data['sample']['data_df_corrected_normalized'][0]
+        _returned = o_grating.data['sample']['working_data'][0]
         self.assertTrue((_expected == _returned).all())
 
         # testing sample without norm_roi
@@ -371,7 +371,7 @@ class TestLoadingNormalization(unittest.TestCase):
         o_grating1.load(folder=ob_tif_folder, data_type='ob')
         o_grating1.normalization()
         _expected = o_grating1.data['sample']['data'][0]
-        _returned = o_grating1.data['sample']['data_df_corrected_normalized'][0]
+        _returned = o_grating1.data['sample']['working_data'][0]
         self.assertTrue((_expected == _returned).all())
         
         # testing ob with norm_roi
@@ -382,7 +382,7 @@ class TestLoadingNormalization(unittest.TestCase):
         o_grating.normalization(norm_roi=norm_roi)
         _ob = o_grating.data['ob']['data'][0]
         _expected = _ob / np.mean(_ob[0:3, 0:4])
-        _returned = o_grating.data['ob']['data_df_corrected_normalized'][0]
+        _returned = o_grating.data['ob']['working_data'][0]
         self.assertTrue((_expected == _returned).all())
         
         # testing ob without norm_roi
@@ -391,5 +391,5 @@ class TestLoadingNormalization(unittest.TestCase):
         o_grating.load(folder=ob_tif_folder, data_type='ob')
         o_grating.normalization()
         _expected = o_grating.data['ob']['data'][0]
-        _returned = o_grating.data['ob']['data_df_corrected_normalized'][0]
+        _returned = o_grating.data['ob']['working_data'][0]
         self.assertTrue((_expected == _returned).all())        

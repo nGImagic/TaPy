@@ -353,7 +353,8 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightRO
         titleTwo += ' repetead period'
 #    PLOT oscillation
     im = stack_im[0]
-    if (0<=xROI<=im.shape[1] and 0<=xROI+widthROI<=im.shape[1] and 0<=yROI<=im.shape[0] and 0<=yROI+heightROI<=im.shape[0]):
+    if (0<=xROI<=im.shape[1] and 0<=xROI+widthROI<=im.shape[1] and 
+        0<=yROI<=im.shape[0] and 0<=yROI+heightROI<=im.shape[0]):
         vmin,vmax=im.min(),im.max()
         cmap='gray'
         fig = plt.figure(figsize=(15,10)) 

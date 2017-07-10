@@ -12,10 +12,10 @@ class GratingInterferometer(object):
     
     def __init__(self):
         self.dict_image = { 'data': [],
-                            'data_df_corrected_normalized': [],
+                            'working_data': [],
                             'file_name': []}
         self.dict_ob = {'data': [],
-                        'data_df_corrected_normalized': [],
+                        'working_data': [],
                         'file_name': []}
         self.dict_df = {'data': [],
                         'data_average': [],
@@ -164,8 +164,8 @@ class GratingInterferometer(object):
             _sample_df_corrected_normalized.append(_sample)
             _ob_df_corrected_normalized.append(_ob)
             
-        self.data['sample']['data_df_corrected_normalized'] = _sample_df_corrected_normalized
-        self.data['ob']['data_df_corrected_normalized'] = _ob_df_corrected_normalized
+        self.data['sample']['working_data'] = _sample_df_corrected_normalized
+        self.data['ob']['working_data'] = _ob_df_corrected_normalized
             
         return True
     
