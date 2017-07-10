@@ -225,4 +225,10 @@ class GratingInterferometer(object):
     
     def crop(self, roi=None):
         ''' Cropping all the data loaded (sample, ob, df)'''
-        pass
+        # make sure we loaded some sample data
+        if self.data['sample']['data'] == []:
+            raise IOError("No sample data have been loaded!")
+
+        # make sure we loaded some ob data
+        if self.data['ob']['data'] == []:
+            raise IOError("No ob data have been loaded!")
