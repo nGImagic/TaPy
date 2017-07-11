@@ -257,7 +257,6 @@ class TestOscillation(unittest.TestCase):
     def test_oscillation_algorithm(self):
         '''assert oscillation of sample and ob works'''
 
-        # sample
         sample_path = self.data_path + '/tif/sample/'
         ob_path = self.data_path + '/tif/ob'
         df_path = self.data_path + '/tif/df'
@@ -267,7 +266,16 @@ class TestOscillation(unittest.TestCase):
         o_grating.load(folder=df_path, data_type='df')
         o_grating.normalization()
         o_grating.oscillation()
+        
+        # sample
         _expected = o_grating.data['sample']['normalized'][1]
         _expected = np.mean(_expected)
         _returned = o_grating.data['sample']['oscillation'][1]
         self.assertTrue(_expected == _returned)
+        
+        # ob
+        _expected = o_grating.data['ob']['normalized'][1]
+        _expected = np.mean(_expected)
+        _returned = o_grating.data['ob']['oscillation'][1]
+        self.assertTrue(_expected == _returned)
+        
