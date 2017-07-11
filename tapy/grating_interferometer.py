@@ -1,6 +1,7 @@
 from pathlib import Path
 import numpy as np
 import os
+import warnings
 
 from tapy.loader import load_hdf, load_tiff, load_fits
 from tapy.roi import ROI
@@ -12,11 +13,11 @@ class GratingInterferometer(object):
         self.shape = {'width': np.NaN,
                       'height': np.NaN}
         self.dict_image = { 'data': [],
-                            'working_data': [],
+                            'normalized': [],
                             'file_name': [],
                             'shape': self.shape.copy()}
         self.dict_ob = {'data': [],
-                        'working_data': [],
+                        'normalized': [],
                         'file_name': [],
                         'shape': self.shape.copy()}
         self.dict_df = {'data': [],
@@ -179,8 +180,8 @@ class GratingInterferometer(object):
             _sample_df_corrected_normalized.append(_sample)
             _ob_df_corrected_normalized.append(_ob)
             
-        self.data['sample']['working_data'] = _sample_df_corrected_normalized
-        self.data['ob']['working_data'] = _ob_df_corrected_normalized
+        self.data['sample']['normalized'] = _sample_df_corrected_normalized
+        self.data['ob']['normalized'] = _ob_df_corrected_normalized
             
         return True
     
@@ -254,11 +255,15 @@ class GratingInterferometer(object):
         self.data[data_type]['data'] = _data_df_corrected
     
     def crop(self, roi=None):
-        ''' Cropping all the data loaded (sample, ob, df)'''
-        # make sure we loaded some sample data
-        if self.data['sample']['data'] == []:
-            raise IOError("No sample data have been loaded!")
+        ''' Cropping the sample and ob normalized data
+        
+        Parameters:
+        ===========
+        roi: ROI object that defines the region to crop
 
-        # make sure we loaded some ob data
-        if self.data['ob']['data'] == []:
-            raise IOError("No ob data have been loaded!")
+        Raises:
+        =======
+        ValueError if the data type specified is empty
+        '''
+        pass
+

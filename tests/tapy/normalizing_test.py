@@ -146,7 +146,7 @@ class TestDFCorrection(unittest.TestCase):
         o_grating.normalization(roi=roi)
         _sample = o_grating.data['sample']['data'][0]
         _expected = _sample / np.mean(_sample[0:3, 0:4])
-        _returned = o_grating.data['sample']['working_data'][0]
+        _returned = o_grating.data['sample']['normalized'][0]
         self.assertTrue((_expected == _returned).all())
 
         # testing sample without norm_roi
@@ -155,7 +155,7 @@ class TestDFCorrection(unittest.TestCase):
         o_grating1.load(folder=ob_tif_folder, data_type='ob')
         o_grating1.normalization()
         _expected = o_grating1.data['sample']['data'][0]
-        _returned = o_grating1.data['sample']['working_data'][0]
+        _returned = o_grating1.data['sample']['normalized'][0]
         self.assertTrue((_expected == _returned).all())
         
         # testing ob with norm_roi
@@ -166,7 +166,7 @@ class TestDFCorrection(unittest.TestCase):
         o_grating.normalization(roi=norm_roi)
         _ob = o_grating.data['ob']['data'][0]
         _expected = _ob / np.mean(_ob[0:3, 0:4])
-        _returned = o_grating.data['ob']['working_data'][0]
+        _returned = o_grating.data['ob']['normalized'][0]
         self.assertTrue((_expected == _returned).all())
         
         # testing ob without norm_roi
@@ -175,7 +175,7 @@ class TestDFCorrection(unittest.TestCase):
         o_grating.load(folder=ob_tif_folder, data_type='ob')
         o_grating.normalization()
         _expected = o_grating.data['ob']['data'][0]
-        _returned = o_grating.data['ob']['working_data'][0]
+        _returned = o_grating.data['ob']['normalized'][0]
         self.assertTrue((_expected == _returned).all())        
         
 class TestApplyingROI(unittest.TestCase):
@@ -236,3 +236,20 @@ class TestApplyingROI(unittest.TestCase):
         self.assertRaises(ValueError, o_grating.normalization)
         
        
+class TestCropping(unittest.TestCase):
+    
+    def setUp(self):    
+        _file_path = os.path.dirname(__file__)
+        self.data_path = os.path.abspath(os.path.join(_file_path, '../data/'))      
+                
+    #def test_data_loaded_to_allow_cropping(self):
+        #'''assert any data set loaded to allow cropping'''
+        #o_grating = GratingInterferometer()
+        #self.assertRaises(ValueError, o_grating.crop)
+        
+    #def test_data_crop_when_cropping_done_after_full_loading(self):
+        #'''assert the data are correctly cropped after loading all the data'''
+        #sample_path = self.data_path + '/tif/sample'
+        #o_grating = GratingInterferometer()
+        #o_grating.load(folder=sample_path)
+        
