@@ -40,4 +40,33 @@ class TestCropping(unittest.TestCase):
         o_grating.normalization()
         self.assertTrue(o_grating.crop(roi=_roi))
         
+    def test_roi_object_passed_to_crop(self):
+        '''assert wrong roi type raises a ValueError'''
+        _roi = {'x0':0, 'y0':1}
+        o_grating = GratingInterferometer()
+        sample_path = self.data_path + '/tif/sample'
+        o_grating.load(folder=sample_path)
+        ob_path = self.data_path + '/tif/ob'
+        o_grating.load(folder=ob_path, data_type='ob')
+        o_grating.normalization()
+        self.assertRaises(ValueError, o_grating.crop, roi=_roi)
         
+    def test_crop_works(self):
+        '''assert crop of sample and ob works correctly'''
+        x0, y0, x1, y1 = 0, 0, 2, 2
+        _roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)
+        o_grating = GratingInterferometer()
+        sample_path = self.data_path + '/tif/sample'
+        o_grating.load(folder=sample_path)
+        ob_path = self.data_path + '/tif/ob'
+        o_grating.load(folder=ob_path, data_type='ob')
+        o_grating.normalization()
+        _expected_sample = o_grating.data['sample']['normalized'][0]
+        _expected_sample = _expected_sample[y0:y1+1, x0:x1+1]
+        _expected_ob = o_grating.data['ob']['normalized'][0]
+        _expected_ob = _expected_ob[y0:y1+1, x0:x1+1]
+        o_grating.crop(roi=_roi)
+        _returned_sample = o_grating.data['sample']['normalized'][0]
+        _returned_ob = o_grating.data['ob']['normalized'][0]
+        self.assertTrue((_expected_sample == _returned_sample).all())
+        self.assertTrue((_expected_ob == _returned_ob).all())

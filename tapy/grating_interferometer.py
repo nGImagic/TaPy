@@ -269,8 +269,24 @@ class GratingInterferometer(object):
            (self.data['ob']['normalized'] == []):
             raise IOError("Data and ob have not been normalized yet!")
 
+        if not type(roi) == ROI:
+            raise ValueError("roi must be of type ROI")
         
+        _x0 = roi.x0
+        _y0 = roi.y0
+        _x1 = roi.x1
+        _y1 = roi.y1
         
+        new_sample_normalized = []
+        for _data in self.data['sample']['normalized']:
+            _crop_data = _data[_y0:_y1+1, _x0:_x1+1]
+            new_sample_normalized.append(_crop_data)
+        self.data['sample']['normalized'] = new_sample_normalized
         
+        new_ob_normalized = []
+        for _data in self.data['ob']['normalized']:
+            _crop_data = _data[_y0:_y1+1, _x0:_x1+1]
+            new_ob_normalized.append(_crop_data)
+        self.data['ob']['normalized'] = new_ob_normalized        
         
         return True
