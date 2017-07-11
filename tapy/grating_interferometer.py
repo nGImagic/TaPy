@@ -305,9 +305,9 @@ class GratingInterferometer(object):
             y0 = roi.y0
             x1 = roi.x1
             y1 = roi.y1
-            stack_sample_mean = [np.mean(_sample[y0:y1+1, x1x0:_x1+1]) 
+            stack_sample_mean = [np.mean(_sample[y0:y1+1, x0:x1+1]) 
                                  for _sample in self.data['sample']['normalized']]
-            stack_ob_mean = [np.mean(_ob[y0:y1+1, _x0:_x1+1])
+            stack_ob_mean = [np.mean(_ob[y0:y1+1, x0:x1+1])
                              for _ob in self.data['ob']['normalized']]
         else:
             stack_sample_mean = [np.mean(_sample) for _sample in self.data['sample']['normalized']]
