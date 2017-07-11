@@ -235,4 +235,23 @@ class TestApplyingROI(unittest.TestCase):
         o_grating.load(file=df1, data_type='df')
         self.assertRaises(ValueError, o_grating.normalization)
         
-       
+class TestOscillation(unittest.TestCase):       
+
+    def setUp(self):    
+        _file_path = os.path.dirname(__file__)
+        self.data_path = os.path.abspath(os.path.join(_file_path, '../data/'))  
+
+    def test_error_raised_if_roi_has_wrong_type(self):
+        '''assert ValueError raised if roi is not a ROI object'''
+        sample_path = self.data_path + '/tif/sample/'
+        ob_path = self.data_path + '/tif/ob'
+        df_path = self.data_path + '/tif/df'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path)      
+        o_grating.load(folder=ob_path, data_type='ob')      
+        o_grating.load(folder=df_path, data_type='df')
+        o_grating.normalization()
+        _roi = {'x0':0, 'y0':0, 'x1':4, 'y1':4}
+        self.assertRaises(ValueError, o_grating.oscillation, roi=_roi)
+        
+    

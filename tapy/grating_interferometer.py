@@ -277,12 +277,9 @@ class GratingInterferometer(object):
         _x1 = roi.x1
         _y1 = roi.y1
         
-        new_sample_normalized = []
-        for _data in self.data['sample']['normalized']:
-            _crop_data = _data[_y0:_y1+1, _x0:_x1+1]
-            new_sample_normalized.append(_crop_data)
-        self.data['sample']['normalized'] = new_sample_normalized
-        
+        new_sample_normalized = [_data[_y0:_y1+1, _x0:_x1+1] for _data in self.data['sample']['normalized']]
+        self.data['sample']['normalized'] = new_sample_normalized        
+       
         new_ob_normalized = []
         for _data in self.data['ob']['normalized']:
             _crop_data = _data[_y0:_y1+1, _x0:_x1+1]
@@ -290,3 +287,17 @@ class GratingInterferometer(object):
         self.data['ob']['normalized'] = new_ob_normalized        
         
         return True
+    
+    def oscillation(self, roi=None):
+        '''mean intensity calculator of the ROI selected over the entire set of 
+        normalized images
+        
+        Parameters:
+        ===========
+        roi: ROI object of the roi to look at
+        '''
+        if roi:
+            if not type(roi) == ROI:
+                raise ValueError("roi must be a ROI object!")        
+        
+        
