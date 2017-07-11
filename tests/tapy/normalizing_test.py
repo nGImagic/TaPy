@@ -236,20 +236,3 @@ class TestApplyingROI(unittest.TestCase):
         self.assertRaises(ValueError, o_grating.normalization)
         
        
-class TestCropping(unittest.TestCase):
-    
-    def setUp(self):    
-        _file_path = os.path.dirname(__file__)
-        self.data_path = os.path.abspath(os.path.join(_file_path, '../data/'))      
-                
-    #def test_data_loaded_to_allow_cropping(self):
-        #'''assert any data set loaded to allow cropping'''
-        #o_grating = GratingInterferometer()
-        #self.assertRaises(ValueError, o_grating.crop)
-        
-    #def test_data_crop_when_cropping_done_after_full_loading(self):
-        #'''assert the data are correctly cropped after loading all the data'''
-        #sample_path = self.data_path + '/tif/sample'
-        #o_grating = GratingInterferometer()
-        #o_grating.load(folder=sample_path)
-        

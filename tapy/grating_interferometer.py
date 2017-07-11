@@ -263,7 +263,14 @@ class GratingInterferometer(object):
 
         Raises:
         =======
-        ValueError if the data type specified is empty
+        ValueError if sample and ob data have not been normalized yet
         '''
-        pass
+        if (self.data['sample']['normalized'] == []) or \
+           (self.data['ob']['normalized'] == []):
+            raise IOError("Data and ob have not been normalized yet!")
 
+        
+        
+        
+        
+        return True
