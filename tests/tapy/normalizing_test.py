@@ -254,4 +254,20 @@ class TestOscillation(unittest.TestCase):
         _roi = {'x0':0, 'y0':0, 'x1':4, 'y1':4}
         self.assertRaises(ValueError, o_grating.oscillation, roi=_roi)
         
-    
+    def test_oscillation_algorithm(self):
+        '''assert oscillation of sample and ob works'''
+
+        # sample
+        sample_path = self.data_path + '/tif/sample/'
+        ob_path = self.data_path + '/tif/ob'
+        df_path = self.data_path + '/tif/df'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path)      
+        o_grating.load(folder=ob_path, data_type='ob')      
+        o_grating.load(folder=df_path, data_type='df')
+        o_grating.normalization()
+        o_grating.oscillation()
+        _expected = o_grating.data['sample']['normalized'][1]
+        _expected = np.mean(_expected)
+        _returned = o_grating.data['sample']['oscillation'][1]
+        self.assertTrue(_expected == _returned)
