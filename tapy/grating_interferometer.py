@@ -169,16 +169,15 @@ class GratingInterferometer(object):
         # heat normalization algorithm
         _sample_df_corrected_normalized = []
         _ob_df_corrected_normalized = []
-
-        for _index, _sample in enumerate(self.data['sample']['data']):
-            _ob = self.data['ob']['data'][_index]
-
-            if roi:
-                _ob = _ob / np.mean(_ob[_y0:_y1+1, _x0:_x1+1])
-                _sample = _sample / np.mean(_sample[_y0:_y1+1, _x0:_x1+1])
-            
-            _sample_df_corrected_normalized.append(_sample)
-            _ob_df_corrected_normalized.append(_ob)
+        
+        if roi:
+            _sample_df_corrected_normalized = [_sample / np.mean(_sample[_y0:_y1+1, _x0:_x1+1]) 
+                                               for _sample in self.data['sample']['data']]
+            _ob_df_corrected_normalized = [_ob / np.mean(_ob[_y0:_y1+1, _x0:_x1+1])
+                                           for _ob in self.data['ob']['data']]
+        else:
+            _sample_df_corrected_normalized = self.data['sample']['data'].copy()
+            _ob_df_corrected_normalized = self.data['ob']['data'].copy()
             
         self.data['sample']['normalized'] = _sample_df_corrected_normalized
         self.data['ob']['normalized'] = _ob_df_corrected_normalized
@@ -247,11 +246,7 @@ class GratingInterferometer(object):
         if np.shape(self.data[data_type]['data'][0]) != np.shape(self.data['df']['data'][0]):
             raise IOError("{} and df data must have the same shpae!".format(data_type))
     
-        _data_df_corrected = []
-        for _data in self.data[data_type]['data']:
-                _data = _data - _df
-                _data_df_corrected.append(_data)
-
+        _data_df_corrected = [_data - _df for _data in self.data[data_type]['data']]
         self.data[data_type]['data'] = _data_df_corrected
     
     def crop(self, roi=None):
@@ -277,13 +272,12 @@ class GratingInterferometer(object):
         _x1 = roi.x1
         _y1 = roi.y1
         
-        new_sample_normalized = [_data[_y0:_y1+1, _x0:_x1+1] for _data in self.data['sample']['normalized']]
+        new_sample_normalized = [_data[_y0:_y1+1, _x0:_x1+1] for 
+                                 _data in self.data['sample']['normalized']]
         self.data['sample']['normalized'] = new_sample_normalized        
        
-        new_ob_normalized = []
-        for _data in self.data['ob']['normalized']:
-            _crop_data = _data[_y0:_y1+1, _x0:_x1+1]
-            new_ob_normalized.append(_crop_data)
+        new_ob_normalized = [_data[_y0:_y1+1, _x0:_x1+1] for 
+                             _data in self.data['ob']['normalized']]
         self.data['ob']['normalized'] = new_ob_normalized        
         
         return True
