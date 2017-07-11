@@ -2,6 +2,7 @@ from pathlib import Path
 import numpy as np
 import os
 import warnings
+import copy
 
 from tapy.loader import load_hdf, load_tiff, load_fits
 from tapy.roi import ROI
@@ -14,10 +15,12 @@ class GratingInterferometer(object):
                       'height': np.NaN}
         self.dict_image = { 'data': [],
                             'normalized': [],
+                            'oscilation': [],
                             'file_name': [],
                             'shape': self.shape.copy()}
         self.dict_ob = {'data': [],
                         'normalized': [],
+                        'oscilation': [],
                         'file_name': [],
                         'shape': self.shape.copy()}
         self.dict_df = {'data': [],
@@ -176,8 +179,8 @@ class GratingInterferometer(object):
             _ob_df_corrected_normalized = [_ob / np.mean(_ob[_y0:_y1+1, _x0:_x1+1])
                                            for _ob in self.data['ob']['data']]
         else:
-            _sample_df_corrected_normalized = self.data['sample']['data'].copy()
-            _ob_df_corrected_normalized = self.data['ob']['data'].copy()
+            _sample_df_corrected_normalized = copy.copy(self.data['sample']['data'])
+            _ob_df_corrected_normalized = copy.copy(self.data['ob']['data'])
             
         self.data['sample']['normalized'] = _sample_df_corrected_normalized
         self.data['ob']['normalized'] = _ob_df_corrected_normalized
@@ -294,4 +297,23 @@ class GratingInterferometer(object):
             if not type(roi) == ROI:
                 raise ValueError("roi must be a ROI object!")        
         
+        # calculate mean of roi for each image
+        stack_sample_mean = []
+        stack_ob_mean = []
+        if roi:
+            x0 = roi.x0
+            y0 = roi.y0
+            x1 = roi.x1
+            y1 = roi.y1
+            stack_sample_mean = [np.mean(_sample[y0:y1+1, x1x0:_x1+1]) 
+                                 for _sample in self.data['sample']['normalized']]
+            stack_ob_mean = [np.mean(_ob[y0:y1+1, _x0:_x1+1])
+                             for _ob in self.data['ob']['normalized']]
+        else:
+            stack_sample_mean = [np.mean(_sample) for _sample in self.data['sample']['normalized']]
+            stack_ob_mean = [np.mean(_ob) for _ob in self.data['ob']['normalized']]
+            
+        self.data['sample']['oscillation'] = stack_sample_mean
+        self.data['ob']['oscillation'] = stack_ob_mean
         
+            
