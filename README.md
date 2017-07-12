@@ -43,8 +43,10 @@ We recommend following series of functions for succesful data reduction:
  - "createIm": Take the stack of OBs and projections to create TI, DPCI, DFI and visiblity map. The algorithm used in this step is based on Marathe et al. (2014) http://dx.doi.org/10.1063/1.4861199.
  - "saveIm": Save your results.
  
- # Have it your way
- Feel free to develop your own functions and add them to "functions.py". If you need more complex read-in routines to fit your data structure we suggest modifying "main.py". If you think you developed things that could be interesting to the community let us know and we will incorporate it and make it available to everybody.
+ Documentations:
+ ===============
+ Full documentation can be found on the [ReadTheDocs](http://tapy.readthedocs.io/en/library_making/tutorial.html#)
+ 
  
  Contact:
  Ralph P. Harti - Ralph.Harti@psi.ch

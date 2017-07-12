@@ -247,7 +247,7 @@ class TestOscillation(unittest.TestCase):
         _roi = {'x0':0, 'y0':0, 'x1':4, 'y1':4}
         self.assertRaises(ValueError, o_grating.oscillation, roi=_roi)
         
-    def test_oscillation_algorithm_without_roi(self):
+    def test_oscillation_algorithm_without_roi_without_df(self):
         '''assert oscillation of sample and ob works without roi used'''
 
         sample_path = self.data_path + '/tif/sample/'
@@ -272,8 +272,32 @@ class TestOscillation(unittest.TestCase):
         _returned = o_grating.data['ob']['oscillation'][1]
         self.assertTrue(_expected == _returned)
         
-    def test_oscillation_algorithm_with_roi(self):
-        '''assert oscillation of sample and ob works with roi used'''
+    def test_oscillation_algorithm_without_roi_without_normalization_without_df(self):
+        '''assert oscillation of sample and ob works without roi used and without normalization'''
+
+        sample_path = self.data_path + '/tif/sample/'
+        ob_path = self.data_path + '/tif/ob'
+        df_path = self.data_path + '/tif/df'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path)      
+        o_grating.load(folder=ob_path, data_type='ob')      
+        o_grating.load(folder=df_path, data_type='df')
+        o_grating.oscillation()
+        
+        # sample
+        _expected = o_grating.data['sample']['data'][1]
+        _expected = np.mean(_expected)
+        _returned = o_grating.data['sample']['oscillation'][1]
+        self.assertTrue(_expected == _returned)
+        
+        # ob
+        _expected = o_grating.data['ob']['data'][1]
+        _expected = np.mean(_expected)
+        _returned = o_grating.data['ob']['oscillation'][1]
+        self.assertTrue(_expected == _returned)
+        
+    def test_oscillation_algorithm_with_roi_with_normalization(self):
+        '''assert oscillation of sample and ob works with roi used after normalization'''
 
         sample_path = self.data_path + '/tif/sample/'
         ob_path = self.data_path + '/tif/ob'
@@ -291,7 +315,6 @@ class TestOscillation(unittest.TestCase):
         _expected = o_grating.data['sample']['data'][1]
         _expected = np.mean(_expected[y0:y1+1, x0:x1+1])
         _returned = o_grating.data['sample']['oscillation'][1]
-        
         self.assertTrue(_expected == _returned)
         
         # ob
@@ -300,3 +323,63 @@ class TestOscillation(unittest.TestCase):
         _returned = o_grating.data['ob']['oscillation'][1]
         self.assertTrue(_expected == _returned)
         
+    def test_oscillation_algorithm_with_roi_without_df_without_normalization(self):
+        '''assert oscillation of sample and ob works with roi used without running normalization'''
+
+        sample_path = self.data_path + '/tif/sample/'
+        ob_path = self.data_path + '/tif/ob'
+        df_path = self.data_path + '/tif/df'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path)      
+        o_grating.load(folder=ob_path, data_type='ob')      
+        o_grating.load(folder=df_path, data_type='df')
+        [x0,y0,x1,y1] = [0,0,2,2]
+        _roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)
+        o_grating.oscillation(roi=_roi)
+        
+        # sample
+        _expected = o_grating.data['sample']['data'][1]
+        _expected = np.mean(_expected[y0:y1+1, x0:x1+1])
+        _returned = o_grating.data['sample']['oscillation'][1]
+        self.assertTrue(_expected == _returned)
+        
+        # ob
+        _expected = o_grating.data['ob']['data'][1]
+        _expected = np.mean(_expected[y0:y1+1, x0:x1+1])
+        _returned = o_grating.data['ob']['oscillation'][1]
+        self.assertTrue(_expected == _returned)
+
+    def test_oscillation_algorithm_with_roi_without_normalization_with_df(self):
+        '''assert oscillation of sample and ob works with roi,  without normalization, with DF'''
+
+        sample_path = self.data_path + '/tif/sample/'
+        ob_path = self.data_path + '/tif/ob'
+        df_path = self.data_path + '/tif/df'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path)      
+        o_grating.load(folder=ob_path, data_type='ob')      
+        o_grating.load(folder=df_path, data_type='df')
+        o_grating.df_correction()
+        [x0,y0,x1,y1] = [0,0,2,2]
+        _roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)
+        o_grating.oscillation(roi=_roi)
+        
+        # sample
+        _expected = o_grating.data['sample']['data'][1]
+        _expected = np.mean(_expected[y0:y1+1, x0:x1+1])
+        _returned = o_grating.data['sample']['oscillation'][1]
+        self.assertTrue(_expected == _returned)
+        
+        # ob
+        _expected = o_grating.data['ob']['data'][1]
+        _expected = np.mean(_expected[y0:y1+1, x0:x1+1])
+        _returned = o_grating.data['ob']['oscillation'][1]
+        self.assertTrue(_expected == _returned)
+
+class TestBinning(unittest.TestCase):       
+
+    def setUp(self):    
+        _file_path = os.path.dirname(__file__)
+        self.data_path = os.path.abspath(os.path.join(_file_path, '../data/'))  
+        
+    

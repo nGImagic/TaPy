@@ -320,4 +320,6 @@ class GratingInterferometer(object):
         self.data['sample']['oscillation'] = stack_sample_mean
         self.data['ob']['oscillation'] = stack_ob_mean
         
-            
+    def binning(self, bin=None):
+        '''rebin the sample and ob data using mean algorithm'''
+        pass

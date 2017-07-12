@@ -1,5 +1,6 @@
+********
 Tutorial
-========
+********
 
 First you need to install the TaPy library
 
@@ -14,9 +15,12 @@ Two options are available to load them:
 
 * file by file
 * full folder at once
+
+Loading
+#######
   
 Loading images file by file
----------------------------
+***************************
 
 Let's pretend that our images are in the folder **/Users/me/sample/** and named 
 
@@ -41,7 +45,7 @@ and the file names
 Let's use the second method to retrieve files for the OB
 
 Loading all images at once
---------------------------
+**************************
 
 Our OB are in the folder **/Users/me/ob/** and named
 
@@ -60,7 +64,7 @@ For this library, DF are optional but for the sake of this exercise, let's load 
 
 >>> o_grating.load(folder='/Users/me/df', data_type='df')
 
-WARNING:
+**WARNING:**
 From this point, any operation on your data will overwrite the inital data loaded. Those
 data can be retrieved at any point by doing
 
@@ -68,7 +72,7 @@ data can be retrieved at any point by doing
 >>> ob = o_grating.data['ob']['data']
 
 Dark Field Correction
----------------------
+#####################
 
 If you loaded a set of Dark Field (DF) images, you probably want to correct all your
 images (sample and OB) for dark field correction
@@ -77,8 +81,11 @@ images (sample and OB) for dark field correction
 
 In case you did not loaded a set of DF, this correction will leave the images untouched
 
+Normalization
+#############
+
 Normalization using ROI (optional)
-----------------------------------
+**********************************
 
 If you want to specify a region of your sample to match with the OB
 
@@ -95,15 +102,14 @@ then the normalization can be run
 
 >>> o_grating.normalization(norm_roi=my_norm_roi)
 
-Normalization
--------------
+Normalization without ROI (optional)
+************************************
 
 If you don't want any normalization ROI, simply run the normalization
 
 >>> o_grating.normalization()
 
 How to get the normalized data
-------------------------------
 
 Each of the data set in the sample and ob will then be normalized.
 If a norm_roi has been provided, the sample arrays will be divided by the average of the 
@@ -113,7 +119,7 @@ region defined. Same thing for the ob. Those normalized array can be retrieved t
 >>> ob_normalized_array = o_gretting.data['ob']['data']
 
 Cropping the data (optional)
-----------------------------
+****************************
 
 You have the option to crop the data but if you do, this must be done after running the normalization. 
 The algorithm only cropped the normalized sample and ob data
@@ -132,7 +138,7 @@ let's use the first method and let's pretend the ROI is defined by
 >>> o_grating.crop(roi=my_crop_roi)
 
 Oscillation
------------
+***********
 
 Now we gonna check the mean value of the region of interest selected for each of the sample and ob data.
 If you don't specify a ROI, the entire image will be used.
