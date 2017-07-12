@@ -31,7 +31,7 @@ install:
   - python setup.py install
 
 script:
-  - pytest -v --cov=tapy/
+  - pytest -v --cov=tests/
 
 after_success:
   - codecov
