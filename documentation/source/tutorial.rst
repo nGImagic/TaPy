@@ -60,6 +60,23 @@ For this library, DF are optional but for the sake of this exercise, let's load 
 
 >>> o_grating.load(folder='/Users/me/df', data_type='df')
 
+WARNING:
+From this point, any operation on your data will overwrite the inital data loaded. Those
+data can be retrieved at any point by doing
+
+>>> data = o_grating.data['sample']['data']
+>>> ob = o_grating.data['ob']['data']
+
+Dark Field Correction
+=====================
+
+If you loaded a set of Dark Field (DF) images, you probably want to correct all your
+images (sample and OB) for dark field correction
+
+>>> o_grating.df_correction()
+
+In case you did not loaded a set of DF, this correction will leave the images untouched
+
 Normalization using ROI (optional)
 ----------------------------------
 
@@ -88,12 +105,12 @@ If you don't want any normalization ROI, simply run the normalization
 How to get the normalized data
 ------------------------------
 
-Each of the data set in the sample and ob will then be normalized (and df corrected if any df have been loaded).
-If a norm_roi has been provided, the sample arrays will be divided by the average of the region defined. Same thing 
-for the ob. Those normalized array can be retrieved this way
+Each of the data set in the sample and ob will then be normalized.
+If a norm_roi has been provided, the sample arrays will be divided by the average of the 
+region defined. Same thing for the ob. Those normalized array can be retrieved this way
 
->>> sample_normalized_array = o_grating.data['sample']['working_data']
->>> ob_normalized_array = o_gretting.data['ob']['working_data']
+>>> sample_normalized_array = o_grating.data['sample']['data']
+>>> ob_normalized_array = o_gretting.data['ob']['data']
 
 Cropping the data (optional)
 ----------------------------

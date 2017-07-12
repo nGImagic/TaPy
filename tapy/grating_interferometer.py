@@ -115,10 +115,7 @@ class GratingInterferometer(object):
 
     def normalization(self, roi=None):
         '''normalization of the data 
-        
-        sample_df_corrected = sample - DF
-        ob_df_corrected = OB - DF
-        
+                
         Parameters:
         ===========
         roi: ROI object that defines the region of the sample and OB that have to match 
@@ -156,10 +153,6 @@ class GratingInterferometer(object):
                 raise ValueError("roi must be a ROI object!")
             if not self.__roi_fit_into_sample(roi=roi):
                 raise ValueError("roi does not fit into sample image!")
-
-        if not self.data['df']['data'] == []:
-            self.df_correction(data_type='sample')
-            self.df_correction(data_type='ob')
         
         if roi:
             _x0 = roi.x0
@@ -224,7 +217,20 @@ class GratingInterferometer(object):
 
         return True
     
-    def df_correction(self, data_type='sample'):
+    def df_correction(self):
+        '''dark field correction of sample and ob
+        
+        sample_df_corrected = sample - DF
+        ob_df_corrected = OB - DF
+
+        '''
+        if not self.data['sample']['data'] == []:
+            self.__df_correction(data_type='sample')
+            
+        if not self.data['ob']['data'] == []:
+            self.__df_correction(data_type='ob')
+    
+    def __df_correction(self, data_type='sample'):
         '''dark field correction
         
         Parameters:

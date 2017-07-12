@@ -41,30 +41,24 @@ class TestDFCorrection(unittest.TestCase):
         
     def test_df_correction_when_no_df(self):
         '''assert sample and ob are inchanged if df is empty'''
+
+        # sample
         path = self.data_path + '/tif/sample'
         o_grating = GratingInterferometer()
         o_grating.load(folder=path, data_type='sample')
         data_before = o_grating.data['sample']['data'][0]
-        o_grating.df_correction(data_type='sample')
+        o_grating.df_correction()
         data_after = o_grating.data['sample']['data'][0]
         self.assertTrue((data_before == data_after).all())
         
+        #ob
         path = self.data_path + '/tif/ob'
         o_grating = GratingInterferometer()
         o_grating.load(folder=path, data_type='ob')
         data_before = o_grating.data['ob']['data'][0]
-        o_grating.df_correction(data_type='sample')
+        o_grating.df_correction()
         data_after = o_grating.data['ob']['data'][0]
         self.assertTrue((data_before == data_after).all())
-        
-    def test_right_data_type_passed_to_df_correction(self):
-        '''assert data_type is either sample or ob'''
-        sample_path = self.data_path + '/tif/sample'
-        df_path = self.data_path + '/tif/df'        
-        o_grating = GratingInterferometer()
-        o_grating.load(folder=sample_path, data_type='sample')
-        o_grating.load(folder=df_path, data_type='df')
-        self.assertRaises(KeyError, o_grating.df_correction, 'not_data_type')
         
     def test_df_fails_when_not_identical_data_shape(self):
         o_grating = GratingInterferometer()
@@ -72,13 +66,13 @@ class TestDFCorrection(unittest.TestCase):
         df_1 = np.ones([6,6])
         o_grating.data['sample']['data'] = sample_1
         o_grating.data['df']['data'] = df_1
-        self.assertRaises(IOError, o_grating.df_correction, 'sample')
+        self.assertRaises(IOError, o_grating.df_correction)
         
         o_grating = GratingInterferometer()
         ob_1 = np.ones([6,6])
         o_grating.data['ob']['data'] = sample_1
         o_grating.data['df']['data'] = ob_1
-        self.assertRaises(IOError, o_grating.df_correction, 'ob')
+        self.assertRaises(IOError, o_grating.df_correction)
 
     def test_df_averaging_only_run_the_first_time(self):
         '''assert the average_df is only run the first time the df_correction is run'''
@@ -101,7 +95,7 @@ class TestDFCorrection(unittest.TestCase):
         self.assertTrue(df_average_data != [])
     
         #ob
-        o_grating.df_correction(data_type='ob')
+        o_grating.df_correction()
         expected_df_average = df_average_data
         df_average = o_grating.data['df']['data_average']
         self.assertTrue((expected_df_average == df_average).all())
@@ -128,7 +122,6 @@ class TestDFCorrection(unittest.TestCase):
         self.assertTrue((_expected_data == o_grating.data['sample']['data'][0]).all())
         
         #ob
-        o_grating.df_correction(data_type='ob')
         _expected_data = np.zeros([5,5])
         _ob_data = o_grating.data['ob']['data'][0]
         self.assertTrue((_expected_data == _ob_data).all())
