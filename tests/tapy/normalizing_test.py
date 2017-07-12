@@ -143,19 +143,19 @@ class TestDFCorrection(unittest.TestCase):
         o_grating.load(folder=sample_tif_folder)
         o_grating.load(folder=ob_tif_folder, data_type='ob')
         roi = ROI(x0=0, y0=0, x1=3, y1=2)
-        o_grating.normalization(roi=roi)
         _sample = o_grating.data['sample']['data'][0]
         _expected = _sample / np.mean(_sample[0:3, 0:4])
-        _returned = o_grating.data['sample']['normalized'][0]
+        o_grating.normalization(roi=roi)
+        _returned = o_grating.data['sample']['data'][0]
         self.assertTrue((_expected == _returned).all())
 
         # testing sample without norm_roi
         o_grating1 = GratingInterferometer()
         o_grating1.load(folder=sample_tif_folder)
         o_grating1.load(folder=ob_tif_folder, data_type='ob')
-        o_grating1.normalization()
         _expected = o_grating1.data['sample']['data'][0]
-        _returned = o_grating1.data['sample']['normalized'][0]
+        o_grating1.normalization()
+        _returned = o_grating1.data['sample']['data'][0]
         self.assertTrue((_expected == _returned).all())
         
         # testing ob with norm_roi
@@ -166,16 +166,16 @@ class TestDFCorrection(unittest.TestCase):
         o_grating.normalization(roi=norm_roi)
         _ob = o_grating.data['ob']['data'][0]
         _expected = _ob / np.mean(_ob[0:3, 0:4])
-        _returned = o_grating.data['ob']['normalized'][0]
+        _returned = o_grating.data['ob']['data'][0]
         self.assertTrue((_expected == _returned).all())
         
         # testing ob without norm_roi
         o_grating = GratingInterferometer()
         o_grating.load(folder=sample_tif_folder)
         o_grating.load(folder=ob_tif_folder, data_type='ob')
-        o_grating.normalization()
         _expected = o_grating.data['ob']['data'][0]
-        _returned = o_grating.data['ob']['normalized'][0]
+        o_grating.normalization()
+        _returned = o_grating.data['ob']['data'][0]
         self.assertTrue((_expected == _returned).all())        
         
 class TestApplyingROI(unittest.TestCase):
@@ -268,13 +268,13 @@ class TestOscillation(unittest.TestCase):
         o_grating.oscillation()
         
         # sample
-        _expected = o_grating.data['sample']['normalized'][1]
+        _expected = o_grating.data['sample']['data'][1]
         _expected = np.mean(_expected)
         _returned = o_grating.data['sample']['oscillation'][1]
         self.assertTrue(_expected == _returned)
         
         # ob
-        _expected = o_grating.data['ob']['normalized'][1]
+        _expected = o_grating.data['ob']['data'][1]
         _expected = np.mean(_expected)
         _returned = o_grating.data['ob']['oscillation'][1]
         self.assertTrue(_expected == _returned)
@@ -295,14 +295,14 @@ class TestOscillation(unittest.TestCase):
         o_grating.oscillation(roi=_roi)
         
         # sample
-        _expected = o_grating.data['sample']['normalized'][1]
+        _expected = o_grating.data['sample']['data'][1]
         _expected = np.mean(_expected[y0:y1+1, x0:x1+1])
         _returned = o_grating.data['sample']['oscillation'][1]
         
         self.assertTrue(_expected == _returned)
         
         # ob
-        _expected = o_grating.data['ob']['normalized'][1]
+        _expected = o_grating.data['ob']['data'][1]
         _expected = np.mean(_expected[y0:y1+1, x0:x1+1])
         _returned = o_grating.data['ob']['oscillation'][1]
         self.assertTrue(_expected == _returned)

@@ -14,12 +14,10 @@ class GratingInterferometer(object):
         self.shape = {'width': np.NaN,
                       'height': np.NaN}
         self.dict_image = { 'data': [],
-                            'normalized': [],
                             'oscilation': [],
                             'file_name': [],
                             'shape': self.shape.copy()}
         self.dict_ob = {'data': [],
-                        'normalized': [],
                         'oscilation': [],
                         'file_name': [],
                         'shape': self.shape.copy()}
@@ -182,8 +180,8 @@ class GratingInterferometer(object):
             _sample_df_corrected_normalized = copy.copy(self.data['sample']['data'])
             _ob_df_corrected_normalized = copy.copy(self.data['ob']['data'])
             
-        self.data['sample']['normalized'] = _sample_df_corrected_normalized
-        self.data['ob']['normalized'] = _ob_df_corrected_normalized
+        self.data['sample']['data'] = _sample_df_corrected_normalized
+        self.data['ob']['data'] = _ob_df_corrected_normalized
             
         return True
     
@@ -263,9 +261,9 @@ class GratingInterferometer(object):
         =======
         ValueError if sample and ob data have not been normalized yet
         '''
-        if (self.data['sample']['normalized'] == []) or \
-           (self.data['ob']['normalized'] == []):
-            raise IOError("Data and ob have not been normalized yet!")
+        if (self.data['sample']['data'] == []) or \
+           (self.data['ob']['data'] == []):
+            raise IOError("We need sample and ob Data !")
 
         if not type(roi) == ROI:
             raise ValueError("roi must be of type ROI")
@@ -275,19 +273,19 @@ class GratingInterferometer(object):
         _x1 = roi.x1
         _y1 = roi.y1
         
-        new_sample_normalized = [_data[_y0:_y1+1, _x0:_x1+1] for 
-                                 _data in self.data['sample']['normalized']]
-        self.data['sample']['normalized'] = new_sample_normalized        
+        new_sample = [_data[_y0:_y1+1, _x0:_x1+1] for 
+                      _data in self.data['sample']['data']]
+        self.data['sample']['data'] = new_sample        
        
-        new_ob_normalized = [_data[_y0:_y1+1, _x0:_x1+1] for 
-                             _data in self.data['ob']['normalized']]
-        self.data['ob']['normalized'] = new_ob_normalized        
+        new_ob = [_data[_y0:_y1+1, _x0:_x1+1] for 
+                  _data in self.data['ob']['data']]
+        self.data['ob']['data'] = new_ob        
         
         return True
     
     def oscillation(self, roi=None):
         '''mean intensity calculator of the ROI selected over the entire set of 
-        normalized images
+        sample and ob images
         
         Parameters:
         ===========
@@ -306,12 +304,12 @@ class GratingInterferometer(object):
             x1 = roi.x1
             y1 = roi.y1
             stack_sample_mean = [np.mean(_sample[y0:y1+1, x0:x1+1]) 
-                                 for _sample in self.data['sample']['normalized']]
+                                 for _sample in self.data['sample']['data']]
             stack_ob_mean = [np.mean(_ob[y0:y1+1, x0:x1+1])
-                             for _ob in self.data['ob']['normalized']]
+                             for _ob in self.data['ob']['data']]
         else:
-            stack_sample_mean = [np.mean(_sample) for _sample in self.data['sample']['normalized']]
-            stack_ob_mean = [np.mean(_ob) for _ob in self.data['ob']['normalized']]
+            stack_sample_mean = [np.mean(_sample) for _sample in self.data['sample']['data']]
+            stack_ob_mean = [np.mean(_ob) for _ob in self.data['ob']['data']]
             
         self.data['sample']['oscillation'] = stack_sample_mean
         self.data['ob']['oscillation'] = stack_ob_mean

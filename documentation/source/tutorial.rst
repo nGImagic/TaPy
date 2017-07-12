@@ -114,4 +114,25 @@ let's use the first method and let's pretend the ROI is defined by
 >>> my_crop_roi = tapy.ROI(x0=5, y0=5, x1=200, y1=250)
 >>> o_grating.crop(roi=my_crop_roi)
 
+Oscillation
+===========
 
+Now we gonna check the mean value of the region of interest selected for each of the sample and ob data.
+If you don't specify a ROI, the entire image will be used.
+
+Let's use a ROI defined as follow
+
+- x0 = 0
+- y0 = 0
+- x1 = 50
+- y1 = 50
+
+>>> my_oscillation_roi = ROI(x0=0, y0=0, x1=50, y1=50)
+>>> o_grating.oscillation(roi=my_oscillation_roi)
+
+We can now retrieve the sample and ob data
+
+>>> sample_oscillation = o_grating.data['sample']['oscillation']
+>>> ob_oscillation = o_grating.data['ob']['oscillation']
+
+We can now display the oscillation data
