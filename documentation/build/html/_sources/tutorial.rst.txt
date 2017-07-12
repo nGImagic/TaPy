@@ -60,6 +60,23 @@ For this library, DF are optional but for the sake of this exercise, let's load 
 
 >>> o_grating.load(folder='/Users/me/df', data_type='df')
 
+WARNING:
+From this point, any operation on your data will overwrite the inital data loaded. Those
+data can be retrieved at any point by doing
+
+>>> data = o_grating.data['sample']['data']
+>>> ob = o_grating.data['ob']['data']
+
+Dark Field Correction
+---------------------
+
+If you loaded a set of Dark Field (DF) images, you probably want to correct all your
+images (sample and OB) for dark field correction
+
+>>> o_grating.df_correction()
+
+In case you did not loaded a set of DF, this correction will leave the images untouched
+
 Normalization using ROI (optional)
 ----------------------------------
 
@@ -88,17 +105,18 @@ If you don't want any normalization ROI, simply run the normalization
 How to get the normalized data
 ------------------------------
 
-Each of the data set in the sample and ob will then be normalized (and df corrected if any df have been loaded).
-If a norm_roi has been provided, the sample arrays will be divided by the average of the region defined. Same thing 
-for the ob. Those normalized array can be retrieved this way
+Each of the data set in the sample and ob will then be normalized.
+If a norm_roi has been provided, the sample arrays will be divided by the average of the 
+region defined. Same thing for the ob. Those normalized array can be retrieved this way
 
->>> sample_normalized_array = o_grating.data['sample']['working_data']
->>> ob_normalized_array = o_gretting.data['ob']['working_data']
+>>> sample_normalized_array = o_grating.data['sample']['data']
+>>> ob_normalized_array = o_gretting.data['ob']['data']
 
 Cropping the data (optional)
 ----------------------------
 
-You have the option to crop the data by specifying either
+You have the option to crop the data but if you do, this must be done after running the normalization. 
+The algorithm only cropped the normalized sample and ob data
 
 - the 4 corners of the region of interest (ROI)
 - the top left corner coordinates, width and height of the ROI
@@ -113,3 +131,25 @@ let's use the first method and let's pretend the ROI is defined by
 >>> my_crop_roi = tapy.ROI(x0=5, y0=5, x1=200, y1=250)
 >>> o_grating.crop(roi=my_crop_roi)
 
+Oscillation
+-----------
+
+Now we gonna check the mean value of the region of interest selected for each of the sample and ob data.
+If you don't specify a ROI, the entire image will be used.
+
+Let's use a ROI defined as follow
+
+- x0 = 0
+- y0 = 0
+- x1 = 50
+- y1 = 50
+
+>>> my_oscillation_roi = ROI(x0=0, y0=0, x1=50, y1=50)
+>>> o_grating.oscillation(roi=my_oscillation_roi)
+
+We can now retrieve the sample and ob data
+
+>>> sample_oscillation = o_grating.data['sample']['oscillation']
+>>> ob_oscillation = o_grating.data['ob']['oscillation']
+
+We can now display the oscillation data

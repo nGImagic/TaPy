@@ -68,7 +68,7 @@ data can be retrieved at any point by doing
 >>> ob = o_grating.data['ob']['data']
 
 Dark Field Correction
-=====================
+---------------------
 
 If you loaded a set of Dark Field (DF) images, you probably want to correct all your
 images (sample and OB) for dark field correction
@@ -132,7 +132,7 @@ let's use the first method and let's pretend the ROI is defined by
 >>> o_grating.crop(roi=my_crop_roi)
 
 Oscillation
-===========
+-----------
 
 Now we gonna check the mean value of the region of interest selected for each of the sample and ob data.
 If you don't specify a ROI, the entire image will be used.
