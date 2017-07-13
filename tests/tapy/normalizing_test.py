@@ -32,6 +32,87 @@ class TestNormalization(unittest.TestCase):
         o_grating.load(folder=ob_path, data_type='ob')
         assert o_grating.normalization()
  
+    def test_normalization_ran_only_once(self):
+        '''assert normalization is only once if force switch not turn on'''
+        sample_tif_folder = self.data_path + '/tif/sample'
+        ob_tif_folder = self.data_path + '/tif/ob'
+    
+        # testing sample with norm_roi
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_tif_folder)
+        o_grating.load(folder=ob_tif_folder, data_type='ob')
+        roi = ROI(x0=0, y0=0, x1=3, y1=2)
+        o_grating.normalization(roi=roi)
+        _returned_first_time = o_grating.data['sample']['data'][0]
+        o_grating.normalization(roi=roi)
+        _returned_second_time = o_grating.data['sample']['data'][0]
+        self.assertTrue((_returned_first_time == _returned_second_time).all())        
+
+    def test_normalization_ran_twice_with_force_flag(self):
+        '''assert normalization can be ran twice using force flag'''
+        sample_tif_folder = self.data_path + '/tif/sample'
+        ob_tif_folder = self.data_path + '/tif/ob'
+    
+        # testing sample with norm_roi
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_tif_folder)
+        o_grating.load(folder=ob_tif_folder, data_type='ob')
+        roi = ROI(x0=0, y0=0, x1=3, y1=2)
+        o_grating.normalization(roi=roi)
+        _returned_first_time = o_grating.data['sample']['data'][0]
+        roi = ROI(x0=0, y0=0, x1=2, y1=3)
+        o_grating.normalization(roi=roi, force=True)
+        _returned_second_time = o_grating.data['sample']['data'][0]
+        self.assertFalse((_returned_first_time == _returned_second_time).all())
+  
+    def test_normalization_works(self):
+        '''assert sample and ob normalization works with and without roi'''
+        sample_tif_folder = self.data_path + '/tif/sample'
+        ob_tif_folder = self.data_path + '/tif/ob'
+
+        # testing sample with norm_roi
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_tif_folder)
+        o_grating.load(folder=ob_tif_folder, data_type='ob')
+        roi = ROI(x0=0, y0=0, x1=3, y1=2)
+        _sample = o_grating.data['sample']['data'][0]
+        _expected = _sample / np.mean(_sample[0:3, 0:4])
+        o_grating.normalization(roi=roi)
+        _returned = o_grating.data['sample']['data'][0]
+        self.assertTrue((_expected == _returned).all())
+
+        # testing sample without norm_roi
+        o_grating1 = GratingInterferometer()
+        o_grating1.load(folder=sample_tif_folder)
+        o_grating1.load(folder=ob_tif_folder, data_type='ob')
+        _expected = o_grating1.data['sample']['data'][0]
+        o_grating1.normalization()
+        _returned = o_grating1.data['sample']['data'][0]
+        self.assertTrue((_expected == _returned).all())
+        
+        # testing ob with norm_roi
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_tif_folder)
+        o_grating.load(folder=ob_tif_folder, data_type='ob')
+        norm_roi = ROI(x0=0, y0=0, x1=3, y1=2)
+        o_grating.normalization(roi=norm_roi)
+        _ob = o_grating.data['ob']['data'][0]
+        _expected = _ob / np.mean(_ob[0:3, 0:4])
+        _returned = o_grating.data['ob']['data'][0]
+        self.assertTrue((_expected == _returned).all())
+        
+        # testing ob without norm_roi
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_tif_folder)
+        o_grating.load(folder=ob_tif_folder, data_type='ob')
+        _expected = o_grating.data['ob']['data'][0]
+        o_grating.normalization()
+        _returned = o_grating.data['ob']['data'][0]
+        self.assertTrue((_expected == _returned).all())  
+  
+ 
+ 
+ 
 class TestDFCorrection(unittest.TestCase):
     
     def setUp(self):    
@@ -125,50 +206,7 @@ class TestDFCorrection(unittest.TestCase):
         _ob_data = o_grating.data['ob']['data'][0]
         self.assertTrue((_expected_data == _ob_data).all())
 
-    def test_sample_df_correction(self):
-        '''assert sample df correction works with and without norm roi provided'''
-        sample_tif_folder = self.data_path + '/tif/sample'
-        ob_tif_folder = self.data_path + '/tif/ob'
-
-        # testing sample with norm_roi
-        o_grating = GratingInterferometer()
-        o_grating.load(folder=sample_tif_folder)
-        o_grating.load(folder=ob_tif_folder, data_type='ob')
-        roi = ROI(x0=0, y0=0, x1=3, y1=2)
-        _sample = o_grating.data['sample']['data'][0]
-        _expected = _sample / np.mean(_sample[0:3, 0:4])
-        o_grating.normalization(roi=roi)
-        _returned = o_grating.data['sample']['data'][0]
-        self.assertTrue((_expected == _returned).all())
-
-        # testing sample without norm_roi
-        o_grating1 = GratingInterferometer()
-        o_grating1.load(folder=sample_tif_folder)
-        o_grating1.load(folder=ob_tif_folder, data_type='ob')
-        _expected = o_grating1.data['sample']['data'][0]
-        o_grating1.normalization()
-        _returned = o_grating1.data['sample']['data'][0]
-        self.assertTrue((_expected == _returned).all())
-        
-        # testing ob with norm_roi
-        o_grating = GratingInterferometer()
-        o_grating.load(folder=sample_tif_folder)
-        o_grating.load(folder=ob_tif_folder, data_type='ob')
-        norm_roi = ROI(x0=0, y0=0, x1=3, y1=2)
-        o_grating.normalization(roi=norm_roi)
-        _ob = o_grating.data['ob']['data'][0]
-        _expected = _ob / np.mean(_ob[0:3, 0:4])
-        _returned = o_grating.data['ob']['data'][0]
-        self.assertTrue((_expected == _returned).all())
-        
-        # testing ob without norm_roi
-        o_grating = GratingInterferometer()
-        o_grating.load(folder=sample_tif_folder)
-        o_grating.load(folder=ob_tif_folder, data_type='ob')
-        _expected = o_grating.data['ob']['data'][0]
-        o_grating.normalization()
-        _returned = o_grating.data['ob']['data'][0]
-        self.assertTrue((_expected == _returned).all())        
+         
         
 class TestApplyingROI(unittest.TestCase):
     
@@ -190,19 +228,31 @@ class TestApplyingROI(unittest.TestCase):
         '''assert norm roi do fit the images'''
         sample_tif_file = self.data_path + '/tif/sample/image001.tif'
         ob_tif_file = self.data_path + '/tif/ob/ob001.tif'
+        
+        # x0 < 0 or x1 > image_width
         o_grating = GratingInterferometer()
         o_grating.load(file=sample_tif_file, data_type='sample')
         o_grating.load(file=ob_tif_file, data_type='ob')
-        
-        # x0 < 0 or x1 > image_width
         roi = ROI(x0=0, y0=0, x1=20, y1=4)
         self.assertRaises(ValueError, o_grating.normalization, roi)
+       
+        o_grating = GratingInterferometer()
+        o_grating.load(file=sample_tif_file, data_type='sample')
+        o_grating.load(file=ob_tif_file, data_type='ob')
         roi = ROI(x0=-1, y0=0, x1=4, y1=4)
         self.assertRaises(ValueError, o_grating.normalization, roi)        
         
         # y0 < 0 or y1 > image_height
+        o_grating = GratingInterferometer()
+        o_grating.load(file=sample_tif_file, data_type='sample')
+        o_grating.load(file=ob_tif_file, data_type='ob')
         roi = ROI(x0=0, y0=-1, x1=4, y1=4)
         self.assertRaises(ValueError, o_grating.normalization, roi)
+
+        # y1>image_height
+        o_grating = GratingInterferometer()
+        o_grating.load(file=sample_tif_file, data_type='sample')
+        o_grating.load(file=ob_tif_file, data_type='ob')
         roi = ROI(x0=0, y0=0, x1=4, y1=20)
         self.assertRaises(ValueError, o_grating.normalization, roi)        
 

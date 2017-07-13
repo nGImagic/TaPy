@@ -37,6 +37,11 @@ class GratingInterferometer(object):
         self.roi = {'normalization': __roi_dict.copy(),
                     'crop': __roi_dict.copy()}
 
+        self.__exec_process_status = {'df_correction': False,
+                                      'normalization': False,
+                                      'crop': False,
+                                      'oscillation': False}
+
         self.data = {}
         self.data['sample'] = self.dict_image
         self.data['ob'] = self.dict_ob
@@ -117,13 +122,15 @@ class GratingInterferometer(object):
             if (not (_prev_width == width)) or (not (_prev_height == height)):
                 raise IOError("Shape of {} do not match previous loaded data set!".format(data_type))
 
-    def normalization(self, roi=None):
+    def normalization(self, roi=None, force=False):
         '''normalization of the data 
                 
         Parameters:
         ===========
         roi: ROI object that defines the region of the sample and OB that have to match 
         in intensity
+        force: boolean that if True will force the normalization to occur, even if it had been
+        run before with the same data set
 
         Raises:
         =======
@@ -132,6 +139,11 @@ class GratingInterferometer(object):
         IOError: if size of sample and OB do not match
         
         '''
+        if not force:
+            # does nothing if normalization has already been run
+            if self.__exec_process_status['normalization']:
+                return
+        self.__exec_process_status['normalization'] = True
         
         # make sure we loaded some sample data
         if self.data['sample']['data'] == []:
@@ -165,20 +177,20 @@ class GratingInterferometer(object):
             _y1 = roi.y1
         
         # heat normalization algorithm
-        _sample_df_corrected_normalized = []
-        _ob_df_corrected_normalized = []
+        _sample_corrected_normalized = []
+        _ob_corrected_normalized = []
         
         if roi:
-            _sample_df_corrected_normalized = [_sample / np.mean(_sample[_y0:_y1+1, _x0:_x1+1]) 
+            _sample_corrected_normalized = [_sample / np.mean(_sample[_y0:_y1+1, _x0:_x1+1]) 
                                                for _sample in self.data['sample']['data']]
-            _ob_df_corrected_normalized = [_ob / np.mean(_ob[_y0:_y1+1, _x0:_x1+1])
+            _ob_corrected_normalized = [_ob / np.mean(_ob[_y0:_y1+1, _x0:_x1+1])
                                            for _ob in self.data['ob']['data']]
         else:
-            _sample_df_corrected_normalized = copy.copy(self.data['sample']['data'])
-            _ob_df_corrected_normalized = copy.copy(self.data['ob']['data'])
+            _sample_corrected_normalized = copy.copy(self.data['sample']['data'])
+            _ob_corrected_normalized = copy.copy(self.data['ob']['data'])
             
-        self.data['sample']['data'] = _sample_df_corrected_normalized
-        self.data['ob']['data'] = _ob_df_corrected_normalized
+        self.data['sample']['data'] = _sample_corrected_normalized
+        self.data['ob']['data'] = _ob_corrected_normalized
             
         return True
     
