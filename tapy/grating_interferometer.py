@@ -129,7 +129,7 @@ class GratingInterferometer(object):
         ===========
         roi: ROI object that defines the region of the sample and OB that have to match 
         in intensity
-        force: boolean that if True will force the normalization to occur, even if it had been
+        force: boolean (default False) that if True will force the normalization to occur, even if it had been
         run before with the same data set
 
         Raises:
@@ -238,7 +238,7 @@ class GratingInterferometer(object):
         
         Parameters
         ==========
-        force: boolean that if True will force the df correction to occur, even if it had been
+        force: boolean (default False) that if True will force the df correction to occur, even if it had been
         run before with the same data set
 
         sample_df_corrected = sample - DF
@@ -282,12 +282,14 @@ class GratingInterferometer(object):
         _data_df_corrected = [_data - _df for _data in self.data[data_type]['data']]
         self.data[data_type]['data'] = _data_df_corrected
     
-    def crop(self, roi=None):
+    def crop(self, roi=None, force=False):
         ''' Cropping the sample and ob normalized data
         
         Parameters:
         ===========
         roi: ROI object that defines the region to crop
+        force: Boolean (default False) that force or not the algorithm to be run more than once
+        with the same data set
 
         Raises:
         =======
@@ -299,6 +301,11 @@ class GratingInterferometer(object):
 
         if not type(roi) == ROI:
             raise ValueError("roi must be of type ROI")
+
+        if not force:
+            if self.__exec_process_status['crop']:
+                return
+        self.__exec_process_status['crop'] = True
         
         _x0 = roi.x0
         _y0 = roi.y0

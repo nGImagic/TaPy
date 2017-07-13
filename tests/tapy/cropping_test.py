@@ -62,3 +62,50 @@ class TestCropping(unittest.TestCase):
         _returned_ob = o_grating.data['ob']['data'][0]
         self.assertTrue((_expected_sample == _returned_sample).all())
         self.assertTrue((_expected_ob == _returned_ob).all())
+        
+    def test_crop_works_only_once_without_force_flag(self):
+        '''assert crop of sample and ob works only once if no force flag used'''
+        x0, y0, x1, y1 = 0, 0, 2, 2
+        _roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)
+        o_grating = GratingInterferometer()
+        sample_path = self.data_path + '/tif/sample'
+        o_grating.load(folder=sample_path)
+        ob_path = self.data_path + '/tif/ob'
+        o_grating.load(folder=ob_path, data_type='ob')
+        o_grating.normalization()
+        # crop run first time
+        o_grating.crop(roi=_roi)
+        _sample_first_time = o_grating.data['sample']['data'][0]
+        _ob_first_time = o_grating.data['ob']['data'][0]
+        # crop run second time
+        o_grating.crop(roi=_roi)
+        _sample_second_time = o_grating.data['sample']['data'][0]
+        _ob_second_time = o_grating.data['ob']['data'][0]
+        self.assertTrue((_sample_first_time == _sample_second_time).all())
+        self.assertTrue((_ob_first_time == _ob_second_time).all())
+        
+    def test_crop_works_again_if_force_flag_is_true(self):
+        '''assert crop of sample and ob works more than once if force flag is true'''
+        x0, y0, x1, y1 = 0, 0, 2, 2
+        _roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)
+        o_grating = GratingInterferometer()
+        sample_path = self.data_path + '/tif/sample'
+        o_grating.load(folder=sample_path)
+        ob_path = self.data_path + '/tif/ob'
+        o_grating.load(folder=ob_path, data_type='ob')
+        o_grating.normalization()
+        # crop run first time
+        o_grating.crop(roi=_roi)
+        _sample_first_time = o_grating.data['sample']['data'][0]
+        _ob_first_time = o_grating.data['ob']['data'][0]
+        # crop run second time
+        x0, y0, x1, y1 = 0, 0, 1, 1
+        _roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)        
+        o_grating.crop(roi=_roi, force=True)
+        _sample_second_time = o_grating.data['sample']['data'][0]
+        _ob_second_time = o_grating.data['ob']['data'][0]
+        #checking output with expected results
+        _expected_sample_second_run = _sample_first_time[y0:y1+1, x0:x1+1]
+        _expected_ob_second_run = _ob_first_time[y0:y1+1, x0:x1+1]
+        self.assertTrue((_sample_second_time == _expected_sample_second_run).all())
+        self.assertTrue((_ob_second_time == _expected_ob_second_run).all())
