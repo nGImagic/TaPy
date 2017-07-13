@@ -513,6 +513,26 @@ class TestBinning(unittest.TestCase):
         bin_value = 'bad_type'
         self.assertRaises(ValueError, o_grating.binning)        
         
+    def test_error_raised_if_binning_has_no_data_and_ob(self):
+        '''assert error raised if we do not have any sample or ob to bin'''
+        image1 = self.data_path + '/tif/sample/image001.tif'
+        ob1 = self.data_path + '/different_format/ob001_4_by_4.tif'
+        
+        # no sample and ob
+        o_grating = GratingInterferometer()
+        self.assertRaises(IOError, o_grating.binning, bin=2)
+        
+        # no ob
+        o_grating = GratingInterferometer()
+        o_grating.load(file=image1)
+        self.assertRaises(IOError, o_grating.binning, bin=2)
+        
+        # no sample
+        o_grating = GratingInterferometer()
+        o_grating.load(file=ob1, data_type='ob')
+        self.assertRaises(IOError, o_grating.binning, bin=2)
+
+
     #def test_bin_can_only_ran_one_time_without_force_flag(self):
         #'''assert the bin algorithm is only run one time if force flag is False'''
         #sample_path = self.data_path + '/tif/sample/'

@@ -40,7 +40,8 @@ class GratingInterferometer(object):
         self.__exec_process_status = {'df_correction': False,
                                       'normalization': False,
                                       'crop': False,
-                                      'oscillation': False}
+                                      'oscillation': False,
+                                      'bin': False}
 
         self.data = {}
         self.data['sample'] = self.dict_image
@@ -420,4 +421,10 @@ class GratingInterferometer(object):
                 return        
         self.__exec_process_status['bin'] = True
         
-        
+        # make sure we loaded some sample data
+        if self.data['sample']['data'] == []:
+            raise IOError("No normalization available as no data have been loaded")
+
+        # make sure we loaded some ob data
+        if self.data['ob']['data'] == []:
+            raise IOError("No normalization available as no OB have been loaded")
