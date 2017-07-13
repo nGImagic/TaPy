@@ -56,7 +56,15 @@ class GratingInterferometer(object):
            file: full path to file
            folder: full path to folder containing files to load
            data_type: ['sample', 'ob', 'df]
+
+        Algorithm won't be allowed to run if any of the main algorithm have been run already, such as
+        oscillation, crop, binning, df_correction.
+
         '''
+        list_exec_flag = [_flag for _flag in self.__exec_process_status.values()]
+        if True in list_exec_flag:
+            raise IOError("Operation not allowed as you already worked on this data set!")
+        
         if not file == '':
             self.load_file(file=file, data_type=data_type)
         
@@ -391,6 +399,6 @@ class GratingInterferometer(object):
             plt.tight_layout()            
             plt.show()
         
-    def binning(self, bin=None):
+    def binning(self, bin=None, force=False):
         '''rebin the sample and ob data using mean algorithm'''
         pass

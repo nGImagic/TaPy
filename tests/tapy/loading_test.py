@@ -198,3 +198,15 @@ class TestLoading(unittest.TestCase):
         o_grating = GratingInterferometer()
         o_grating.load(file=df1)
         self.assertRaises(IOError, o_grating.load, file=df2)        
+
+    def test_loading_new_data_not_allowed_if_algorithm_already_run(self):
+        '''assert error raises when loading new data on data already manipulated'''
+        # tiff
+        sample_tif_file = self.data_path + '/tif/sample/image001.tif'
+        ob_tif_file = self.data_path +'/tif/ob/ob001.tif'
+        o_grating = GratingInterferometer()
+        o_grating.load(file=sample_tif_file, data_type='sample')
+        o_grating.load(file=ob_tif_file, data_type='ob')
+        o_grating.normalization()
+        new_sample_tif_file = self.data_path + '/tif/sample/image002.tif'
+        self.assertRaises(IOError, o_grating.load, file=new_sample_tif_file)
