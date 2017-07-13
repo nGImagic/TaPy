@@ -111,8 +111,6 @@ class TestNormalization(unittest.TestCase):
         self.assertTrue((_expected == _returned).all())  
   
  
- 
- 
 class TestDFCorrection(unittest.TestCase):
     
     def setUp(self):    
@@ -206,6 +204,60 @@ class TestDFCorrection(unittest.TestCase):
         _ob_data = o_grating.data['ob']['data'][0]
         self.assertTrue((_expected_data == _ob_data).all())
 
+    def test_df_correction_locked_when_run_twice_without_force_flag(self):
+        '''assert df corrction run only one time if force flag is False'''
+        sample_path = self.data_path + '/tif/sample/'
+        ob_path = self.data_path + '/tif/ob/'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path)
+        o_grating.load(folder=ob_path, data_type='ob')
+        df_file_1 = self.data_path + '/tif/df/df002.tif'
+        df_file_2 = self.data_path + '/tif/df/df003.tif'
+        o_grating.load(file=df_file_1, data_type='df')
+        o_grating.load(file=df_file_2, data_type='df')
+        
+        # first iteration
+        o_grating.df_correction()
+        _sample_first_run = o_grating.data['sample']['data'][0]
+        _ob_first_run = o_grating.data['ob']['data'][0]
+        
+        # second iteration
+        o_grating.df_correction()
+        _sample_second_run = o_grating.data['sample']['data'][0]
+        _ob_second_run = o_grating.data['ob']['data'][0]
+         
+        self.assertTrue((_sample_first_run == _sample_second_run).all())
+        self.assertTrue((_ob_first_run == _ob_second_run).all())
+         
+    def test_df_correction_run_twice_with_force_flag(self):
+        '''assert df corrction run more than once with force flag'''
+        sample_path = self.data_path + '/tif/sample/'
+        ob_path = self.data_path + '/tif/ob/'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path)
+        o_grating.load(folder=ob_path, data_type='ob')
+        df_file_1 = self.data_path + '/tif/df/df002.tif'
+        df_file_2 = self.data_path + '/tif/df/df003.tif'
+        o_grating.load(file=df_file_1, data_type='df')
+        o_grating.load(file=df_file_2, data_type='df')
+        
+        # first iteration
+        o_grating.df_correction()
+        _sample_first_run = o_grating.data['sample']['data'][0]
+        _ob_first_run = o_grating.data['ob']['data'][0]
+        _average_df = o_grating.data['df']['data_average']
+        
+        # second iteration
+        o_grating.df_correction(force=True)
+        _sample_second_run = o_grating.data['sample']['data'][0]
+        _ob_second_run = o_grating.data['ob']['data'][0]
+
+        # expected
+        _expected_sample_after_second_run = _sample_first_run - _average_df
+        _expected_ob_after_second_run = _ob_first_run - _average_df
+         
+        self.assertTrue((_sample_second_run == _expected_sample_after_second_run).all())
+        self.assertTrue((_ob_second_run == _expected_ob_after_second_run).all())    
          
         
 class TestApplyingROI(unittest.TestCase):

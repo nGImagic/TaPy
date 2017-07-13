@@ -233,13 +233,23 @@ class GratingInterferometer(object):
 
         return True
     
-    def df_correction(self):
+    def df_correction(self, force=False):
         '''dark field correction of sample and ob
         
+        Parameters
+        ==========
+        force: boolean that if True will force the df correction to occur, even if it had been
+        run before with the same data set
+
         sample_df_corrected = sample - DF
         ob_df_corrected = OB - DF
 
         '''
+        if not force:
+            if self.__exec_process_status['df_correction']:
+                return
+        self.__exec_process_status['df_correction'] = True
+        
         if not self.data['sample']['data'] == []:
             self.__df_correction(data_type='sample')
             
