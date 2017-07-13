@@ -400,5 +400,24 @@ class GratingInterferometer(object):
             plt.show()
         
     def binning(self, bin=None, force=False):
-        '''rebin the sample and ob data using mean algorithm'''
-        pass
+        '''rebin the sample and ob data using mean algorithm
+        
+        Parameters:
+        bin: int value that defines the size of the rebinning to apply
+        force: Boolean (default False) that force or not the algorithm to be run more than once
+        with the same data set
+        '''
+        if bin is None:
+            raise ValueError("You need to provide a bin value (int)!")
+        
+        try:
+            bin = np.int(bin)
+        except:
+            raise ValueError("bin argument needs to be an int!")
+        
+        if not force:
+            if self.__exec_process_status['bin']:
+                return        
+        self.__exec_process_status['bin'] = True
+        
+        

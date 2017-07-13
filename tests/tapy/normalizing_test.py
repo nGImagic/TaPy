@@ -484,4 +484,56 @@ class TestBinning(unittest.TestCase):
         _file_path = os.path.dirname(__file__)
         self.data_path = os.path.abspath(os.path.join(_file_path, '../data/'))  
         
-    
+    def test_error_raised_if_bin_argument_missing_or_wrong_type(self):
+        '''assert ValueError raised if bin argument missing or wrong type'''
+        sample_path = self.data_path + '/tif/sample/'
+        ob_path = self.data_path + '/tif/ob'
+        df_path = self.data_path + '/tif/df'
+        
+        # missing bin argument
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path)      
+        o_grating.load(folder=ob_path, data_type='ob')      
+        o_grating.load(folder=df_path, data_type='df')
+        o_grating.df_correction()
+        [x0,y0,x1,y1] = [0,0,2,2]
+        _roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)
+        o_grating.oscillation(roi=_roi)
+        self.assertRaises(ValueError, o_grating.binning)
+        
+        # bin argument has wrong type
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path)      
+        o_grating.load(folder=ob_path, data_type='ob')      
+        o_grating.load(folder=df_path, data_type='df')
+        o_grating.df_correction()
+        [x0,y0,x1,y1] = [0,0,2,2]
+        _roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)
+        o_grating.oscillation(roi=_roi)
+        bin_value = 'bad_type'
+        self.assertRaises(ValueError, o_grating.binning)        
+        
+    #def test_bin_can_only_ran_one_time_without_force_flag(self):
+        #'''assert the bin algorithm is only run one time if force flag is False'''
+        #sample_path = self.data_path + '/tif/sample/'
+        #ob_path = self.data_path + '/tif/ob'
+        #df_path = self.data_path + '/tif/df'
+        #o_grating = GratingInterferometer()
+        #o_grating.load(folder=sample_path)      
+        #o_grating.load(folder=ob_path, data_type='ob')      
+        #o_grating.load(folder=df_path, data_type='df')
+        #o_grating.df_correction()
+        #[x0,y0,x1,y1] = [0,0,2,2]
+        #_roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)
+        #o_grating.oscillation(roi=_roi)
+        
+        ## first time running algorithm
+        #o_grating.binning()
+        #_sample_data_first_time = o_grating.data['sample']['data']
+        #o_grating.binning()
+        #_sample_data_second_time = o_grating.data['sample']['data']
+        
+        #print(_sample_data_first_time)
+        #print(_sample_data_second_time)
+        #self.assertTrue(False)
+        
