@@ -4,6 +4,10 @@ import os
 import warnings
 import copy
 
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+from matplotlib import gridspec            
+
 from tapy.loader import load_hdf, load_tiff, load_fits
 from tapy.roi import ROI
 from tapy._utilities import get_sorted_list_images, average_df
@@ -289,7 +293,7 @@ class GratingInterferometer(object):
         
         return True
     
-    def oscillation(self, roi=None):
+    def oscillation(self, roi=None, plot=False):
         '''mean intensity calculator of the ROI selected over the entire set of 
         sample and ob images
         
@@ -319,6 +323,44 @@ class GratingInterferometer(object):
             
         self.data['sample']['oscillation'] = stack_sample_mean
         self.data['ob']['oscillation'] = stack_ob_mean
+        
+        if plot:
+            
+            im = self.data['sample']['data'][0]
+            if not roi:
+                x0, y0 = 0, 0
+                [height, width] = np.shape(im)
+            else:
+                height = y1 - y0
+                width = x1 - x0
+            
+            vmin, vmax=im.min(), im.max()
+            
+            fig = plt.figure(figsize=[8,3])
+            gs = gridspec.GridSpec(1,2, width_ratios=[1,2])
+            ax = plt.subplot(gs[0])
+            ax2 = plt.subplot(gs[1])
+            
+            # sample 0 with oscillation ROI
+            ax.imshow(im,vmin=vmin, vmax=vmax, interpolation='nearest', cmap='gray')
+            rectNorm = patches.Rectangle((x0,y0), width, height, linewidth=1, edgecolor='m')
+            ax.add_patch(rectNorm)
+            ax.set_title("Area for Oscillation")
+            
+            # oscillation 
+            range_sample = np.arange(1, len(stack_sample_mean)+1)
+            ax2.plot(range_sample, stack_sample_mean, color='g', label='sample')
+            ax2.scatter(range_sample, stack_sample_mean, marker='*', color='g')
+            
+            range_ob = np.arange(1, len(stack_ob_mean)+1)
+            ax2.plot(range_ob, stack_ob_mean, color='b', label='ob')
+            ax2.scatter(range_ob, stack_ob_mean, color='b')
+            ax2.legend(loc=1, shadow=True)
+            ax2.set_title('Oscillation Plot')
+            ax2.set_xlim(0, len(stack_ob_mean)+2)
+            ax2.grid(True)
+            plt.tight_layout()            
+            plt.show()
         
     def binning(self, bin=None):
         '''rebin the sample and ob data using mean algorithm'''

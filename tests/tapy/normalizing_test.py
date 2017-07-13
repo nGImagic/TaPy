@@ -1,4 +1,3 @@
-
 import unittest
 import numpy as np
 import os
@@ -375,6 +374,7 @@ class TestOscillation(unittest.TestCase):
         _expected = np.mean(_expected[y0:y1+1, x0:x1+1])
         _returned = o_grating.data['ob']['oscillation'][1]
         self.assertTrue(_expected == _returned)
+        
 
 class TestBinning(unittest.TestCase):       
 
