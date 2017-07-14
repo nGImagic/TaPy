@@ -594,3 +594,27 @@ class TestBinning(unittest.TestCase):
         self.assertTrue((_sample_data_first_time == _sample_data_second_time).all())
         self.assertTrue((_ob_data_first_time == _ob_data_second_time).all())
         
+    def test_bin_can_run_a_second_time_if_force_flag_used(self):
+        '''assert the bin algorithm can be run more than once if force flag used'''
+        sample_path = self.data_path + '/tif/sample/'
+        ob_path = self.data_path + '/tif/ob'
+        df_path = self.data_path + '/tif/df'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path)      
+        o_grating.load(folder=ob_path, data_type='ob')      
+        o_grating.load(folder=df_path, data_type='df')
+        
+        # first time running algorithm
+        o_grating.binning(bin=2)
+        _sample_data_first_time = o_grating.data['sample']['data'][0]
+        _ob_data_first_time = o_grating.data['ob']['data'][0]
+
+        # second time running the algorithm
+        o_grating.binning(bin=2, force=True)
+        _sample_data_second_time = o_grating.data['sample']['data'][0]
+        _ob_data_second_time = o_grating.data['ob']['data'][0]
+
+        self.assertFalse((_sample_data_first_time == _sample_data_second_time).all())
+        self.assertFalse((_ob_data_first_time == _ob_data_second_time).all())
+
+    
