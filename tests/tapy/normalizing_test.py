@@ -532,7 +532,45 @@ class TestBinning(unittest.TestCase):
         o_grating.load(file=ob1, data_type='ob')
         self.assertRaises(IOError, o_grating.binning, bin=2)
 
+    def test_binning_works_with_various_bins(self):
+        '''assert binning works with various bin size'''
+        image1 = self.data_path + '/tif/sample/image001.tif'
+        ob1 = self.data_path + '/tif/ob/ob001.tif'
+    
+        # case 1
+        bin = 2 
+        o_grating = GratingInterferometer()
+        o_grating.load(file=image1)
+        o_grating.load(file=ob1, data_type='ob')
+        o_grating.binning(bin=bin)
+        
+        #sample
+        _returned_sample = o_grating.data['sample']['data']
+        _expected_sample = np.array([[2, 2.5],[1, 2.5]], dtype=np.float32)
+        self.assertTrue((_returned_sample == _expected_sample).all())
 
+        #ob
+        _returned_ob = o_grating.data['ob']['data']
+        _expected_ob = np.array([[2, 1],[1, 1]], dtype=np.float32)
+        self.assertTrue((_returned_ob == _expected_ob).all())
+        
+        # case 2
+        bin = 3 
+        o_grating = GratingInterferometer()
+        o_grating.load(file=image1)
+        o_grating.load(file=ob1, data_type='ob')
+        o_grating.binning(bin=bin)
+
+        # sample
+        _returned_sample = o_grating.data['sample']['data']
+        _expected_sample = np.array([1.7777778], dtype=np.float32)
+        self.assertAlmostEqual(_returned_sample, _expected_sample, delta=0.0001)
+
+        # ob
+        _returned_ob = o_grating.data['ob']['data']
+        _expected_ob = np.array([1.4444443], dtype=np.float32)
+        self.assertAlmostEqual(_returned_ob, _expected_ob, delta=0.0001)
+    
     #def test_bin_can_only_ran_one_time_without_force_flag(self):
         #'''assert the bin algorithm is only run one time if force flag is False'''
         #sample_path = self.data_path + '/tif/sample/'

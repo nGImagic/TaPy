@@ -400,15 +400,19 @@ class GratingInterferometer(object):
             plt.tight_layout()            
             plt.show()
         
-    def binning(self, bin=None, force=False):
+    def binning(self, bin=np.NaN, force=False):
         '''rebin the sample and ob data using mean algorithm
         
         Parameters:
         bin: int value that defines the size of the rebinning to apply
         force: Boolean (default False) that force or not the algorithm to be run more than once
         with the same data set
+        
+        if the size of the data is not compatible with the binning your defined, the last incomplete row and 
+        column bins will be truncated
+        
         '''
-        if bin is None:
+        if np.isnan(bin):
             raise ValueError("You need to provide a bin value (int)!")
         
         try:
@@ -428,3 +432,33 @@ class GratingInterferometer(object):
         # make sure we loaded some ob data
         if self.data['ob']['data'] == []:
             raise IOError("No normalization available as no OB have been loaded")
+        
+        self.__binning_data(data_type='sample', bin=bin)
+        self.__binning_data(data_type='ob', bin=bin)
+        
+    def __binning_data(self, bin=np.NaN, data_type='sample'):
+        '''heart of the binning algorithm'''
+        
+        [height, width] = np.shape(self.data[data_type]['data'][0])
+        data_rebinned = []
+        
+        # size of last bin does not match other bins
+        new_height = height
+        _nbr_height_bin = int(np.floor(height/bin))
+        if not (np.mod(height, bin) == 0):
+            new_height = int(_nbr_height_bin * bin)
+        new_height = int(new_height)
+        
+        new_width = width
+        _nbr_width_bin = int(np.floor(width/bin))
+        if not (np.mod(width, bin) == 0):
+            new_width = int(_nbr_width_bin * bin)
+        new_width = int(new_width)
+
+        for _data in self.data[data_type]['data']:
+            _new_data = _data[0:new_height, 0:new_width]
+            _new_data = _new_data.reshape(_nbr_height_bin, bin, _nbr_width_bin, bin)
+            data_rebinned.append(_new_data.mean(axis=3).mean(axis=1))
+
+        self.data[data_type]['data'] = data_rebinned
+        

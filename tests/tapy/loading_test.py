@@ -101,10 +101,13 @@ class TestLoading(unittest.TestCase):
         # tiff
         sample_tif_file_1 = self.data_path + '/tif//sample/image001.tif'
         sample_tif_file_2 = self.data_path + '/tif/sample/image002.tif'
+        ob_tif_file_1 = self.data_path + '/tif/ob/ob001.tif'
         o_grating = GratingInterferometer()
         o_grating.load(file=sample_tif_file_1, data_type='sample')
         o_grating.load(file=sample_tif_file_2, data_type='sample')
-
+        o_grating.load(file=ob_tif_file_1, data_type='ob')
+        
+        # sample 0
         _expected_data_1 = np.ones([5,5])
         _expected_data_1[0,0] = 5
         _expected_data_1[:,2] = 2
@@ -116,6 +119,7 @@ class TestLoading(unittest.TestCase):
         _loaded_name_1 = o_grating.data['sample']['file_name'][0]
         self.assertTrue(_expected_name_1 == _loaded_name_1)
         
+        # sample 1
         _expected_data_2 = np.ones([5,5])
         _expected_data_2[0,0] = 5
         _expected_data_2[:,2] = 2
@@ -126,6 +130,12 @@ class TestLoading(unittest.TestCase):
         _expected_name_2 = sample_tif_file_2
         _loaded_name_2 = o_grating.data['sample']['file_name'][1]
         self.assertTrue(_expected_name_2 == _loaded_name_2)        
+ 
+        # ob 0
+        _expected_data_1 = np.ones([5,5])
+        _expected_data_1[0,0] = 5
+        _loaded_data_1 = o_grating.data['ob']['data'][0]
+        self.assertTrue((_expected_data_1 == _loaded_data_1).all())
         
         # fits
         sample_fits_file_1 = self.data_path + '/fits//sample/image001.fits'
