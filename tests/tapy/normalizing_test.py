@@ -571,27 +571,26 @@ class TestBinning(unittest.TestCase):
         _expected_ob = np.array([1.4444443], dtype=np.float32)
         self.assertAlmostEqual(_returned_ob, _expected_ob, delta=0.0001)
     
-    #def test_bin_can_only_ran_one_time_without_force_flag(self):
-        #'''assert the bin algorithm is only run one time if force flag is False'''
-        #sample_path = self.data_path + '/tif/sample/'
-        #ob_path = self.data_path + '/tif/ob'
-        #df_path = self.data_path + '/tif/df'
-        #o_grating = GratingInterferometer()
-        #o_grating.load(folder=sample_path)      
-        #o_grating.load(folder=ob_path, data_type='ob')      
-        #o_grating.load(folder=df_path, data_type='df')
-        #o_grating.df_correction()
-        #[x0,y0,x1,y1] = [0,0,2,2]
-        #_roi = ROI(x0=x0, y0=y0, x1=x1, y1=y1)
-        #o_grating.oscillation(roi=_roi)
+    def test_bin_can_only_ran_one_time_without_force_flag(self):
+        '''assert the bin algorithm is only run one time if force flag is False'''
+        sample_path = self.data_path + '/tif/sample/'
+        ob_path = self.data_path + '/tif/ob'
+        df_path = self.data_path + '/tif/df'
+        o_grating = GratingInterferometer()
+        o_grating.load(folder=sample_path)      
+        o_grating.load(folder=ob_path, data_type='ob')      
+        o_grating.load(folder=df_path, data_type='df')
         
-        ## first time running algorithm
-        #o_grating.binning()
-        #_sample_data_first_time = o_grating.data['sample']['data']
-        #o_grating.binning()
-        #_sample_data_second_time = o_grating.data['sample']['data']
-        
-        #print(_sample_data_first_time)
-        #print(_sample_data_second_time)
-        #self.assertTrue(False)
+        # first time running algorithm
+        o_grating.binning(bin=2)
+        _sample_data_first_time = o_grating.data['sample']['data'][0]
+        _ob_data_first_time = o_grating.data['ob']['data'][0]
+
+        # second time running the algorithm
+        o_grating.binning(bin=2)
+        _sample_data_second_time = o_grating.data['sample']['data'][0]
+        _ob_data_second_time = o_grating.data['ob']['data'][0]
+
+        self.assertTrue((_sample_data_first_time == _sample_data_second_time).all())
+        self.assertTrue((_ob_data_first_time == _ob_data_second_time).all())
         
