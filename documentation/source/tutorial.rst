@@ -65,8 +65,11 @@ For this library, DF are optional but for the sake of this exercise, let's load 
 >>> o_grating.load(folder='/Users/me/df', data_type='df')
 
 **WARNING:**
-From this point, any operation on your data will overwrite the inital data loaded. Those
+#1 From this point, any operation on your data will overwrite the inital data loaded. Those
 data can be retrieved at any point by doing
+#2 The program won't let you run the same algorithm twice (normalization, df_correction, 
+oscillation, rebin). But it's possible to overwrite this option by making a flag **force**
+equal to True. Use this feature at your own risk!
 
 >>> data = o_grating.data['sample']['data']
 >>> ob = o_grating.data['ob']['data']
@@ -140,7 +143,8 @@ let's use the first method and let's pretend the ROI is defined by
 Oscillation
 ***********
 
-Now we gonna check the mean value of the region of interest selected for each of the sample and ob data.
+Now we gonna check the mean value of the region of interest selected for each of the sample
+and ob data.
 If you don't specify a ROI, the entire image will be used.
 
 Let's use a ROI defined as follow
@@ -159,3 +163,12 @@ We can now retrieve the sample and ob data
 >>> ob_oscillation = o_grating.data['ob']['oscillation']
 
 We can now display the oscillation data
+
+Binning
+=======
+
+In order to improve the statistics, it's possible to rebin the sample and ob data. 
+If we want for example to rebin pixels 2 by 2
+
+>>> bin = 2
+>>> o_grating.rebin(bin=2)

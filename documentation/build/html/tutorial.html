@@ -53,8 +53,10 @@ Two options are available to load them:</p>
 <li>file by file</li>
 <li>full folder at once</li>
 </ul>
+<div class="section" id="loading">
+<h2>Loading<a class="headerlink" href="#loading" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="loading-images-file-by-file">
-<h2>Loading images file by file<a class="headerlink" href="#loading-images-file-by-file" title="Permalink to this headline">¶</a></h2>
+<h3>Loading images file by file<a class="headerlink" href="#loading-images-file-by-file" title="Permalink to this headline">¶</a></h3>
 <p>Let’s pretend that our images are in the folder <strong>/Users/me/sample/</strong> and named</p>
 <ul class="simple">
 <li>image001.fits</li>
@@ -79,7 +81,7 @@ Two options are available to load them:</p>
 <p>Let’s use the second method to retrieve files for the OB</p>
 </div>
 <div class="section" id="loading-all-images-at-once">
-<h2>Loading all images at once<a class="headerlink" href="#loading-all-images-at-once" title="Permalink to this headline">¶</a></h2>
+<h3>Loading all images at once<a class="headerlink" href="#loading-all-images-at-once" title="Permalink to this headline">¶</a></h3>
 <p>Our OB are in the folder <strong>/Users/me/ob/</strong> and named</p>
 <ul class="simple">
 <li>ob001.fits</li>
@@ -98,12 +100,16 @@ Two options are available to load them:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="s1">&#39;/Users/me/df&#39;</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;df&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>WARNING:
-From this point, any operation on your data will overwrite the inital data loaded. Those
-data can be retrieved at any point by doing</p>
+<p><strong>WARNING:</strong>
+#1 From this point, any operation on your data will overwrite the inital data loaded. Those
+data can be retrieved at any point by doing
+#2 The program won’t let you run the same algorithm twice (normalization, df_correction,
+oscillation, rebin). But it’s possible to overwrite this option by making a flag <strong>force</strong>
+equal to True. Use this feature at your own risk!</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">o_grating</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;sample&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ob</span> <span class="o">=</span> <span class="n">o_grating</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;ob&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
 </pre></div>
+</div>
 </div>
 </div>
 <div class="section" id="dark-field-correction">
@@ -115,8 +121,10 @@ images (sample and OB) for dark field correction</p>
 </div>
 <p>In case you did not loaded a set of DF, this correction will leave the images untouched</p>
 </div>
+<div class="section" id="normalization">
+<h2>Normalization<a class="headerlink" href="#normalization" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="normalization-using-roi-optional">
-<h2>Normalization using ROI (optional)<a class="headerlink" href="#normalization-using-roi-optional" title="Permalink to this headline">¶</a></h2>
+<h3>Normalization using ROI (optional)<a class="headerlink" href="#normalization-using-roi-optional" title="Permalink to this headline">¶</a></h3>
 <p>If you want to specify a region of your sample to match with the OB</p>
 <p>Let’s use the following region</p>
 <ul class="simple">
@@ -133,15 +141,13 @@ images (sample and OB) for dark field correction</p>
 </pre></div>
 </div>
 </div>
-<div class="section" id="normalization">
-<h2>Normalization<a class="headerlink" href="#normalization" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="normalization-without-roi-optional">
+<h3>Normalization without ROI (optional)<a class="headerlink" href="#normalization-without-roi-optional" title="Permalink to this headline">¶</a></h3>
 <p>If you don’t want any normalization ROI, simply run the normalization</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">normalization</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="how-to-get-the-normalized-data">
-<h2>How to get the normalized data<a class="headerlink" href="#how-to-get-the-normalized-data" title="Permalink to this headline">¶</a></h2>
+<p>How to get the normalized data</p>
 <p>Each of the data set in the sample and ob will then be normalized.
 If a norm_roi has been provided, the sample arrays will be divided by the average of the
 region defined. Same thing for the ob. Those normalized array can be retrieved this way</p>
@@ -151,7 +157,7 @@ region defined. Same thing for the ob. Those normalized array can be retrieved t
 </div>
 </div>
 <div class="section" id="cropping-the-data-optional">
-<h2>Cropping the data (optional)<a class="headerlink" href="#cropping-the-data-optional" title="Permalink to this headline">¶</a></h2>
+<h3>Cropping the data (optional)<a class="headerlink" href="#cropping-the-data-optional" title="Permalink to this headline">¶</a></h3>
 <p>You have the option to crop the data but if you do, this must be done after running the normalization.
 The algorithm only cropped the normalized sample and ob data</p>
 <ul class="simple">
@@ -171,8 +177,9 @@ The algorithm only cropped the normalized sample and ob data</p>
 </div>
 </div>
 <div class="section" id="oscillation">
-<h2>Oscillation<a class="headerlink" href="#oscillation" title="Permalink to this headline">¶</a></h2>
-<p>Now we gonna check the mean value of the region of interest selected for each of the sample and ob data.
+<h3>Oscillation<a class="headerlink" href="#oscillation" title="Permalink to this headline">¶</a></h3>
+<p>Now we gonna check the mean value of the region of interest selected for each of the sample
+and ob data.
 If you don’t specify a ROI, the entire image will be used.</p>
 <p>Let’s use a ROI defined as follow</p>
 <ul class="simple">
@@ -191,6 +198,16 @@ If you don’t specify a ROI, the entire image will be used.</p>
 </pre></div>
 </div>
 <p>We can now display the oscillation data</p>
+<div class="section" id="binning">
+<h4>Binning<a class="headerlink" href="#binning" title="Permalink to this headline">¶</a></h4>
+<p>In order to improve the statistics, it’s possible to rebin the sample and ob data.
+If we want for example to rebin pixels 2 by 2</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">bin</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">rebin</span><span class="p">(</span><span class="nb">bin</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 </div>
 </div>
 
@@ -212,14 +229,9 @@ If you don’t specify a ROI, the entire image will be used.</p>
 <h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#loading-images-file-by-file">Loading images file by file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#loading-all-images-at-once">Loading all images at once</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loading">Loading</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dark-field-correction">Dark Field Correction</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#normalization-using-roi-optional">Normalization using ROI (optional)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#normalization">Normalization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-get-the-normalized-data">How to get the normalized data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cropping-the-data-optional">Cropping the data (optional)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#oscillation">Oscillation</a></li>
 </ul>
 </li>
 </ul>

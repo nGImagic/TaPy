@@ -390,7 +390,9 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightRO
 
 def matrix(stack_im,numberPeriods):
     """
-    Take the stack of OBs and projections to create TI, DPCI, DFI and visiblity map. The algorithm used in this step is based on Marathe et al. (2014) http://dx.doi.org/10.1063/1.4861199.
+    Take the stack of OBs and projections to create TI, DPCI, DFI and visiblity map.
+    The algorithm used in this step is based on Marathe et al.
+    (2014) http://dx.doi.org/10.1063/1.4861199.
     
     Parameters
     ----------
