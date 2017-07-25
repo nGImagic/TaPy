@@ -207,6 +207,27 @@ If we want for example to rebin pixels 2 by 2</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="intererometry-images">
+<h4>Intererometry Images<a class="headerlink" href="#intererometry-images" title="Permalink to this headline">¶</a></h4>
+<p>It’s now time to produce the various images we want such as</p>
+<ul class="simple">
+<li>Transmission</li>
+<li>Differential Phase Contrast</li>
+<li>Dark Field</li>
+<li>visibility map</li>
+</ul>
+<p>To calculate those imags, simply run</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">create_interferometry_images</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Then those arrays can be retrieved this way</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">transmission</span> <span class="o">=</span> <span class="n">o_grating</span><span class="o">.</span><span class="n">interferometry</span><span class="p">[</span><span class="s1">&#39;transmission&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">differential_phase_contrast</span> <span class="o">=</span> <span class="n">o_grating</span><span class="o">.</span><span class="n">interferometry</span><span class="p">[</span><span class="s1">&#39;diff_phase_contrast&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dark_field</span> <span class="o">=</span> <span class="n">o_grating</span><span class="o">.</span><span class="n">interferometry</span><span class="p">[</span><span class="s1">&#39;dark_field&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">visibility_map</span> <span class="o">=</span> <span class="n">o_grating</span><span class="o">.</span><span class="n">interferometry</span><span class="p">[</span><span class="s1">&#39;visibility_map&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 </div>

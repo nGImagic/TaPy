@@ -357,8 +357,9 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightRO
         0<=yROI<=im.shape[0] and 0<=yROI+heightROI<=im.shape[0]):
         vmin,vmax=im.min(),im.max()
         cmap='gray'
-        fig = plt.figure(figsize=(15,10)) 
-        gs = gridspec.GridSpec(1,2,width_ratios=[2,1],height_ratios=[1,1]) 
+        fig = plt.figure(figsize=[8,3]) 
+        gs = gridspec.GridSpec(1,2, width_ratios=[1,2])
+#        gs = gridspec.GridSpec(1,2,width_ratios=[2,1],height_ratios=[1,1]) 
         ax = plt.subplot(gs[0])
         ax2 = plt.subplot(gs[1])
         ax.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)

@@ -172,3 +172,24 @@ If we want for example to rebin pixels 2 by 2
 
 >>> bin = 2
 >>> o_grating.rebin(bin=2)
+
+Intererometry Images
+====================
+
+It's now time to produce the various images we want such as
+
+- Transmission
+- Differential Phase Contrast
+- Dark Field
+- visibility map
+
+To calculate those imags, simply run
+
+>>> o_grating.create_interferometry_images()
+
+Then those arrays can be retrieved this way
+
+>>> transmission = o_grating.interferometry['transmission']
+>>> differential_phase_contrast = o_grating.interferometry['diff_phase_contrast']
+>>> dark_field = o_grating.interferometry['dark_field']
+>>> visibility_map = o_grating.interferometry['visibility_map']
