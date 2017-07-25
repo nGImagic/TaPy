@@ -10,7 +10,7 @@ from matplotlib import gridspec
 
 from tapy.loader import load_hdf, load_tiff, load_fits
 from tapy.roi import ROI
-from tapy._utilities import get_sorted_list_images, average_df
+from tapy._utilities import get_sorted_list_images, average_df, remove_inf_null
 
 class GratingInterferometer(object):
 
@@ -42,6 +42,12 @@ class GratingInterferometer(object):
                                       'crop': False,
                                       'oscillation': False,
                                       'bin': False}
+
+        self.interferometry = {'transmission': [],
+                               'diff_phase_contrast': [],
+                               'dark_field': [],
+                               'visibility_map': [],
+                               }
 
         self.data = {}
         self.data['sample'] = self.dict_image
@@ -508,3 +514,48 @@ class GratingInterferometer(object):
         return {'offset': offset, 
                 'amplitude': amplitude,
                 'phase': phase}
+    
+    def create_interferometry_images(self, number_periods=1):
+        '''TO DO'''
+        
+        # to avoid warnings when dividing by np.NaN !
+        np.seterr(divide='ignore', invalid='ignore')
+        
+        _sample_reduction_matrix = self._create_reduction_matrix(
+            number_periods=number_periods)
+        _ob_reduction_matrix = self._create_reduction_matrix(
+            data_type='ob', 
+            number_periods=number_periods)
+
+        # retrieve arrays
+        _sample_offset = _sample_reduction_matrix['offset']
+        _sample_amplitude = _sample_reduction_matrix['amplitude']
+        _sample_phase = _sample_reduction_matrix['phase']
+    
+        _ob_offset = _ob_reduction_matrix['offset']
+        _ob_amplitude = _ob_reduction_matrix['amplitude']
+        _ob_phase = _ob_reduction_matrix['phase']
+
+        # remove inf and nan from denominator arrays
+        _sample_offset = remove_inf_null(data=_sample_offset)
+        _ob_offset = remove_inf_null(data=_ob_offset)
+
+        # calculate transmission
+        transmission = np.divide(_sample_offset, _ob_offset)
+        self.interferometry['transmission'] = transmission
+
+        # calculate differential phase contrast
+        diff_phase_contrast = _sample_phase - _ob_phase
+        diff_phase_contrast = np.arctan(np.tan(diff_phase_contrast))
+        self.interferometry['diff_phase_contrast'] = diff_phase_contrast
+
+        # calculate dark field
+        
+        dark_field = np.divide(np.divide(_sample_amplitude, _sample_offset),
+                              np.divide(_ob_amplitude, _ob_offset))
+        self.interferometry['dark_field'] = dark_field
+
+        # calculate visibility map
+        visibility_map = np.divide(_ob_amplitude, _ob_offset)
+        self.interferometry['visibility_map'] = visibility_map
+        

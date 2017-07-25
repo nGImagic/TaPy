@@ -20,3 +20,11 @@ def average_df(df=[]):
     '''if more than 1 DF have been provided, we need to average them'''
     mean_average = np.mean(df, axis=0)
     return mean_average
+
+def remove_inf_null(data=[]):
+    '''replace all the inf and null values by np.NaN'''
+    _data = data.copy()
+    _data[_data == 0] = np.NaN
+    _data[_data == -np.inf] = np.NaN
+    _data[_data == np.inf] = np.NaN
+    return _data

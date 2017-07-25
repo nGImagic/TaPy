@@ -5,7 +5,7 @@ import os
 from PIL import Image
 
 from tapy.grating_interferometer import GratingInterferometer
-from tapy._utilities import get_sorted_list_images, average_df
+from tapy._utilities import get_sorted_list_images, average_df, remove_inf_null
 
 
 class TestUtilites(unittest.TestCase):
@@ -44,3 +44,26 @@ class TestUtilites(unittest.TestCase):
         expected_df[0,0] = 5
         self.assertTrue((expected_df == _average_df).all())    
       
+    def test_remove_inf_null(self):
+        '''assert remove inf and null works'''
+        
+        # no 0 and no inf
+        before_data_1 = np.ones((5,5))
+        after_data_1 = remove_inf_null(data=before_data_1)
+        self.assertTrue((before_data_1 == after_data_1).all())
+        
+        # with 0
+        before_data_2 = np.ones((5,5))
+        before_data_2[3,3] = 0
+        after_data_2 = remove_inf_null(data=before_data_2)
+        _expected_data_2 = before_data_2.copy()
+        _expected_data_2[3,3] = np.NaN
+        np.testing.assert_array_equal(_expected_data_2, after_data_2)
+        
+        # with np.inf
+        before_data_3 = np.ones((5,5))
+        before_data_3[2,2] = np.inf
+        after_data_3 = remove_inf_null(data=before_data_3)
+        _expected_data_3 = before_data_3.copy()
+        _expected_data_3[2,2] = np.NaN
+        np.testing.assert_array_equal(_expected_data_3, after_data_3)

@@ -58,5 +58,13 @@ class TestInterferometry(unittest.TestCase):
         _expected_phase_0_1 = 5.55e-17
 #        print(_dict['phase'])
 
+    def test_interferometry_code_runs(self):
+        '''assert interferometry code that creates final images works'''
+        o_grating = GratingInterferometer()
+        sample_path = self.data_path + '/tif/sample/'
+        o_grating.load(folder=sample_path)
+        ob_path = self.data_path + '/tif/ob/'
+        o_grating.load(folder=ob_path, data_type='ob')
+        o_grating.create_interferometry_images()
         
 
