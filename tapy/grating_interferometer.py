@@ -462,3 +462,49 @@ class GratingInterferometer(object):
 
         self.data[data_type]['data'] = data_rebinned
         
+    def _create_reduction_matrix(self, data_type='sample', number_periods=1):
+        '''create the reduction matrix 
+        
+        The algorithm used in this step is based on Marathe et al.
+        (2014) http://dx.doi.org/10.1063/1.4861199.cosdfd
+        
+        Parameters:
+        ==========
+        data_type: Sring (default 'sample')
+        number_periods: float (default 1) number or fraction of stepped period
+        
+        Returns:
+        =======
+        dictionary dict defined as followed:
+          dict['offset'] numpy array 
+          dict['amplitute'] numpy array
+          dict['phase'] numpy array
+        
+        '''
+        data = self.data[data_type]['data']
+        [nbr_images, height, width] = np.shape(data)
+        
+        # init B (see reference paper for meaning behind B)
+        B = np.zeros((nbr_images, 3))
+        
+        data_reshaped = np.reshape(data, [nbr_images, height * width])
+        for _index in np.arange(nbr_images):
+            B[_index][0] = 1.0
+            B[_index][1] = np.cos(2.*np.pi*_index*number_periods/(nbr_images-1))
+            B[_index][2] = np.sin(2.*np.pi*_index*number_periods/(nbr_images-1))            
+        
+        B = np.matrix(B)
+        G = (B.T * B).I * B.T
+        A = G * data_reshaped
+        
+        offset, absolute_amplitude, absolute_phase = A[0,:], A[1,:], A[2,:]
+        
+        offset = np.reshape(offset, [height, width])
+        amplitude = np.reshape(np.sqrt(np.square(absolute_amplitude) + \
+                                       np.square(absolute_phase)), [height, width])
+        absolute_amplitude[absolute_amplitude == 0] = np.NaN
+        phase = np.reshape(np.arctan((absolute_phase/absolute_amplitude)), [height, width])
+        
+        return {'offset': offset, 
+                'amplitude': amplitude,
+                'phase': phase}
