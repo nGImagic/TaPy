@@ -193,3 +193,29 @@ Then those arrays can be retrieved this way
 >>> differential_phase_contrast = o_grating.interferometry['diff_phase_contrast']
 >>> dark_field = o_grating.interferometry['dark_field']
 >>> visibility_map = o_grating.interferometry['visibility_map']
+
+Export Images
+=============
+
+You can export into tiff or fits files, any of the interferometry images created
+
+WARNING: the output folder must exist! The program won't create this folder for you.
+
+Example using 'tif' output files
+
+>>> output_folder = '/Users/my_data/transmission/'
+>>> o_grating.export(folder=output_folder, data_type='transmission', file_type='tif')
+
+>>> output_folder = '/Users/my_data/diff_phase_contrast/'
+>>> o_grating.export(folder=output_folder, data_type='diff_phase_contrast', file_type='tif')
+
+>>> output_folder = '/Users/my_data/dark_field'
+>>> o_grating.export(folder=output_folder, data_type='dark_field', file_type='tif')
+
+>>> output_folder = '/Users/my_data/visibility_map'
+>>> o_grating.export(folder=output_folder, data_type='visibility_map', file_type='tif')
+
+For 'fits' output, just replaced the file_type by 'fits'
+
+>>> output_folder = '/Users/my_data/transmission/'
+>>> o_grating.export(folder=output_folder, data_type='transmission', file_type='fits')

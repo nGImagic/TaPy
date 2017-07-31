@@ -228,6 +228,33 @@ If we want for example to rebin pixels 2 by 2</p>
 </pre></div>
 </div>
 </div>
+<div class="section" id="export-images">
+<h4>Export Images<a class="headerlink" href="#export-images" title="Permalink to this headline">¶</a></h4>
+<p>You can export into tiff or fits files, any of the interferometry images created</p>
+<p>WARNING: the output folder must exist! The program won’t create this folder for you.</p>
+<p>Example using ‘tif’ output files</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">output_folder</span> <span class="o">=</span> <span class="s1">&#39;/Users/my_data/transmission/&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;transmission&#39;</span><span class="p">,</span> <span class="n">file_type</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">output_folder</span> <span class="o">=</span> <span class="s1">&#39;/Users/my_data/diff_phase_contrast/&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;diff_phase_contrast&#39;</span><span class="p">,</span> <span class="n">file_type</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">output_folder</span> <span class="o">=</span> <span class="s1">&#39;/Users/my_data/dark_field&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;dark_field&#39;</span><span class="p">,</span> <span class="n">file_type</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">output_folder</span> <span class="o">=</span> <span class="s1">&#39;/Users/my_data/visibility_map&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;visibility_map&#39;</span><span class="p">,</span> <span class="n">file_type</span><span class="o">=</span><span class="s1">&#39;tif&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For ‘fits’ output, just replaced the file_type by ‘fits’</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">output_folder</span> <span class="o">=</span> <span class="s1">&#39;/Users/my_data/transmission/&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">o_grating</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">folder</span><span class="o">=</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;transmission&#39;</span><span class="p">,</span> <span class="n">file_type</span><span class="o">=</span><span class="s1">&#39;fits&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 </div>
