@@ -38,12 +38,14 @@ class TestInterferometry(unittest.TestCase):
         ob_path = self.data_path + '/tif/ob/'
         o_grating.load(folder=ob_path, data_type='ob')
         _dict = o_grating._create_reduction_matrix()
-        _line = np.matrix(np.array([5.55e-17, 5.55e-17, 1.11e-16, 2.22e-16, 2.22e-16])).T
+
+        _line = np.matrix(np.array([0.5, 0.5, 1., 2., 2.])).T
         _col = np.matrix(np.ones((5)))
-        _expected_amplitude_0_0 = 0
-        _expected_amplitude_0_1 = 5.55e-17
-        self.assertAlmostEqual(_expected_amplitude_0_0, _dict['amplitude'][0,0], delta=0.01)
-        self.assertAlmostEqual(_expected_amplitude_0_1, _dict['amplitude'][0,1], delta=0.01)
+        _expected_amplitude = (_line * _col).T
+        _expected_amplitude[0,0] = 2.
+
+        self.assertAlmostEqual(_expected_amplitude[0,0], _dict['amplitude'][0,0], delta=0.01)
+        self.assertAlmostEqual(_expected_amplitude[0,1], _dict['amplitude'][0,1], delta=0.01)
         
     def test_phase_correctly_calculated_for_sample(self):
         '''assert phase is correctly calculated'''
@@ -123,16 +125,13 @@ class TestExportPhase2(unittest.TestCase):
         o_grating.load(folder=sample_path)
         o_grating.load(folder=ob_path, data_type='ob')
         o_grating.create_interferometry_images()
-        o_grating.export(folder=self.export_folder)
+        o_grating.export(folder=self.export_folder) # transmission by default
 
         output_file_name_list = o_grating._export_file_name
-        _returned_file_0 = output_file_name_list[0]
+        _returned_file = output_file_name_list
+        _expected_file = self.export_folder + '/transmission.tif'
         
-        _expected = os.path.basename(o_grating.data['sample']['file_name'][0])
-        _new_file_name = os.path.splitext(_expected)[0] + '.tif'
-        _expected_file_0 = os.path.join(self.export_folder, _new_file_name)
-        
-        self.assertTrue(_expected_file_0, _returned_file_0)
+        self.assertTrue(_expected_file, _returned_file)
 
     def test_export_works_for_tif(self):
         '''assert the file crated is correct for tif images'''
@@ -143,11 +142,11 @@ class TestExportPhase2(unittest.TestCase):
         o_grating.load(folder=ob_path, data_type='ob')
         o_grating.create_interferometry_images()
         o_grating.export(folder=self.export_folder)
-        _sample_0 = o_grating.interferometry['transmission'][0]
+        _sample = o_grating.interferometry['transmission']
 
         o_grating_2 = GratingInterferometer()
         o_grating_2.load(folder=self.export_folder)
         _sample_1 = o_grating_2.data['sample']['data'][0]
         
-        self.assertTrue((_sample_0 == _sample_1).all())
+        self.assertTrue((_sample == _sample_1).all())
         
