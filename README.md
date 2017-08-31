@@ -39,7 +39,7 @@ We recommend following series of functions for succesful data reduction:
  - "oscillation": This function plots the oscillation of the raw data through the stepping of one grating. You can use it to get an idea of the quality of you motor and visually check the oscillations you use for retrieving the signal.
  - "cropped": Crop the image to a region of interest. This increases the computational speed.
  - "binning": If you would like to bin you data - here you go.
- - "createIm": Take the stack of OBs and projections to create TI, DPCI, DFI and visiblity map. The algorithm used in this step is based on Marathe et al. (2014) http://dx.doi.org/10.1063/1.4861199.
+ - "createIm": Take the stack of OBs and projections to create TI, DPCI, DFI and visiblity map. The 'method' flag gives the option of choosing different algorithms. Default ist the 'matrix' method, which is based on Marathe et al. (2014) http://dx.doi.org/10.1063/1.4861199. Other options are 'fourier' which does a fourier component analysis and 'max_min' which determines the amplitude and thus the DFI signal by simply comparing maximum and minimum value of the measure oscillation. 'max_min' methods cannot return DPCI images.
  - "saveIm": Save your results.
  
  # Have it your way
