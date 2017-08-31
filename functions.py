@@ -20,7 +20,7 @@ from scipy.signal import medfilt,wiener
 
 
 
-def readRead(path,dc=0):
+def readRead(path,dc=0, ProtonDoseCorrection=False, factorProtonDose=10000):
     """
     Function to read data from the specified path, it can read FITS, TIFF and HDF.
     
@@ -46,7 +46,13 @@ def readRead(path,dc=0):
         im_a1 = []
         if path.lower().endswith('.fits'):
             try:
-                temp = fits.open(path,ignore_missing_end=True)[0].data
+                fitsFile = fits.open(path,ignore_missing_end=True)[0]
+                
+                if ProtonDoseCorrection:
+                    temp = fitsFile.data/fitsFile.header['PDOSE']*factorProtonDose
+                else:
+                    temp = fitsFile.data
+
                 if len(temp.shape) == 3:
                     temp = temp.reshape(temp.shape[1:])                
                 im_a1.append(temp)  
@@ -67,7 +73,7 @@ def readRead(path,dc=0):
     else:
         raise OSError('the path does not exist')
     
-def read_data(path_im,path_ob,path_dc):
+def read_data(path_im,path_ob,path_dc, ProtonDoseCorrection=False,factorProtonDose=10000):
     """
     Function to read data from the specified folders, it can read FITS, TIFF and HDF.
 
@@ -103,7 +109,7 @@ def read_data(path_im,path_ob,path_dc):
         for name in filenames_dc:
             full_path_name = path_dc+'/'+name
 #            print(full_path_name)
-            im_a1.append(readRead(full_path_name))
+            im_a1.append(readRead(full_path_name, ProtonDoseCorrection,factorProtonDose))
         im_a1 = np.asarray(im_a1)
         im_a1 = np.sum(im_a1,axis=0)/np.shape(im_a1)[0]
     
@@ -114,9 +120,9 @@ def read_data(path_im,path_ob,path_dc):
     for name in filenames_ob:
         full_path_name = path_ob+'/'+name
         if path_dc:
-            stack_ob.append(readRead(full_path_name,im_a1)) #with dc
+            stack_ob.append(readRead(full_path_name,im_a1, ProtonDoseCorrection,factorProtonDose)) #with dc
         else:
-            stack_ob.append(readRead(full_path_name))   #without dc
+            stack_ob.append(readRead(full_path_name, ProtonDoseCorrection,factorProtonDose))   #without dc
     stack_ob = np.concatenate(stack_ob)
 
 #    Projections
@@ -126,9 +132,9 @@ def read_data(path_im,path_ob,path_dc):
     for name in filenames_im:
         full_path_name = path_im+'/'+name
         if path_dc:
-            stack_im_ar.append(readRead(full_path_name,im_a1)) #with dc
+            stack_im_ar.append(readRead(full_path_name,im_a1, ProtonDoseCorrection,factorProtonDose)) #with dc
         else:
-            stack_im_ar.append(readRead(full_path_name))   #without dc
+            stack_im_ar.append(readRead(full_path_name, ProtonDoseCorrection,factorProtonDose))   #without dc
     stack_im_ar = np.concatenate(stack_im_ar)
     if np.shape(stack_im_ar) != np.shape(stack_ob):
             raise ValueError('Data and open beam have different shapes')
