@@ -5,7 +5,7 @@ Created on Fri Jan  6 15:42:58 2017
 
 @author: harti and valsecchi
 """
-from functions import read_data,cropped,createIm,normalization,saveIm,binning,oscillation,createIm_fft
+from functions import read_data,cropped,createIm,normalization,saveIm,binning,oscillation
 
 
 path_ob = 'data/data_OB'
@@ -21,7 +21,7 @@ savingFolder = 'folder'
 
 im,ob = read_data(path_im,path_ob,path_dc)
 #im,ob=normalization(im,ob,*norm_param)
-#oscillation(im,ob,folder=savingFolder,*oscillationParam)
+oscillation(im,ob,folder=savingFolder,*oscillationParam)
 #im,ob = cropped(im,ob,*crop_param)
 #im, ob = binning(im,ob,bin_fac)
 ti, dpci, dfi, vis_map = createIm(im,ob,numberPeriods)

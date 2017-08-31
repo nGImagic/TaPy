@@ -462,76 +462,43 @@ def reductionMatrix(stack_im,stack_ob,numberPeriods):
     """
     return (matrix(stack_im,numberPeriods),matrix(stack_ob,numberPeriods))
 
-def createIm_fft(stack_im,stack_ob):
+def max_min(stack_im):
     """
-    Apply the fourier component analysis to retrieve dfi, ti, dpci and visibility map.
-
+    Take a stack of images, return the mean value and the relative amplitude (max-min)/(max+min).
     Parameters
     ----------
     stack_im : array_like
         Input stack of projections.
     
-    stack_ob : array_like
-        Input stack of open beam.
-    
     Returns
     -------
-    ti : array_like
-        Reconstructed fft trasmission array.
+    mean: Mean value of oscillation.
         
-    dpci : array_like
-        Reconstructed fft DPCI array.
-        
-    dfi : array_like
-        Reconstructed fft DFI array.
-        
-    visi : array_like
-        Reconstructed fft visibility array.
+    amp : (max-min)/(max+min)
+    
     Notes
     -----
     """
-    ## Projection
-    shapeStack_im = np.shape(stack_im)
-    stack_imReshaped = np.reshape(stack_im,[shapeStack_im[0],shapeStack_im[1]*shapeStack_im[2]])
-    steps = len(stack_imReshaped[:,:])
-    outfft_a_im = []
-    outfft_b_im = []
-    outfft_c_im = []
-    for i in range(len(stack_imReshaped[0,:])):
-        fft_osc = np.fft.rfft(stack_imReshaped[:,i])/(steps-1)
-        outfft_a_im.append(fft_osc[0])
-        outfft_b_im.append(2*np.sqrt(np.real(fft_osc[1])**2+np.imag(fft_osc[1])**2))
-        outfft_c_im.append(-np.angle(fft_osc[1]))
-    outfft_a_im = np.reshape(outfft_a_im, [shapeStack_im[1],shapeStack_im[2]])
-    outfft_b_im = np.reshape(outfft_b_im, [shapeStack_im[1],shapeStack_im[2]])
-    outfft_c_im = np.reshape(outfft_c_im, [shapeStack_im[1],shapeStack_im[2]])
+    shapeStack = np.shape(stack_im)
 
-    ## open beam
-    shapeStack_ob = np.shape(stack_ob)
-    stack_obReshaped = np.reshape(stack_ob,[shapeStack_ob[0],shapeStack_ob[1]*shapeStack_ob[2]])
-    steps = len(stack_obReshaped[:,:])
-    outfft_a_ob = []
-    outfft_b_ob = []
-    outfft_c_ob = []
-    for i in range(len(stack_obReshaped[0,:])):
-        fft_osc = np.fft.rfft(stack_obReshaped[:,i])/(steps-1)
-        outfft_a_ob.append(fft_osc[0])
-        outfft_b_ob.append(2*np.sqrt(np.real(fft_osc[1])**2+np.imag(fft_osc[1])**2))
-        outfft_c_ob.append(-np.angle(fft_osc[1]))
-    outfft_a_ob = np.reshape(outfft_a_ob, [shapeStack_ob[1],shapeStack_ob[2]])
-    outfft_b_ob = np.reshape(outfft_b_ob, [shapeStack_ob[1],shapeStack_ob[2]])
-    outfft_c_ob = np.reshape(outfft_c_ob, [shapeStack_ob[1],shapeStack_ob[2]])
-    ti = np.real(outfft_a_im)/np.real(outfft_a_ob)
-    dpci = outfft_c_im - outfft_c_ob
-    dfi = (np.real(outfft_b_im)*np.real(outfft_a_ob))/(np.real(outfft_b_ob)*np.real(outfft_a_im))
-    visi = np.real(outfft_b_ob)/np.real(outfft_a_ob)
     
-    return ti, dpci, dfi, visi
+    stack_imReshaped = np.reshape(stack_im,[shapeStack[0],shapeStack[1]*shapeStack[2]])
+    max_resh = stack_imReshaped.max(0)
+    min_resh = stack_imReshaped.min(0)
+    
+    mean_resh = stack_imReshaped.mean(0)
+    
+    amp_resh = (max_resh-min_resh)/(max_resh+min_resh)
+    
+    mean = np.reshape(mean_resh,[shapeStack[1],shapeStack[2]])
+    amp = np.reshape(amp_resh,[shapeStack[1],shapeStack[2]])
+    
+    return mean,amp
 
 
-def createIm(stack_im,stack_ob,numberPeriods):
+def createIm(stack_im,stack_ob,numberPeriods, method='matrix'):
     """
-    Process the projections and open beam stacks to retrieve dfi, ti, dpci and visibility map.
+    Process the projections and open beam stacks to retrieve dfi, ti, dpci and visibility map. 
     
     Parameters
     ----------
@@ -543,6 +510,9 @@ def createIm(stack_im,stack_ob,numberPeriods):
         
     numberPeriods : float_like
         Numbers or fraction of stepped period.
+    
+    method : 'string'
+        Definition of algorithm.
         
     Returns
     -------
@@ -561,13 +531,60 @@ def createIm(stack_im,stack_ob,numberPeriods):
     Notes
     -----
     """
-    imParam,obParam = reductionMatrix(stack_im,stack_ob,numberPeriods)
-    TI = np.divide(imParam[0],obParam[0])
-    DPCI = imParam[2]-obParam[2]
-    DPCI = np.arctan(np.tan(DPCI))
-    DFI = np.divide(np.divide(imParam[1],imParam[0]),np.divide(obParam[1],obParam[0]))
-    VIS_map = np.divide(obParam[1],obParam[0])
+    if method == 'matrix':
+        imParam,obParam = reductionMatrix(stack_im,stack_ob,numberPeriods)
+        TI = np.divide(imParam[0],obParam[0])
+        DPCI = imParam[2]-obParam[2]
+        DPCI = np.arctan(np.tan(DPCI))
+        DFI = np.divide(np.divide(imParam[1],imParam[0]),np.divide(obParam[1],obParam[0]))
+        VIS_map = np.divide(obParam[1],obParam[0])
     
+    elif method == 'max_min': 
+        mean_OB,amp_OB = max_min(stack_ob)
+        mean_im,amp_im = max_min(stack_im)
+        
+        TI = mean_im/mean_OB
+        DFI = amp_im/amp_OB
+        DPCI = np.zeros(np.shape(TI))
+        VIS_map = amp_OB
+        
+    elif method == 'fourier':
+        ## Projection
+        shapeStack_im = np.shape(stack_im)
+        stack_imReshaped = np.reshape(stack_im,[shapeStack_im[0],shapeStack_im[1]*shapeStack_im[2]])
+        steps = len(stack_imReshaped[:,:])
+        outfft_a_im = []
+        outfft_b_im = []
+        outfft_c_im = []
+        for i in range(len(stack_imReshaped[0,:])):
+            fft_osc = np.fft.rfft(stack_imReshaped[:,i])/(steps-1)
+            outfft_a_im.append(fft_osc[0])
+            outfft_b_im.append(2*np.sqrt(np.real(fft_osc[1])**2+np.imag(fft_osc[1])**2))
+            outfft_c_im.append(-np.angle(fft_osc[1]))
+        outfft_a_im = np.reshape(outfft_a_im, [shapeStack_im[1],shapeStack_im[2]])
+        outfft_b_im = np.reshape(outfft_b_im, [shapeStack_im[1],shapeStack_im[2]])
+        outfft_c_im = np.reshape(outfft_c_im, [shapeStack_im[1],shapeStack_im[2]])
+    
+        ## open beam
+        shapeStack_ob = np.shape(stack_ob)
+        stack_obReshaped = np.reshape(stack_ob,[shapeStack_ob[0],shapeStack_ob[1]*shapeStack_ob[2]])
+        steps = len(stack_obReshaped[:,:])
+        outfft_a_ob = []
+        outfft_b_ob = []
+        outfft_c_ob = []
+        for i in range(len(stack_obReshaped[0,:])):
+            fft_osc = np.fft.rfft(stack_obReshaped[:,i])/(steps-1)
+            outfft_a_ob.append(fft_osc[0])
+            outfft_b_ob.append(2*np.sqrt(np.real(fft_osc[1])**2+np.imag(fft_osc[1])**2))
+            outfft_c_ob.append(-np.angle(fft_osc[1]))
+        outfft_a_ob = np.reshape(outfft_a_ob, [shapeStack_ob[1],shapeStack_ob[2]])
+        outfft_b_ob = np.reshape(outfft_b_ob, [shapeStack_ob[1],shapeStack_ob[2]])
+        outfft_c_ob = np.reshape(outfft_c_ob, [shapeStack_ob[1],shapeStack_ob[2]])
+        TI = np.real(outfft_a_im)/np.real(outfft_a_ob)
+        DPCI = outfft_c_im - outfft_c_ob
+        DFI = (np.real(outfft_b_im)*np.real(outfft_a_ob))/(np.real(outfft_b_ob)*np.real(outfft_a_im))
+        VIS_map = np.real(outfft_b_ob)/np.real(outfft_a_ob)
+        
     return TI, DPCI, DFI, VIS_map
     
 def saveIm(ti,dpci,dfi,vis_map,name='name',folder='folder',overWrite=False):
