@@ -48,7 +48,7 @@ def readRead(path,dc=0, ProtonDoseCorrection=False, factorProtonDose=10000):
             try:
                 fitsFile = fits.open(path,ignore_missing_end=True)[0]
                 
-                if ProtonDoseCorrection:
+                if ProtonDoseCorrection == True:
                     temp = fitsFile.data/fitsFile.header['PDOSE']*factorProtonDose
                 else:
                     temp = fitsFile.data
