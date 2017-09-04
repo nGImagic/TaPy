@@ -109,7 +109,7 @@ def read_data(path_im,path_ob,path_dc, ProtonDoseCorrection=False,factorProtonDo
         for name in filenames_dc:
             full_path_name = path_dc+'/'+name
 #            print(full_path_name)
-            im_a1.append(readRead(full_path_name, ProtonDoseCorrection,factorProtonDose))
+            im_a1.append(readRead(full_path_name,0,ProtonDoseCorrection,factorProtonDose))
         im_a1 = np.asarray(im_a1)
         im_a1 = np.sum(im_a1,axis=0)/np.shape(im_a1)[0]
     
@@ -122,7 +122,7 @@ def read_data(path_im,path_ob,path_dc, ProtonDoseCorrection=False,factorProtonDo
         if path_dc:
             stack_ob.append(readRead(full_path_name,im_a1, ProtonDoseCorrection,factorProtonDose)) #with dc
         else:
-            stack_ob.append(readRead(full_path_name, ProtonDoseCorrection,factorProtonDose))   #without dc
+            stack_ob.append(readRead(full_path_name,0, ProtonDoseCorrection,factorProtonDose))   #without dc
     stack_ob = np.concatenate(stack_ob)
 
 #    Projections
@@ -134,7 +134,7 @@ def read_data(path_im,path_ob,path_dc, ProtonDoseCorrection=False,factorProtonDo
         if path_dc:
             stack_im_ar.append(readRead(full_path_name,im_a1, ProtonDoseCorrection,factorProtonDose)) #with dc
         else:
-            stack_im_ar.append(readRead(full_path_name, ProtonDoseCorrection,factorProtonDose))   #without dc
+            stack_im_ar.append(readRead(full_path_name,0, ProtonDoseCorrection,factorProtonDose))   #without dc
     stack_im_ar = np.concatenate(stack_im_ar)
     if np.shape(stack_im_ar) != np.shape(stack_ob):
             raise ValueError('Data and open beam have different shapes')
