@@ -194,7 +194,7 @@ def roi(im,xROI,yROI,widthROI,heightROI,show=False,titleOne='Original image with
             print(vmax, vmin)
             cmap='gray'
             fig = plt.figure(figsize=(15,10)) 
-            gs = gridspec.GridSpec(1, 2,width_ratios=[4,1],height_ratios=[1,1]) 
+            gs = gridspec.GridSpec(2,2,width_ratios=[1,1],height_ratios=[1,1]) 
             ax = plt.subplot(gs[0])
             ax2 = plt.subplot(gs[1])
             ax.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)
@@ -363,7 +363,7 @@ def oscillation(stack_im,stack_ob,xROI=xROI,yROI=yROI,widthROI=widthROI,heightRO
         vmin,vmax=im.min(),im.max()
         cmap='gray'
         fig = plt.figure(figsize=(15,10)) 
-        gs = gridspec.GridSpec(1,2,width_ratios=[2,1],height_ratios=[1,1]) 
+        gs = gridspec.GridSpec(2,2,width_ratios=[1,1],height_ratios=[1,1]) 
         ax = plt.subplot(gs[0])
         ax2 = plt.subplot(gs[1])
         ax.imshow(im,vmin=vmin, vmax=vmax,interpolation='nearest',cmap=cmap)
@@ -623,10 +623,10 @@ def saveIm(ti,dpci,dfi,vis_map,name='name',folder='folder',overWrite=False):
     if not os.path.exists(folder):
         makedirs(folder) 
     print('files saved in folder: ',folder)
-    fits.writeto(folder+'/ti_'+str(name)+'.fits',ti,clobber=overWrite)
-    fits.writeto(folder+'/dpci_'+str(name)+'.fits',dpci,clobber=overWrite)
-    fits.writeto(folder+'/dfi_'+str(name)+'.fits',dfi,clobber=overWrite)
-    fits.writeto(folder+'/visi_'+str(name)+'.fits',vis_map,clobber=overWrite)
+    fits.writeto(folder+'/ti_'+str(name)+'.fits',ti,overwrite=overWrite)
+    fits.writeto(folder+'/dpci_'+str(name)+'.fits',dpci,overwrite=overWrite)
+    fits.writeto(folder+'/dfi_'+str(name)+'.fits',dfi,overwrite=overWrite)
+    fits.writeto(folder+'/visi_'+str(name)+'.fits',vis_map,overwrite=overWrite)
     
 def binning(stack_im,stack_ob,bin_fac=None):
     """
